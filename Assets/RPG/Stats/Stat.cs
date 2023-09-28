@@ -1,6 +1,7 @@
 ﻿namespace RPG.Stats {
     public enum Stat {
         BASE_HEALTH,
+        HEALTH_REGEN,
         PHYSICAL_RESISTANCE,
         MAGICAL_RESISTANCE,
         PALE_RESISTANCE,

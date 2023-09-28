@@ -10,10 +10,6 @@ namespace RPG.Stats {
 
         public event Action OnLevelUp;
 
-        public void Start() {
-            _stats.InitStats();
-        }
-
         public void AddExperience(float amount) {
             var exp = Stat.EXPERIENCE_TO_PROMOTE;
             _experience += amount;

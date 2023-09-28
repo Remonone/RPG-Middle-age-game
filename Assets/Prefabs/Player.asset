@@ -29,7 +29,7 @@ MonoBehaviour:
   - stat: 6
     value: 1
   - stat: 7
-    value: 1
+    value: 4
   - stat: 8
     value: 1
   - stat: 9
@@ -39,6 +39,8 @@ MonoBehaviour:
   - stat: 11
     value: 1
   - stat: 12
+    value: 1
+  - stat: 13
     value: 1
   _scaleStats:
   - stat: 0
@@ -56,7 +58,7 @@ MonoBehaviour:
   - stat: 6
     value: 1
   - stat: 7
-    value: 1
+    value: 0.05
   - stat: 8
     value: 1
   - stat: 9
@@ -66,4 +68,6 @@ MonoBehaviour:
   - stat: 11
     value: 1
   - stat: 12
+    value: 1
+  - stat: 13
     value: 1
