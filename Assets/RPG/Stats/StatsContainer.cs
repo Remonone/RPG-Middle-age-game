@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RPG.Combat;
 using UnityEngine;
 
 namespace RPG.Stats {
@@ -11,8 +12,7 @@ namespace RPG.Stats {
         
         [SerializeField] private List<StatValue> _baseStats = new List<StatValue>();
         [SerializeField] private List<StatValue> _scaleStats = new List<StatValue>();
-
-    
+        
 
         public float GetBaseStat(Stat stat) {
             return _baseStats.Single(basic => basic.stat == stat).value;
@@ -21,6 +21,7 @@ namespace RPG.Stats {
         public float GetLevelStat(Stat stat, int level) {
             return GetBaseStat(stat) * level;
         }
+
         public void OnBeforeSerialize() {
             if (_baseStats.Count == 0 && _scaleStats.Count == 0) {
                 foreach (var str in Enum.GetNames(typeof(Stat))) {

@@ -19,11 +19,18 @@ namespace RPG.Stats {
                 OnLevelUp?.Invoke();
             }
         }
+        
+        public float GetBaseStat(Stat stat) => _stats.GetBaseStat(stat);
 
         public float GetStatValue(Stat stat) {
-            return _stats.GetBaseStat(stat) + _stats.GetLevelStat(stat, _level);
+            return (_stats.GetBaseStat(stat) + _stats.GetLevelStat(stat, _level) + CalculateFlatStatChangers(stat)) * CalculatePercentStatChangers(stat);
+        }
+        private float CalculatePercentStatChangers(Stat stat) {
+            return 1F;
         }
 
-        public float GetBaseStat(Stat stat) => _stats.GetBaseStat(stat);
+        private float CalculateFlatStatChangers(Stat stat) {
+            return 0;
+        }
     }
 }
