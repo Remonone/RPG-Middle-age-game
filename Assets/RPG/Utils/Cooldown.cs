@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace RPG.Utils {
-    public class Cooldown : MonoBehaviour {
+    
+    [Serializable]
+    public class Cooldown {
         [SerializeField] private float _timeToReset = 1f;
 
         private float _cooldownTime = -1f;

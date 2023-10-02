@@ -37,8 +37,9 @@ namespace RPG.Control {
                 var selectable = hit.collider.GetComponent<SelectableEnemy>();
                 if (selectable == null) continue;
                 _fighter.Attack(selectable);
+                return true;
             }
-            return true;
+            return false;
         }
 
         private RaycastHit[] SortedRaycast() {
@@ -58,7 +59,7 @@ namespace RPG.Control {
             Ray direction = GetMouseRay();
             Physics.Raycast(direction, out var hit, 100F);
             if (hit.collider != null) {
-                _mover.MoveToPoint(hit.point);
+                _mover.StartMovingToPoint(hit.point);
                 return true;
             }
             return false;

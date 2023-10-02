@@ -2,10 +2,13 @@
 using RPG.Core;
 using RPG.Movement;
 using RPG.Stats;
+using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Combat {
     public class Fighter : MonoBehaviour, IAction {
+
+        [SerializeField] private Cooldown _cooldown;
 
         private BaseStats _stats;
         private Mover _mover;
@@ -16,7 +19,7 @@ namespace RPG.Combat {
 
         private readonly int _hAttack = Animator.StringToHash("Action"); 
         private readonly int _hMoving = Animator.StringToHash("Moving");
-        private readonly int _hTriggerAction = Animator.StringToHash("TriggerAction");
+        private readonly int _hTriggerAction = Animator.StringToHash("TriggerNumber");
         private readonly int _hTrigger = Animator.StringToHash("Trigger");
 
         private void Awake() {
@@ -27,10 +30,13 @@ namespace RPG.Combat {
         }
         
         private void Update() {
-            if(_target == null || !_target.IsAlive) _scheduler.CancelAction();
+            if (_target == null || !_target.IsAlive) return;
+            
             var distanceToTarget = Vector3.Distance(transform.position, _target.transform.position);
-            if (distanceToTarget <= _stats.GetStatValue(Stat.ATTACK_RANGE)) {
+            if (distanceToTarget <= _stats.GetStatValue(Stat.ATTACK_RANGE) && _cooldown.IsAvailable) {
                 AttackTarget();
+                _cooldown.Reset();
+                return;
             }
             _mover.MoveToPoint(_target.transform.position);
         }
@@ -45,7 +51,7 @@ namespace RPG.Combat {
             // TODO: Change DamageType by player equipment;
             var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), DamageType.PHYSICAL, gameObject); 
             // TODO: By player equipment or buffs cast additional changes to target;
-            _target.Hit(report);
+            _target.HitEntity(report);
         }
 
         public void Cancel() {
