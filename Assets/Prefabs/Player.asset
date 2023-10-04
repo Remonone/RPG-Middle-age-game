@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec95ce7ba114eca81299610eaa058c4, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  _raceName: 
+  _raceName: Human
   _baseStats:
   - stat: 0
     value: 1
@@ -21,7 +21,7 @@ MonoBehaviour:
   - stat: 2
     value: 1
   - stat: 3
-    value: 1
+    value: 4
   - stat: 4
     value: 1
   - stat: 5
@@ -29,18 +29,18 @@ MonoBehaviour:
   - stat: 6
     value: 1
   - stat: 7
-    value: 4
+    value: 1
   - stat: 8
     value: 1
   - stat: 9
     value: 1
-  - stat: 10
+  - stat: 1000
     value: 1
-  - stat: 11
+  - stat: 1001
     value: 1
-  - stat: 12
+  - stat: 1010
     value: 1
-  - stat: 13
+  - stat: 1011
     value: 1
   _scaleStats:
   - stat: 0
@@ -63,11 +63,11 @@ MonoBehaviour:
     value: 1
   - stat: 9
     value: 1
-  - stat: 10
+  - stat: 1000
     value: 1
-  - stat: 11
+  - stat: 1001
     value: 1
-  - stat: 12
+  - stat: 1010
     value: 1
-  - stat: 13
+  - stat: 1011
     value: 1

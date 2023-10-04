@@ -1,4 +1,5 @@
 ﻿using System;
+using RPG.Combat.Modifiers;
 using UnityEngine;
 
 namespace RPG.Stats {
@@ -26,11 +27,25 @@ namespace RPG.Stats {
             return (_stats.GetBaseStat(stat) + _stats.GetLevelStat(stat, _level) + CalculateFlatStatChangers(stat)) * CalculatePercentStatChangers(stat);
         }
         private float CalculatePercentStatChangers(Stat stat) {
-            return 1F;
+            IStatModifier[] statChangers = GetComponents<IStatModifier>();
+            float totalValue = 0f;
+            
+            foreach (var part in statChangers) {
+                totalValue += part.ReflectFlatStat(stat);
+            }
+
+            return totalValue;
         }
 
         private float CalculateFlatStatChangers(Stat stat) {
-            return 0;
+            IStatModifier[] statChangers = GetComponents<IStatModifier>();
+            float totalValue = 0f;
+            
+            foreach (var part in statChangers) {
+                totalValue += part.ReflectPercentStat(stat);
+            }
+
+            return totalValue;
         }
     }
 }
