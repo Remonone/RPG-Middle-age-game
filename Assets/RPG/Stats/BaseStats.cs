@@ -1,15 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using RPG.Combat.Buffs;
 using RPG.Combat.Modifiers;
 using UnityEngine;
 
 namespace RPG.Stats {
+    [RequireComponent(typeof(BuffContainer))]
     public class BaseStats : MonoBehaviour {
         [SerializeField] private StatsContainer _stats;
 
         [SerializeField] private int _level;
         [SerializeField] private float _experience;
 
+        public BuffContainer Buffs;
+
         public event Action OnLevelUp;
+
+        private void Awake() {
+            Buffs = GetComponent<BuffContainer>();
+        }
 
         public void AddExperience(float amount) {
             var exp = Stat.EXPERIENCE_TO_PROMOTE;
@@ -48,4 +58,5 @@ namespace RPG.Stats {
             return totalValue;
         }
     }
+    
 }
