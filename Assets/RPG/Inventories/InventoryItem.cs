@@ -23,5 +23,9 @@ namespace RPG.Inventories {
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize() { }
+
+        public void DropPickup(int count) {
+            
+        }
     }
 }
