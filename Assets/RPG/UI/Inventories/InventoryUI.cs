@@ -1,5 +1,4 @@
-﻿using System;
-using RPG.Inventories;
+﻿using RPG.Inventories;
 using UnityEngine;
 
 namespace RPG.UI.Inventories {
