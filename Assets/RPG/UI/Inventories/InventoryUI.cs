@@ -22,6 +22,7 @@ namespace RPG.UI.Inventories {
             }
             for (int i = 0; i < _inventory.Size; i++) {
                 var slot = Instantiate(_slotUI, transform);
+                slot.Setup(_inventory, i);
                 slot.name = "Inventory Slot " + i;
             }
         }

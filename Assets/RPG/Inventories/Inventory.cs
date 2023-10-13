@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RPG.Inventories.Items;
 using UnityEngine;
 
 namespace RPG.Inventories {
@@ -15,6 +16,13 @@ namespace RPG.Inventories {
 
         private void Awake() {
             _inventorySlots = new InventorySlot[_slotsCount];
+        }
+
+        private void Start() {
+            _inventorySlots[0] = new InventorySlot {
+                Item = InventoryItem.GetItemByGuid("168820e5-f325-4e1e-9948-126e5ada4f18"),
+                Count = 1
+            };
         }
 
         public void AddToInventorySlot(int slot, InventoryItem item, int count) {

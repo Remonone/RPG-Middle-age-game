@@ -8,6 +8,7 @@ namespace RPG.UI.Inventories {
 
         public void Setup(Inventory inventory, int i) {
             var slot = inventory.GetItemInSlot(i);
+            if (slot == null) return;
             _imageUI.sprite = slot.Item.Icon;
         }
     }
