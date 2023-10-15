@@ -2,6 +2,7 @@ using System;
 using RPG.Combat;
 using RPG.Movement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace RPG.Control {
@@ -26,9 +27,15 @@ namespace RPG.Control {
         }
 
         private void Update() {
+            if (InteractWithUI()) return;
             if (InteractWithComponent()) return;
             if (MoveTowardPoint()) return;
         }
+        private bool InteractWithUI() {
+            var isOverUI = EventSystem.current.IsPointerOverGameObject();
+            return isOverUI && _map["Action"].WasPressedThisFrame();
+        }
+        
         private bool InteractWithComponent() {
             if (!_map["Action"].WasPressedThisFrame()) return false;
             var hits = SortedRaycast();

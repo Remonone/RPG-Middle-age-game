@@ -10,15 +10,15 @@ namespace RPG.UI.Inventories {
 
         private void Awake() {
             _inventory = Inventory.GetPlayerInventory();
-            _inventory.OnInventoryUpdate += RedrawUI;
         }
 
         private void Start() {
+            _inventory.OnInventoryUpdate += RedrawUI;
             RedrawUI();
         }
         private void RedrawUI() {
             foreach (Transform child in transform) {
-                Destroy(child);
+                Destroy(child.gameObject);
             }
             for (int i = 0; i < _inventory.Size; i++) {
                 var slot = Instantiate(_slotUI, transform);

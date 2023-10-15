@@ -23,6 +23,7 @@ namespace RPG.Inventories {
                 Item = InventoryItem.GetItemByGuid("168820e5-f325-4e1e-9948-126e5ada4f18"),
                 Count = 1
             };
+            OnInventoryUpdate?.Invoke();
         }
 
         public void AddToInventorySlot(int slot, InventoryItem item, int count) {
