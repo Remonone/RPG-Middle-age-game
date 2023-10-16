@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4537828504203544692}
   - component: {fileID: 411710891640521144}
   - component: {fileID: 3878241301173503359}
+  - component: {fileID: -1781940099572428779}
   m_Layer: 5
   m_Name: InventorySlot
   m_TagString: Untagged
@@ -61,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -91,6 +92,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _imageUI: {fileID: 4708716069662026927}
+--- !u!225 &-1781940099572428779
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931313013196440480}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8419698825941434152
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,6 +116,7 @@ GameObject:
   - component: {fileID: 6198249900989467349}
   - component: {fileID: 4708716069662026927}
   - component: {fileID: 3100620249710089120}
+  - component: {fileID: 6793308383746351079}
   m_Layer: 5
   m_Name: InventoryImage
   m_TagString: Untagged
@@ -180,3 +194,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7caeb184bd348b2ab4840720a826805, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &6793308383746351079
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8419698825941434152}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

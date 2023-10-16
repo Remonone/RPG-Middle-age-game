@@ -13,15 +13,15 @@ namespace RPG.UI.Inventories {
 
         public void Setup(Inventory inventory, int i) {
             var slot = inventory.GetItemInSlot(i);
-            if (slot == null) {
+            _index = i;
+            _inventory = inventory;
+            if (slot.Item == null) {
                 _imageUI.sprite = null;
-                _index = -1;
                 return;
             }
-            _index = i;
             _imageUI.sprite = slot.Item.Icon;
         }
-        public int MaxAcceptable(InventoryItem item) => item == null || !item.IsStackable ? -1 : int.MaxValue;
+        public int MaxAcceptable(InventoryItem item) => item == null ? -1 : !item.IsStackable ? 1 : int.MaxValue;
 
         public void AddItems(InventoryItem item, int count) {
             _inventory.AddToInventorySlot(_index, item, count);
@@ -32,7 +32,7 @@ namespace RPG.UI.Inventories {
         }
 
         public int GetNumber() {
-            return 1;
+            return _inventory.GetItemInSlot(_index).Count;
         }
         public void RemoveItems(int count) {
             _inventory.RemoveCountFromSlot(_index, count);
