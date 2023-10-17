@@ -19,7 +19,7 @@ namespace RPG.Stats {
         }
 
         public float GetLevelStat(Stat stat, int level) {
-            return GetBaseStat(stat) * level;
+            return _scaleStats.Single(basic => basic.stat == stat).value * level;
         }
 
         public void OnBeforeSerialize() {

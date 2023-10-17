@@ -36,7 +36,7 @@ namespace RPG.Stats {
         }
         private float CalculatePercentStatChangers(Stat stat) {
             IStatModifier[] statChangers = GetComponents<IStatModifier>();
-            float totalValue = 0f;
+            float totalValue = 1f;
             
             foreach (var part in statChangers) {
                 totalValue += part.ReflectFlatStat(stat);

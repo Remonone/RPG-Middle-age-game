@@ -21,6 +21,7 @@ namespace RPG.Combat {
 
         private void Start() {
             _currentHealth = _stats.GetStatValue(Stat.BASE_HEALTH);
+            print(_currentHealth + " " + _stats.GetStatValue(Stat.BASE_HEALTH));
         }
 
         public void HitEntity(DamageReport report) {

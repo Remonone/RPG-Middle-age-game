@@ -30,12 +30,8 @@ namespace RPG.Utils.UI {
             GetComponent<CanvasGroup>().blocksRaycasts = true;
             transform.SetParent(_originalParent, true);
 
-            IDragDestination<T> container;
-            if (!EventSystem.current.IsPointerOverGameObject()) {
-                container = _parentCanvas.GetComponent<IDragDestination<T>>();
-            } else {
-                container = GetContainer(eventData);
-            }
+            IDragDestination<T> container= !EventSystem.current.IsPointerOverGameObject() ? 
+                _parentCanvas.GetComponent<IDragDestination<T>>() : GetContainer(eventData);
             if (container != null) {
                 DropItemIntoContainer(container);
             }

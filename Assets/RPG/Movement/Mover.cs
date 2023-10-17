@@ -40,12 +40,13 @@ namespace RPG.Movement {
         }
 
         public void StartMovingToPoint(Vector3 point) {
+            if (!_health.IsAlive) return;
             _scheduler.SwitchAction(this);
             MoveToPoint(point);
         }
 
         public void MoveToPoint(Vector3 point) {
-            
+            if (!_health.IsAlive) return;
             _agent.isStopped = false;
             _agent.destination = point;
             _animator.SetFloat(_hZSpeed, 1);
