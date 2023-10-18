@@ -9,10 +9,12 @@ using UnityEngine;
 namespace RPG.Inventories.Items {
     [CreateAssetMenu(fileName = "Equipment Item", menuName = "GumuPeachu/Inventory/Create new Equipment")]
     public class EquipmentItem : InventoryItem, IStatModifier {
-        
+
+        [SerializeField] private EquipmentSlots _slot;
         [SerializeField] private List<StatReflection> _statModifier;
         [SerializeField] private List<Buff> _buffs;
-        
+
+        public EquipmentSlots Slot => _slot;
 
         public float ReflectFlatStat(Stat stat) {
             return _statModifier.Single(reflection => reflection.Stat == stat).FlatReflection;
