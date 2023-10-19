@@ -1,4 +1,5 @@
 ﻿using RPG.Inventories;
+using RPG.UI.Inventories.Slots;
 using UnityEngine;
 
 namespace RPG.UI.Inventories {

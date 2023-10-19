@@ -2,11 +2,10 @@
 using RPG.Inventories.Items;
 using RPG.Utils.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace RPG.UI.Inventories {
+namespace RPG.UI.Inventories.Slots {
     public class InventorySlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem> {
-        [SerializeField] private Image _imageUI;
+        [SerializeField] private InventoryItemIcon _imageUI;
 
         private int _index;
         private Inventory _inventory;
@@ -16,10 +15,10 @@ namespace RPG.UI.Inventories {
             _index = i;
             _inventory = inventory;
             if (slot.Item == null) {
-                _imageUI.sprite = null;
+                _imageUI.SetItem(null);
                 return;
             }
-            _imageUI.sprite = slot.Item.Icon;
+            _imageUI.SetItem(slot.Item);
         }
         public int MaxAcceptable(InventoryItem item) => item == null ? -1 : !item.IsStackable ? 1 : int.MaxValue;
 

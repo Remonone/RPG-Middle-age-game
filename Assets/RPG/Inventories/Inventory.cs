@@ -29,6 +29,10 @@ namespace RPG.Inventories {
                 Item = InventoryItem.GetItemByGuid("168820e5-f325-4e1e-9948-126e5ada4f18"),
                 Count = 1
             };
+            _inventorySlots[1] = new InventorySlot {
+                Item = InventoryItem.GetItemByGuid("19a20eb4-eccb-4298-b58b-97d7e7fb66b4"),
+                Count = 1
+            };
             OnInventoryUpdate?.Invoke();
         }
 

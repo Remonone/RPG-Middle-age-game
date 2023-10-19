@@ -1178,6 +1178,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slotsCount: 40
+--- !u!114 &1152719044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931818938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dacacc49cb2f47a78331d5e65cc2440a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1605904236
 GameObject:
   m_ObjectHideFlags: 0
@@ -2015,6 +2027,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1152719032}
+    - targetCorrespondingSourceObject: {fileID: 5334357305607278876, guid: d38ab1ba7cecb6e4db43e7b9473a30cc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1152719044}
   m_SourcePrefab: {fileID: 100100000, guid: d38ab1ba7cecb6e4db43e7b9473a30cc, type: 3}
 --- !u!1001 &5795818061088577944
 PrefabInstance:

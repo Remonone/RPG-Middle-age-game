@@ -10,16 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55378257e81d47cf80ec4e491dc7e6ab, type: 3}
-  m_Name: Chestplate
+  m_Name: Helmet
   m_EditorClassIdentifier: 
-  _itemID: 168820e5-f325-4e1e-9948-126e5ada4f18
-  _itemName: Chestplate
-  _itemDescription: Just a Chestplate
-  _itemIcon: {fileID: 21300000, guid: 603e026921ee6c44ab5c48b149bb31e9, type: 3}
+  _itemID: 19a20eb4-eccb-4298-b58b-97d7e7fb66b4
+  _itemName: Helmet
+  _itemDescription: 
+  _itemIcon: {fileID: 21300000, guid: 8626b3213071afa439ed1e4a73f62276, type: 3}
   _stackable: 0
-  _slot: 1
+  _slot: 0
   _statModifier:
+  - Stat: 0
+    FlatReflection: 1
+    PercentReflection: 0
   - Stat: 1000
-    FlatReflection: 3
+    FlatReflection: 5
     PercentReflection: 0
   _buffs: []

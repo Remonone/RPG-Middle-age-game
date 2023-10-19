@@ -11,7 +11,8 @@ namespace RPG.Inventories {
         public event Action OnEquipmentChange;
         
         public EquipmentItem GetEquipmentItem(EquipmentSlots equipmentSlot) {
-            return _items[equipmentSlot];
+            if(_items.ContainsKey(equipmentSlot)) return _items[equipmentSlot];
+            return null;
         }
         public void PlaceEquipment(EquipmentItem item, EquipmentSlots equipmentSlot) {
             if (item.Slot != equipmentSlot) return;

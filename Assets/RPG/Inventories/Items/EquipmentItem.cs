@@ -22,6 +22,10 @@ namespace RPG.Inventories.Items {
         public float ReflectPercentStat(Stat stat) {
             return _statModifier.Single(reflection => reflection.Stat == stat).PercentReflection;
         }
+        
+        public bool CanEquip(EquipmentSlots location) {
+            return _slot == location;
+        }
 
         [Serializable]
         internal class StatReflection {

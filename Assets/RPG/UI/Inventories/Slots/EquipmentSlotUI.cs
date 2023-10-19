@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace RPG.UI.Inventories {
     public class EquipmentSlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem> {
 
-        [SerializeField] private Image _equipmentImage;
+        [SerializeField] private InventoryItemIcon _equipmentImage;
         [SerializeField] private EquipmentSlots _equipmentSlot;
 
         private Equipment _equipment;
@@ -26,10 +26,10 @@ namespace RPG.UI.Inventories {
         private void RedrawSlot() {
             var item = _equipment.GetEquipmentItem(_equipmentSlot);
             if (item == null) {
-                _equipmentImage.sprite = null;
+                _equipmentImage.SetItem(null);
                 return;
             }
-            _equipmentImage.sprite = item.Icon;
+            _equipmentImage.SetItem(item);
         }
 
         public int GetNumber() {
@@ -39,8 +39,14 @@ namespace RPG.UI.Inventories {
             _equipment.RemoveEquipment(_equipmentSlot);
         }
         public int MaxAcceptable(InventoryItem item) {
+            EquipmentItem equipableItem = item as EquipmentItem;
+            if (equipableItem == null) return 0;
+            if (equipableItem.Slot != _equipmentSlot) return 0;
+            if (GetItem() != null) return 0;
+
             return 1;
         }
+        
         public void AddItems(InventoryItem item, int number) {
             _equipment.PlaceEquipment((EquipmentItem)item, _equipmentSlot);
         }
