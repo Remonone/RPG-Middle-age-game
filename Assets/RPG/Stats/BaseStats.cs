@@ -1,6 +1,7 @@
 ﻿using System;
 using RPG.Combat.Buffs;
 using RPG.Combat.Modifiers;
+using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Stats {
@@ -18,7 +19,7 @@ namespace RPG.Stats {
         private void Awake() {
             Buffs = GetComponent<BuffContainer>();
         }
-
+        
         public void AddExperience(float amount) {
             var exp = Stat.EXPERIENCE_TO_PROMOTE;
             _experience += amount;
@@ -55,6 +56,29 @@ namespace RPG.Stats {
 
             return totalValue;
         }
+        #if UNITY_EDITOR
+        
+        private void Start() {
+            UpdateInfo();
+        }
+        void UpdateInfo() {
+            _info.UpdateInfo(GetStatValue(Stat.BASE_HEALTH), GetStatValue(Stat.PHYSICAL_RESISTANCE), GetStatValue(Stat.HEALTH_REGEN));
+        }
+        [SerializeField] private ReadOnlyStats _info;
+
+        
+        [Serializable]
+        internal sealed class ReadOnlyStats {
+            [ReadOnly] public float _baseHealth;
+            [ReadOnly] public float _basePhysicalResist;
+            [ReadOnly] public float _baseRegen;
+            public void UpdateInfo(float baseHealth, float baseResist, float baseRegen) {
+                _baseHealth = baseHealth;
+                _basePhysicalResist = baseResist;
+                _baseRegen = baseRegen;
+            }
+        }
+        #endif
     }
     
 }

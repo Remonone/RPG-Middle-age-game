@@ -17,10 +17,14 @@ namespace RPG.Inventories.Items {
         public EquipmentSlots Slot => _slot;
 
         public float ReflectFlatStat(Stat stat) {
-            return _statModifier.Single(reflection => reflection.Stat == stat).FlatReflection;
+            var reflectionStat = _statModifier.SingleOrDefault(reflection => reflection.Stat == stat);
+            if (reflectionStat == null) return 0;
+            return reflectionStat.FlatReflection;
         }
         public float ReflectPercentStat(Stat stat) {
-            return _statModifier.Single(reflection => reflection.Stat == stat).PercentReflection;
+            var reflectionStat = _statModifier.SingleOrDefault(reflection => reflection.Stat == stat);
+            if (reflectionStat == null) return 0;
+            return reflectionStat.PercentReflection;
         }
         
         public bool CanEquip(EquipmentSlots location) {

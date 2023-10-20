@@ -7,11 +7,9 @@ using UnityEngine;
 namespace RPG.Combat {
     public class Health : MonoBehaviour {
         private BaseStats _stats;
-
         [ReadOnly] [SerializeField] private float _currentHealth = 0;
-
+        [ReadOnly] [SerializeField] private float _maxHealth;
         public bool IsAlive => _currentHealth > 0;
-
         public event Action OnHitEvent;
         public event Action OnDieEvent;
 
@@ -20,7 +18,14 @@ namespace RPG.Combat {
         }
 
         private void Start() {
-            _currentHealth = _stats.GetStatValue(Stat.BASE_HEALTH);
+            _maxHealth = _stats.GetStatValue(Stat.BASE_HEALTH);
+            _currentHealth = _maxHealth  - 15F;
+            
+        }
+
+        private void Update() {
+            if(_currentHealth < _maxHealth)
+                _currentHealth += _stats.GetStatValue(Stat.HEALTH_REGEN) / 5 * Time.deltaTime;
         }
 
         public void HitEntity(DamageReport report) {
