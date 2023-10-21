@@ -1,12 +1,14 @@
-﻿using RPG.Combat.DamageDefinition;
+﻿using Newtonsoft.Json.Linq;
+using RPG.Combat.DamageDefinition;
 using RPG.Core;
 using RPG.Movement;
+using RPG.Saving;
 using RPG.Stats;
 using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Combat {
-    public class Fighter : MonoBehaviour, IAction {
+    public class Fighter : MonoBehaviour, IAction{
 
         [SerializeField] private Cooldown _cooldown;
 

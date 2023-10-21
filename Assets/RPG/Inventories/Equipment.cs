@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using RPG.Combat.Modifiers;
 using RPG.Inventories.Items;
+using RPG.Saving;
 using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Inventories {
-    public class Equipment : MonoBehaviour, IStatModifier {
+    public class Equipment : MonoBehaviour, IStatModifier, ISaveable {
 
         private Dictionary<EquipmentSlots, EquipmentItem> _items = new Dictionary<EquipmentSlots, EquipmentItem>();
 
@@ -31,6 +33,23 @@ namespace RPG.Inventories {
         }
         public float ReflectPercentStat(Stat stat) {
             return _items.Values.Where(item => item != null).Sum(item => item.ReflectPercentStat(stat));
+        }
+        public JToken CaptureAsJToken() {
+            var equipmentInfo = new JProperty("equipment", new JArray(
+                from equipmentID in _items 
+                select new JObject(
+                        new JProperty("slot", equipmentID.Key.ToString()),
+                        new JProperty("id", equipmentID.Value.ID)
+                    )
+            ));
+            return equipmentInfo;
+        }
+        public void RestoreFromJToken(JToken state) {
+            foreach (var id in state["equipment"]) {
+                var item = InventoryItem.GetItemByGuid((string)id);
+                var slot = Enum.Parse<EquipmentSlots>((string)state["slot"]);
+                _items[slot] = (EquipmentItem) item;
+            }
         }
     }
 }

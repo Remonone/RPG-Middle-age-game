@@ -1,11 +1,13 @@
 ﻿using System;
+using Newtonsoft.Json.Linq;
+using RPG.Saving;
 using RPG.Stats;
 using RPG.Utils;
 using UnityEditor;
 using UnityEngine;
 
 namespace RPG.Combat {
-    public class Health : MonoBehaviour {
+    public class Health : MonoBehaviour, ISaveable {
         private BaseStats _stats;
         [ReadOnly] [SerializeField] private float _currentHealth = 0;
         [ReadOnly] [SerializeField] private float _maxHealth;
@@ -19,8 +21,6 @@ namespace RPG.Combat {
 
         private void Start() {
             _maxHealth = _stats.GetStatValue(Stat.BASE_HEALTH);
-            _currentHealth = _maxHealth  - 15F;
-            
         }
 
         private void Update() {
@@ -39,5 +39,12 @@ namespace RPG.Combat {
             OnDieEvent?.Invoke();
         }
 
+        public JToken CaptureAsJToken() {
+            var healthInfo = new JObject(new JProperty("current_health", _currentHealth));
+            return healthInfo;
+        }
+        public void RestoreFromJToken(JToken state) {
+            _currentHealth = (float)state["current_health"];
+        }
     }
 }

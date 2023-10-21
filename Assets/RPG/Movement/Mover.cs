@@ -1,11 +1,14 @@
-﻿using RPG.Combat;
+﻿using Newtonsoft.Json.Linq;
+using RPG.Combat;
 using RPG.Core;
+using RPG.Saving;
 using RPG.Stats;
+using RPG.Utils;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace RPG.Movement {
-    public class Mover : MonoBehaviour, IAction {
+    public class Mover : MonoBehaviour, IAction, ISaveable {
         
         [SerializeField] private Animator _animator;
         [SerializeField] private float _threshold = 2F;
@@ -63,6 +66,15 @@ namespace RPG.Movement {
         public void Cancel() {
             _agent.isStopped = true;
             _animator.SetFloat(_hZSpeed, 0);
+        }
+        public JToken CaptureAsJToken() {
+            return JToken.FromObject(transform.position.ToToken());
+        }
+        public void RestoreFromJToken(JToken state) {
+            _agent.enabled = false;
+            transform.position = state.ToObject<Vector3>();
+            _agent.enabled = true;
+            _scheduler.CancelAction();
         }
     }
 }

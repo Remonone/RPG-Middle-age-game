@@ -1,12 +1,14 @@
 ﻿using System;
+using Newtonsoft.Json.Linq;
 using RPG.Combat.Buffs;
 using RPG.Combat.Modifiers;
+using RPG.Saving;
 using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Stats {
     [RequireComponent(typeof(BuffContainer))]
-    public class BaseStats : MonoBehaviour {
+    public class BaseStats : MonoBehaviour, ISaveable {
         [SerializeField] private StatsContainer _stats;
 
         [SerializeField] private int _level;
@@ -79,6 +81,16 @@ namespace RPG.Stats {
             }
         }
         #endif
+        public JToken CaptureAsJToken() {
+            return new JObject(
+                new JProperty("level", _level),
+                new JProperty("experience", _experience)
+            );
+        }
+        public void RestoreFromJToken(JToken state) {
+            _level = (int)state["level"];
+            _experience = (int)state["experience"];
+        }
     }
     
 }

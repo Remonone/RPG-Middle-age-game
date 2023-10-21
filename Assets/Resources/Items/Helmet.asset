@@ -25,4 +25,7 @@ MonoBehaviour:
   - Stat: 1000
     FlatReflection: 5
     PercentReflection: 0
+  - Stat: 1
+    FlatReflection: 1
+    PercentReflection: 0
   _buffs: []

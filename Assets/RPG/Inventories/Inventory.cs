@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using RPG.Inventories.Items;
+using RPG.Saving;
+using RPG.UI.Inventories;
 using UnityEngine;
 
 namespace RPG.Inventories {
-    public class Inventory : MonoBehaviour {
+    public class Inventory : MonoBehaviour, ISaveable {
         [SerializeField] private int _slotsCount;
 
         private InventorySlot[] _inventorySlots;
@@ -99,6 +102,32 @@ namespace RPG.Inventories {
         public sealed class InventorySlot {
             public InventoryItem Item;
             public int Count;
+        }
+
+        public JToken CaptureAsJToken() {
+            var inventoryState = new JArray(
+                            from item in _inventorySlots
+                            select new JObject(
+                                    new JProperty("slot", Array.FindIndex(_inventorySlots, slot => slot == item)),
+                                    new JProperty("item" , new JObject(
+                                                new JProperty("id", item.Item.ID),
+                                                new JProperty("count", item.Count)
+                                            ))
+                                )
+                        );
+            return inventoryState;
+        }
+        public void RestoreFromJToken(JToken state) {
+            foreach (var slot in state) {
+                var index = (int)slot["slot"];
+                var itemConfig = slot["item"];
+                var item = InventoryItem.GetItemByGuid((string)itemConfig["id"]);
+                var count = (int)itemConfig["count"];
+                _inventorySlots[index] = new InventorySlot {
+                    Item = item,
+                    Count = count
+                };
+            }
         }
     }
 }

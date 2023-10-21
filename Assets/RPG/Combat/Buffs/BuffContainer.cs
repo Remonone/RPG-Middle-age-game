@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using RPG.Saving;
 using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Combat.Buffs {
-    public class BuffContainer : MonoBehaviour {
+    public class BuffContainer : MonoBehaviour, ISaveable {
         
         private List<BuffProperties> _buffList = new List<BuffProperties>();
         
@@ -67,6 +69,12 @@ namespace RPG.Combat.Buffs {
             public float CreationTime;
             public int Strength;
         }
-        
+
+        public JToken CaptureAsJToken() { // TODO: Make realization of this when will make Predicate system.
+            return new JArray(
+                    
+                );
+        }
+        public void RestoreFromJToken(JToken state) { } // TODO: Make realization of this when will make Predicate system.
     }
 }
