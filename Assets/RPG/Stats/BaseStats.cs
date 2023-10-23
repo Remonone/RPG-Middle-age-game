@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using RPG.Combat.Buffs;
 using RPG.Combat.Modifiers;
+using RPG.Core.Predicate;
 using RPG.Saving;
 using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Stats {
     [RequireComponent(typeof(BuffContainer))]
-    public class BaseStats : MonoBehaviour, ISaveable {
+    public class BaseStats : PredicateMonoBehaviour, ISaveable {
         [SerializeField] private StatsContainer _stats;
 
         [SerializeField] private int _level;
@@ -18,10 +21,12 @@ namespace RPG.Stats {
 
         public event Action OnLevelUp;
 
-        private void Awake() {
+        private List<PredicatedStats> _predicatedStats = new List<PredicatedStats>();
+
+        protected override void OnAwake() {
             Buffs = GetComponent<BuffContainer>();
         }
-        
+
         public void AddExperience(float amount) {
             var exp = Stat.EXPERIENCE_TO_PROMOTE;
             _experience += amount;
@@ -37,6 +42,31 @@ namespace RPG.Stats {
         public float GetStatValue(Stat stat) {
             return (_stats.GetBaseStat(stat) + _stats.GetLevelStat(stat, _level) + CalculateFlatStatChangers(stat)) * CalculatePercentStatChangers(stat);
         }
+        
+        public override void Predicate((string command, object[] arguments)[] predicates, out List<object> results) {
+            results = new List<object>();
+            foreach (var predicate in predicates) {
+                results.Add(predicate.command switch {
+                    "AmplifyStat" => AmplifyStat(predicate.arguments),
+                    _ => null
+                });
+            }
+        }
+
+        private bool AmplifyStat(object[] args) {
+            try {
+                _predicatedStats.Add(new PredicatedStats {
+                    Stat = (Stat)args[0],
+                    FlatValue = (float)args[1],
+                    PercentValue = (float)args[2]
+                });
+                return true;
+            }
+            catch (Exception e) {
+                return false;
+            }
+        }
+        
         private float CalculatePercentStatChangers(Stat stat) {
             IStatModifier[] statChangers = GetComponents<IStatModifier>();
             float totalValue = 1f;
@@ -44,6 +74,9 @@ namespace RPG.Stats {
             foreach (var part in statChangers) {
                 totalValue += part.ReflectFlatStat(stat);
             }
+
+            var predicate = _predicatedStats.SingleOrDefault(predicated => predicated.Stat == stat);
+            totalValue += predicate?.FlatValue ?? 0;
 
             return totalValue;
         }
@@ -55,6 +88,8 @@ namespace RPG.Stats {
             foreach (var part in statChangers) {
                 totalValue += part.ReflectPercentStat(stat);
             }
+            var predicate = _predicatedStats.SingleOrDefault(predicated => predicated.Stat == stat);
+            totalValue += predicate?.PercentValue ?? 0;
 
             return totalValue;
         }
@@ -90,6 +125,12 @@ namespace RPG.Stats {
         public void RestoreFromJToken(JToken state) {
             _level = (int)state["level"];
             _experience = (int)state["experience"];
+        }
+
+        private sealed class PredicatedStats {
+            public Stat Stat;
+            public float FlatValue;
+            public float PercentValue;
         }
     }
     
