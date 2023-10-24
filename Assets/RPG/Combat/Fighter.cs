@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using RPG.Combat.DamageDefinition;
 using RPG.Core;
+using RPG.Core.Predicate;
 using RPG.Movement;
 using RPG.Saving;
 using RPG.Stats;
@@ -23,6 +24,8 @@ namespace RPG.Combat {
         private readonly int _hMoving = Animator.StringToHash("Moving");
         private readonly int _hTriggerAction = Animator.StringToHash("TriggerNumber");
         private readonly int _hTrigger = Animator.StringToHash("Trigger");
+
+        private string AmplifyPredicate = "#{0}:AmplifyStat:BASE_ATTACK;5;0.";
 
         private void Awake() {
             _mover = GetComponent<Mover>();
@@ -50,6 +53,7 @@ namespace RPG.Combat {
         }
 
         void Hit() {
+            PredicateWorker.ParsePredicate(string.Format(AmplifyPredicate, GetComponent<BaseStats>().ComponentID));
             // TODO: Change DamageType by player equipment;
             var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), DamageType.PHYSICAL, gameObject); 
             // TODO: By player equipment or buffs cast additional changes to target;
