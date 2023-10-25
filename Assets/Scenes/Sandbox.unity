@@ -1016,10 +1016,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9921b18577d843c4bf89955b1b7151dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentID: 
   _stats: {fileID: 11400000, guid: 6c7bbac02d04a9f479aa665aef4fcefb, type: 2}
   _level: 1
   _experience: 0
   Buffs: {fileID: 0}
+  _info:
+    _baseHealth: 0
+    _basePhysicalResist: 0
+    _baseRegen: 0
 --- !u!114 &743613398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1033,6 +1038,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentHealth: 0
+  _maxHealth: 0
 --- !u!114 &743613399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1128,7 +1134,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 743613396}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.44, y: 54.95, z: 47.74}
+  m_LocalPosition: {x: 40.75, y: 53.7, z: 55.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

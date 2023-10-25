@@ -12,7 +12,7 @@ namespace RPG.Core.Predicate {
 
         private void Awake() {
             if (string.IsNullOrWhiteSpace(_componentID)) {
-                _componentID = System.Guid.NewGuid().ToString();
+                _componentID = "C_" + Guid.NewGuid().ToString().Replace('-', '_');
             }
             OnAwake();
         }
@@ -31,6 +31,6 @@ namespace RPG.Core.Predicate {
         protected virtual void OnAwake() {}
         protected virtual void OnEnableEvent() {}
         protected virtual void OnDestroyEvent() {}
-        public abstract void Predicate((string command, object[] arguments)[] predicates, out List<object> results);
+        public abstract void Predicate(string command, object[] arguments, out object result);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 using RPG.Combat.DamageDefinition;
 using RPG.Core;
 using RPG.Core.Predicate;
@@ -12,6 +13,8 @@ namespace RPG.Combat {
     public class Fighter : MonoBehaviour, IAction{
 
         [SerializeField] private Cooldown _cooldown;
+
+        private string _sessionID;
 
         private BaseStats _stats;
         private Mover _mover;
@@ -32,6 +35,7 @@ namespace RPG.Combat {
             _stats = GetComponent<BaseStats>();
             _scheduler = GetComponent<TaskScheduler>();
             _animator = GetComponent<Animator>();
+            _sessionID = Guid.NewGuid().ToString();
         }
         
         private void Update() {
@@ -53,10 +57,11 @@ namespace RPG.Combat {
         }
 
         void Hit() {
-            PredicateWorker.ParsePredicate(string.Format(AmplifyPredicate, GetComponent<BaseStats>().ComponentID));
+            PredicateWorker.ParsePredicate(string.Format(AmplifyPredicate, GetComponent<BaseStats>().ComponentID), _sessionID);
             // TODO: Change DamageType by player equipment;
             var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), DamageType.PHYSICAL, gameObject); 
             // TODO: By player equipment or buffs cast additional changes to target;
+            Debug.Log(report);
             _target.HitEntity(report);
         }
 

@@ -43,26 +43,27 @@ namespace RPG.Stats {
             return (_stats.GetBaseStat(stat) + _stats.GetLevelStat(stat, _level) + CalculateFlatStatChangers(stat)) * CalculatePercentStatChangers(stat);
         }
         
-        public override void Predicate((string command, object[] arguments)[] predicates, out List<object> results) {
-            results = new List<object>();
-            foreach (var predicate in predicates) {
-                results.Add(predicate.command switch {
-                    "AmplifyStat" => AmplifyStat(predicate.arguments),
-                    _ => null
-                });
-            }
+        public override void Predicate(string command, object[] arguments, out object result) {
+            result = command switch {
+                "AmplifyStat" => AmplifyStat(arguments),
+                _ => null
+            };
+
         }
 
         private bool AmplifyStat(object[] args) {
+            Debug.Log("Amplifying");
             try {
+                Debug.Log(args);
                 _predicatedStats.Add(new PredicatedStats {
-                    Stat = (Stat)args[0],
-                    FlatValue = (float)args[1],
-                    PercentValue = (float)args[2]
+                    Stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0])),
+                    FlatValue = (float)Convert.ToDouble(args[1]),
+                    PercentValue = (float)Convert.ToDouble(args[2])
                 });
                 return true;
             }
             catch (Exception) {
+                Debug.Log((float)Convert.ToDouble(args[1]));
                 return false;
             }
         }
@@ -76,7 +77,7 @@ namespace RPG.Stats {
             }
 
             var predicate = _predicatedStats.SingleOrDefault(predicated => predicated.Stat == stat);
-            totalValue += predicate?.FlatValue ?? 0;
+            totalValue += predicate?.PercentValue ?? 0;
 
             return totalValue;
         }
@@ -89,7 +90,7 @@ namespace RPG.Stats {
                 totalValue += part.ReflectPercentStat(stat);
             }
             var predicate = _predicatedStats.SingleOrDefault(predicated => predicated.Stat == stat);
-            totalValue += predicate?.PercentValue ?? 0;
+            totalValue += predicate?.FlatValue ?? 0;
 
             return totalValue;
         }

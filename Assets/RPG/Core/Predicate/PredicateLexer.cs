@@ -18,10 +18,9 @@ namespace RPG.Core.Predicate {
             while (NextToken() && iteration < MAX_ITER) { 
                 iteration++;
             }
-            if (_position != _code.Length) {
-                Debug.Log($"Error has appeared in symbol {_position}.");
-                return null;
-            }
+            if (_position != _code.Length) 
+                throw new Exception($"Error has appeared in symbol {_position}.");
+                
             return _predicateTokens;
         }
 
@@ -30,7 +29,6 @@ namespace RPG.Core.Predicate {
             foreach (var type in PredicateLexicon.TokenTypes.Values) {
                 var cutCode = _code.Substring(_position);
                 var match = Regex.Match(cutCode, '^' + type.regex);
-                // Debug.Log(result.Result("").Length + " " + result.Result(""));
                 if (!match.Success || match.Value.Length < 1) continue;
                 var token = new PredicateToken(type, match.Value, _position); 
                 _position += match.Value.Length;
