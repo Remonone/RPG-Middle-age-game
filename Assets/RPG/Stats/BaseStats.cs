@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using RPG.Combat.Buffs;
-using RPG.Combat.Modifiers;
 using RPG.Core.Predicate;
 using RPG.Saving;
-using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Stats {
@@ -22,6 +21,7 @@ namespace RPG.Stats {
         public event Action OnLevelUp;
 
         private List<PredicatedStats> _predicatedStats = new List<PredicatedStats>();
+        private List<PredicatedStats> _temporaryStats = new List<PredicatedStats>();
 
         protected override void OnAwake() {
             Buffs = GetComponent<BuffContainer>();
@@ -46,77 +46,70 @@ namespace RPG.Stats {
         public override void Predicate(string command, object[] arguments, out object result) {
             result = command switch {
                 "AmplifyStat" => AmplifyStat(arguments),
+                "CancelStat" => CancelStat(arguments),
                 _ => null
             };
-
+        }
+        
+        private bool AmplifyStat(object[] args) {
+            var statToChange = GetAmplifyStat(args);
+            if (statToChange == null) return false;
+            if(Convert.ToInt32(args[3]) == 0)
+                _temporaryStats.Add(statToChange);
+            else
+                _predicatedStats.Add(statToChange);
+            return true;
         }
 
-        private bool AmplifyStat(object[] args) {
-            Debug.Log("Amplifying");
+        private bool CancelStat(object[] args) {
+            var stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0]));
+            if (Convert.ToInt32(args[1]) == 0) {
+                _temporaryStats.RemoveAll(predicate => predicate.Stat == stat);
+                return true;
+            }
+            _predicatedStats.RemoveAll(predicate => predicate.Stat == stat);
+            return true;
+        }
+
+        [CanBeNull]
+        private PredicatedStats GetAmplifyStat(object[] args) {
             try {
-                Debug.Log(args);
-                _predicatedStats.Add(new PredicatedStats {
+                var stats = new PredicatedStats {
                     Stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0])),
                     FlatValue = (float)Convert.ToDouble(args[1]),
                     PercentValue = (float)Convert.ToDouble(args[2])
-                });
-                return true;
+                };
+                return stats;
             }
             catch (Exception) {
-                Debug.Log((float)Convert.ToDouble(args[1]));
-                return false;
+                return null;
             }
         }
         
         private float CalculatePercentStatChangers(Stat stat) {
-            IStatModifier[] statChangers = GetComponents<IStatModifier>();
             float totalValue = 1f;
             
-            foreach (var part in statChangers) {
-                totalValue += part.ReflectFlatStat(stat);
-            }
-
+            var temporary = _temporaryStats.SingleOrDefault(predicatedStat => predicatedStat.Stat == stat);
+            totalValue += temporary?.PercentValue ?? 0;
+            _temporaryStats.Remove(temporary);
+            
             var predicate = _predicatedStats.SingleOrDefault(predicated => predicated.Stat == stat);
             totalValue += predicate?.PercentValue ?? 0;
-
             return totalValue;
         }
 
         private float CalculateFlatStatChangers(Stat stat) {
-            IStatModifier[] statChangers = GetComponents<IStatModifier>();
-            float totalValue = 0f;
+            float totalValue = 1f;
             
-            foreach (var part in statChangers) {
-                totalValue += part.ReflectPercentStat(stat);
-            }
+            var temporary = _temporaryStats.SingleOrDefault(predicatedStat => predicatedStat.Stat == stat);
+            totalValue += temporary?.FlatValue ?? 0;
+            _temporaryStats.Remove(temporary);
+            
             var predicate = _predicatedStats.SingleOrDefault(predicated => predicated.Stat == stat);
             totalValue += predicate?.FlatValue ?? 0;
-
             return totalValue;
         }
-        #if UNITY_EDITOR
         
-        private void Start() {
-            UpdateInfo();
-        }
-        void UpdateInfo() {
-            _info.UpdateInfo(GetStatValue(Stat.BASE_HEALTH), GetStatValue(Stat.PHYSICAL_RESISTANCE), GetStatValue(Stat.HEALTH_REGEN));
-        }
-        [SerializeField] private ReadOnlyStats _info;
-
-        
-        [Serializable]
-        internal sealed class ReadOnlyStats {
-            [ReadOnly] public float _baseHealth;
-            [ReadOnly] public float _basePhysicalResist;
-            [ReadOnly] public float _baseRegen;
-            public void UpdateInfo(float baseHealth, float baseResist, float baseRegen) {
-                _baseHealth = baseHealth;
-                _basePhysicalResist = baseResist;
-                _baseRegen = baseRegen;
-            }
-        }
-        #endif
         public JToken CaptureAsJToken() {
             return new JObject(
                 new JProperty("level", _level),

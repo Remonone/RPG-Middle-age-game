@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using RPG.Combat.Modifiers;
 using RPG.Inventories.Items;
 using RPG.Stats;
 using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Combat.Buffs {
-    public abstract class Buff : ScriptableObject, IStatModifier, ISerializationCallbackReceiver {
+    public abstract class Buff : ScriptableObject, ISerializationCallbackReceiver {
 
 
         private static Dictionary<string, Buff> _buffStore;
@@ -44,8 +43,6 @@ namespace RPG.Combat.Buffs {
         /// </summary>
         public abstract void CastBuff(int quantity, params object[] cast);
 
-        public abstract float ReflectFlatStat(Stat stat);
-        public abstract float ReflectPercentStat(Stat stat);
 
         public static Buff GetBuffById(string buffID) {
             if (_buffStore == null) {

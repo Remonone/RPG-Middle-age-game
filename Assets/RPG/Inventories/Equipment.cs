@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using RPG.Combat.Modifiers;
+using RPG.Core.Predicate;
 using RPG.Inventories.Items;
 using RPG.Saving;
 using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Inventories {
-    public class Equipment : MonoBehaviour, IStatModifier, ISaveable {
+    public class Equipment : PredicateMonoBehaviour, ISaveable {
 
         private Dictionary<EquipmentSlots, EquipmentItem> _items = new Dictionary<EquipmentSlots, EquipmentItem>();
+
+        private BaseStats _stats;
 
         public event Action OnEquipmentChange;
         
@@ -22,18 +24,17 @@ namespace RPG.Inventories {
         public void PlaceEquipment(EquipmentItem item, EquipmentSlots equipmentSlot) {
             if (item.Slot != equipmentSlot) return;
             _items[equipmentSlot] = item;
+            var predicate = string.Format(item.OnEquipPredicate, _stats.ComponentID);
+            PredicateWorker.ParsePredicate(predicate, ComponentID);
             OnEquipmentChange?.Invoke();
         }
         public void RemoveEquipment(EquipmentSlots equipmentSlot) {
+            var predicate = string.Format(_items[equipmentSlot].OnUnequipPredicate, _stats.ComponentID);
+            PredicateWorker.ParsePredicate(predicate, ComponentID);
             _items[equipmentSlot] = null;
             OnEquipmentChange?.Invoke();
         }
-        public float ReflectFlatStat(Stat stat) {
-            return _items.Values.Where(item => item != null).Sum(item => item.ReflectFlatStat(stat));
-        }
-        public float ReflectPercentStat(Stat stat) {
-            return _items.Values.Where(item => item != null).Sum(item => item.ReflectPercentStat(stat));
-        }
+        
         public JToken CaptureAsJToken() {
             var equipmentInfo = new JProperty("equipment", new JArray(
                 from equipmentID in _items 
@@ -50,6 +51,11 @@ namespace RPG.Inventories {
                 var slot = Enum.Parse<EquipmentSlots>((string)state["slot"]);
                 _items[slot] = (EquipmentItem) item;
             }
+        }
+        public override void Predicate(string command, object[] arguments, out object result) {
+            result = command switch {
+                _ => null
+            };
         }
     }
 }
