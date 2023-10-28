@@ -17,9 +17,11 @@ namespace RPG.Stats {
         [SerializeField] private float _experience;
 
         public BuffContainer Buffs;
+        
 
         public event Action OnLevelUp;
-
+        public event Action OnStatUpdated;
+        
         private List<PredicatedStats> _predicatedStats = new List<PredicatedStats>();
         private List<PredicatedStats> _temporaryStats = new List<PredicatedStats>();
 
@@ -49,19 +51,26 @@ namespace RPG.Stats {
                 "CancelStat" => CancelStat(arguments),
                 _ => null
             };
+            if (result != null) OnStatUpdated?.Invoke();
         }
         
         private bool AmplifyStat(object[] args) {
-            var statToChange = GetAmplifyStat(args);
-            if (statToChange == null) return false;
-            if(Convert.ToInt32(args[3]) == 0)
-                _temporaryStats.Add(statToChange);
+            ValidateArgs(args, typeof(string), typeof(float), typeof(float), typeof(bool));
+            for (int i = 0; i < args.Length; i++) args[i] = Convert.ToString(args[i]);
+            var stats = new PredicatedStats {
+                Stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0])),
+                FlatValue = (float)Convert.ToDouble(args[1]),
+                PercentValue = (float)Convert.ToDouble(args[2])
+            };
+            if(Convert.ToBoolean(args[3]))
+                _temporaryStats.Add(stats);
             else
-                _predicatedStats.Add(statToChange);
+                _predicatedStats.Add(stats);
             return true;
         }
 
         private bool CancelStat(object[] args) {
+            ValidateArgs(args, typeof(string), typeof(bool));
             var stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0]));
             if (Convert.ToInt32(args[1]) == 0) {
                 _temporaryStats.RemoveAll(predicate => predicate.Stat == stat);
@@ -70,21 +79,7 @@ namespace RPG.Stats {
             _predicatedStats.RemoveAll(predicate => predicate.Stat == stat);
             return true;
         }
-
-        [CanBeNull]
-        private PredicatedStats GetAmplifyStat(object[] args) {
-            try {
-                var stats = new PredicatedStats {
-                    Stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0])),
-                    FlatValue = (float)Convert.ToDouble(args[1]),
-                    PercentValue = (float)Convert.ToDouble(args[2])
-                };
-                return stats;
-            }
-            catch (Exception) {
-                return null;
-            }
-        }
+        
         
         private float CalculatePercentStatChangers(Stat stat) {
             float totalValue = 1f;

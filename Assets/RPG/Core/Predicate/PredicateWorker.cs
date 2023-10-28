@@ -25,12 +25,12 @@ namespace RPG.Core.Predicate {
             return _predicateStore.Remove(id);
         }
 
-        public static void ParsePredicate(string parse, string sessionID) { // PIZDA
+        public static void ParsePredicate(string parse, string sessionID) {
             try {
                 var list = _lexer.LexAnalysis(parse);
-                foreach (var item in list) {
-                    Debug.Log("Type: " + item.type + "; Value: " + item.text);
-                }
+                // foreach (var item in list) {
+                //     Debug.Log("Type: " + item.type + "; Value: " + item.text);
+                // }
                 var treeNode = _parser.ParseCode(list);
                 var result = RunNodes(treeNode, sessionID);
             }
@@ -64,12 +64,8 @@ namespace RPG.Core.Predicate {
                 _variableStore[sessionID].Remove(delete.ToDelete.text);
             }
 
-            if (node.GetType() == typeof(NumberNode)) {
-                objects = Convert.ToDecimal(((NumberNode)node).Number.text);
-            }
-
-            if (node.GetType() == typeof(StringNode)) {
-                objects = ((StringNode)node).StringLine.text;
+            if (node.GetType() == typeof(ValueNode)) {
+                objects = ((ValueNode)node).Value.text;
             }
 
             if (node.GetType() == typeof(VariableNode)) {

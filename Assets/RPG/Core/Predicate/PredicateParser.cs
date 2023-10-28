@@ -23,7 +23,7 @@ namespace RPG.Core.Predicate {
         
         private PredicateToken Require(params TokenType[] expected) {
             var token = Match(expected);
-            if (token == null) throw new Exception($"Type mismatch. In {_position} position expected {expected[0]}. Received: {_tokens[_position].type}");
+            if (token == null) throw new Exception($"Type mismatch. In {_position} position expected {expected[0]}. Received: {_tokens[_position]}");
             return token;
         }
 
@@ -48,14 +48,14 @@ namespace RPG.Core.Predicate {
             }
             if (Match(PredicateLexicon.TokenTypes["DELETE"]) != null) {
                 CheckOnStep();
-                var deletingNode = Require(PredicateLexicon.TokenTypes["STRING"]);
+                var deletingNode = Require(PredicateLexicon.TokenTypes["VALUE"]);
                 return new DeleteNode{ToDelete = deletingNode};
             }
 
             if (Match(PredicateLexicon.TokenTypes["VARIABLE"]) == null)
                 throw new Exception("Expected operating with component or variable operator");
             CheckOnStep();
-            var variableName = Match(PredicateLexicon.TokenTypes["STRING"]);
+            var variableName = Match(PredicateLexicon.TokenTypes["VALUE"]);
             if (variableName == null) throw new Exception("Variable name is empty/incorrect");
             CheckOnStep();
             var value = ParseFormula();
@@ -68,7 +68,7 @@ namespace RPG.Core.Predicate {
         }
         
         private FunctionNode ParseFunctionInvocation() {
-            var functionName = Match(PredicateLexicon.TokenTypes["STRING"]);
+            var functionName = Match(PredicateLexicon.TokenTypes["VALUE"]);
             if (functionName == null) throw new Exception("Incorrect method call");
             CheckOnStep();
             if (Match(PredicateLexicon.TokenTypes["EMPTY"]) != null) return new FunctionNode{Name = functionName, Args = null};
@@ -89,10 +89,9 @@ namespace RPG.Core.Predicate {
 
         }
         private ExpressionNode ParseVariableOrNumber() {
-            var token = Match(PredicateLexicon.TokenTypes["NUMBER"], PredicateLexicon.TokenTypes["STRING"], PredicateLexicon.TokenTypes["REFERENCE"], PredicateLexicon.TokenTypes["IDENTIFIER"]);
-            if (token == null) throw new Exception("Awaits reference or number...");
-            if (token.type.name == "STRING") return new StringNode { StringLine = token };
-            if (token.type.name == "NUMBER") return new NumberNode { Number = token };
+            var token = Match(PredicateLexicon.TokenTypes["VALUE"], PredicateLexicon.TokenTypes["REFERENCE"], PredicateLexicon.TokenTypes["IDENTIFIER"]);
+            if (token == null) throw new Exception("Awaits reference or value...");
+            if (token.type.name == "VALUE") return new ValueNode { Value = token };
             if(token.type.name == "REFERENCE") return new VariableNode { Variable = token };
             var identifier = ParseIdentifier();
             var function = ParseFunctionInvocation();
@@ -112,7 +111,7 @@ namespace RPG.Core.Predicate {
 
         
         private IdentifierNode ParseIdentifier() {
-            var id = Require(PredicateLexicon.TokenTypes["STRING"]);
+            var id = Require(PredicateLexicon.TokenTypes["VALUE"]);
             if (id == null) throw new Exception("ID of component is empty.");
             CheckOnStep();
             return new IdentifierNode { ID = id };

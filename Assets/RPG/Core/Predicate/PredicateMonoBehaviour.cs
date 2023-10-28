@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using Unity.Collections;
+using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Core.Predicate {
@@ -25,6 +24,20 @@ namespace RPG.Core.Predicate {
         private void OnDestroy() {
             PredicateWorker.DestroyPredicate(_componentID);
             OnDestroyEvent();
+        }
+
+        protected bool ValidateArgs(object[] args, params Type[] expected) {
+            if (args.Length != expected.Length) return false;
+            // var counter = 0;
+            // foreach (var arg in args) {
+            //     Debug.Log(arg + " " + expected[counter]);
+            //     var stringValue = Convert.ToString(arg);
+            //     counter++;
+            //     if(stringValue.GetTypeCode().ToString() != expected.ToString()) 
+            //         Debug.LogError($"Argument {arg} of type {stringValue.GetTypeCode().ToString()} type mismatch. Expected: {expected[counter - 1]}.");
+            // } NOT WORKING
+
+            return true;
         }
         
         // TODO: Might be changable...

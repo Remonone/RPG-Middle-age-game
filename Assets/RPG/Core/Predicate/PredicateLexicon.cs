@@ -5,8 +5,8 @@ namespace RPG.Core.Predicate {
     
     public static class PredicateLexicon {
         public static readonly Dictionary<string, TokenType> TokenTypes = new Dictionary<string, TokenType> {
-            {"STRING", new TokenType("STRING", @"(?=.*[a-zA-Z_])[\w\d_]+")},
-            {"NUMBER", new TokenType("NUMBER", @"[-+]?(\d+\.\d+|\.\d+|\d+)")},
+            {"VALUE", new TokenType("VALUE", @"[A-Za-z0-9._]*")}, // (?=.*[a-zA-Z_])[\w\d_]+)"
+            // {"NUMBER", new TokenType("NUMBER", @"[-+]?(\d+\.\d+|\.\d+|\d+)")},
             {"IDENTIFIER", new TokenType("IDENTIFIER", @"#")},
             {"STEP", new TokenType("STEP", @":")},
             {"PRE_CONDITION", new TokenType("PRE_CONDITION", @"[c_]")},
@@ -18,8 +18,8 @@ namespace RPG.Core.Predicate {
             {"MULTIPLY", new TokenType("MULTIPLY", @"\*")},
             {"DIVIDE", new TokenType("DIVIDE", @"\/")},
             {"EMPTY", new TokenType("EMPTY", @"@")},
-            {"END", new TokenType("END", @"\.")},
-            {"NEXT", new TokenType("NEXT", @"\;")},
+            {"END", new TokenType("END", @"\;")},
+            {"NEXT", new TokenType("NEXT", @"\,")},
             {"CONDITION_START", new TokenType("CONDITION_START", @"<")},
             {"CONDITION_END", new TokenType("CONDITION_END", @">")},
             {"LPAR", new TokenType("LPAR", @"\(")},

@@ -16,6 +16,10 @@ namespace RPG.Inventories {
         private BaseStats _stats;
 
         public event Action OnEquipmentChange;
+
+        private void Awake() {
+            _stats = GetComponent<BaseStats>();
+        }
         
         public EquipmentItem GetEquipmentItem(EquipmentSlots equipmentSlot) {
             if(_items.ContainsKey(equipmentSlot)) return _items[equipmentSlot];

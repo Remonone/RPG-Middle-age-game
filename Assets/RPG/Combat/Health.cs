@@ -19,6 +19,13 @@ namespace RPG.Combat {
             _stats = GetComponent<BaseStats>();
         }
 
+        private void OnEnable() {
+            _stats.OnStatUpdated += OnStatUpdated;
+        }
+        private void OnStatUpdated() {
+            _maxHealth = _stats.GetStatValue(Stat.BASE_HEALTH);
+        }
+
         private void Start() {
             _maxHealth = _stats.GetStatValue(Stat.BASE_HEALTH);
         }
