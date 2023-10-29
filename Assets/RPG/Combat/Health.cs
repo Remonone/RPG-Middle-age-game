@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
+using RPG.Core.Predicate;
 using RPG.Saving;
 using RPG.Stats;
 using RPG.Utils;
@@ -7,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace RPG.Combat {
-    public class Health : MonoBehaviour, ISaveable {
+    public class Health : PredicateMonoBehaviour, ISaveable {
         private BaseStats _stats;
         [ReadOnly] [SerializeField] private float _currentHealth = 0;
         [ReadOnly] [SerializeField] private float _maxHealth;
@@ -21,6 +22,9 @@ namespace RPG.Combat {
 
         private void OnEnable() {
             _stats.OnStatUpdated += OnStatUpdated;
+        }
+        public override void Predicate(string command, object[] arguments, out object result) {
+            throw new NotImplementedException();
         }
         private void OnStatUpdated() {
             _maxHealth = _stats.GetStatValue(Stat.BASE_HEALTH);

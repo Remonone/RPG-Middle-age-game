@@ -62,7 +62,7 @@ namespace RPG.Stats {
                 FlatValue = (float)Convert.ToDouble(args[1]),
                 PercentValue = (float)Convert.ToDouble(args[2])
             };
-            if(Convert.ToBoolean(args[3]))
+            if(Convert.ToInt32(args[3]) == 0)
                 _temporaryStats.Add(stats);
             else
                 _predicatedStats.Add(stats);

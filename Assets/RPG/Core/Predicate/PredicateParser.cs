@@ -111,10 +111,18 @@ namespace RPG.Core.Predicate {
 
         
         private IdentifierNode ParseIdentifier() {
-            var id = Require(PredicateLexicon.TokenTypes["VALUE"]);
+            var id = Require(PredicateLexicon.TokenTypes["VALUE"], PredicateLexicon.TokenTypes["REFERENCE"]);
+            var node = new ExpressionNode();
             if (id == null) throw new Exception("ID of component is empty.");
+            if (id.type.name == "REFERENCE") {
+                id = Require(PredicateLexicon.TokenTypes["VALUE"]);
+                node = new VariableNode { Variable = id };
+            }
+            else {
+                node = new ValueNode { Value = id };
+            }
             CheckOnStep();
-            return new IdentifierNode { ID = id };
+            return new IdentifierNode { ID = node };
         }
     }
 }

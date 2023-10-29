@@ -46,7 +46,9 @@ namespace RPG.Core.Predicate {
             }
             if (node.GetType() == typeof(SenderNode)) {
                 var sender = (SenderNode)node;
-                var component = _predicateStore[sender.Receiver.ID.text];
+                var receiver = sender.Receiver.ID;
+                var id = Convert.ToString(RunNodes(receiver, sessionID));
+                var component = _predicateStore[id];
                 if (component != null) {
                     component.Predicate(sender.Action.Name.text,
                         sender.Action.Args.Select(arg => RunNodes(arg, sessionID)).ToArray(), out var result);

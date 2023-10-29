@@ -1,12 +1,14 @@
 using System;
+using System.Linq;
 using RPG.Combat;
+using RPG.Core.Predicate;
 using RPG.Movement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace RPG.Control {
-    public class PlayerController : MonoBehaviour {
+    public class PlayerController : PredicateMonoBehaviour {
         [SerializeField] private Camera _camera;
         [SerializeField] private InputActionMap _map;
         
@@ -20,6 +22,41 @@ namespace RPG.Control {
 
         private void OnEnable() {
             _map.Enable();
+        }
+        public override void Predicate(string command, object[] arguments, out object result) {
+            result = command switch {
+               "FindNearByLayer" => FindNearByLayer(arguments),
+               "FindNearByTag" => FindNearByTag(arguments),
+                _ => null
+            };
+        }
+        private object FindNearByTag(object[] args) {
+            ValidateArgs(args, typeof(string), typeof(string), typeof(int));
+            string array = "[";
+            foreach (var obj in Physics.OverlapSphere(transform.position, (float)Convert.ToDouble(args[2]))) {
+                if (!obj.gameObject.CompareTag(Convert.ToString(args[0]))) continue;
+                var component = obj.GetComponent(Convert.ToString(args[1]));
+                if (component.GetType() == typeof(PredicateMonoBehaviour))
+                    array += ((PredicateMonoBehaviour)component).ComponentID + ",";
+            }
+            if (array.Length != 1) array = array.Substring(0, array.Length - 1);
+            array += "]";
+            
+            return array;
+        }
+        private object FindNearByLayer(object[] args) {
+            ValidateArgs(args, typeof(string), typeof(string), typeof(int));
+            string array = "[";
+            foreach (var obj in Physics.OverlapSphere(transform.position, (float)Convert.ToDouble(args[2]))) {
+                if (!obj.gameObject.CompareTag(Convert.ToString(args[0]))) continue;
+                var component = obj.GetComponent(Convert.ToString(args[1]));
+                if (component.GetType() == typeof(PredicateMonoBehaviour))
+                    array += ((PredicateMonoBehaviour)component).ComponentID + ",";
+            }
+            if (array.Length != 1) array = array.Substring(0, array.Length - 1);
+            array += "]";
+            
+            return array;
         }
 
         private void OnDisable() {

@@ -5,13 +5,12 @@ namespace RPG.Core.Predicate {
     
     public static class PredicateLexicon {
         public static readonly Dictionary<string, TokenType> TokenTypes = new Dictionary<string, TokenType> {
-            {"VALUE", new TokenType("VALUE", @"[A-Za-z0-9._]*")}, // (?=.*[a-zA-Z_])[\w\d_]+)"
-            // {"NUMBER", new TokenType("NUMBER", @"[-+]?(\d+\.\d+|\.\d+|\d+)")},
+            {"VALUE", new TokenType("VALUE", @"[A-Za-z0-9._]*")},
             {"IDENTIFIER", new TokenType("IDENTIFIER", @"#")},
             {"STEP", new TokenType("STEP", @":")},
             {"PRE_CONDITION", new TokenType("PRE_CONDITION", @"[c_]")},
             {"POST_CONDITION", new TokenType("POST_CONDITION", @"[_c]")},
-            {"VARIABLE", new TokenType("VARIABLE", "VAR")},
+            {"VARIABLE", new TokenType("VARIABLE", @"VAR")},
             {"REFERENCE", new TokenType("REFERENCE", @"&")},
             {"PLUS", new TokenType("PLUS", @"+")},
             {"MINUS", new TokenType("MINUS", @"-")},
@@ -25,6 +24,7 @@ namespace RPG.Core.Predicate {
             {"LPAR", new TokenType("LPAR", @"\(")},
             {"RPAR", new TokenType("RPAR", @"\)")},
             {"DELETE", new TokenType("DELETE", @"DEL")}
+            //TODO: Array object;
         };
         
     }

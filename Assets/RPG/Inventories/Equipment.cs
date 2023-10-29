@@ -10,6 +10,12 @@ using UnityEngine;
 
 namespace RPG.Inventories {
     public class Equipment : PredicateMonoBehaviour, ISaveable {
+        
+        // 1. Receive Component by tag
+        // 2. Make PlayerController as PredicateMonoBehaviour
+        // 3. Make function in PlayerController which work with environment
+        // 4. Call PlayerController and receive id of the component which would be written in variable
+        // 5. When you call component you may call id of the component by variable
 
         private Dictionary<EquipmentSlots, EquipmentItem> _items = new Dictionary<EquipmentSlots, EquipmentItem>();
 
@@ -28,12 +34,16 @@ namespace RPG.Inventories {
         public void PlaceEquipment(EquipmentItem item, EquipmentSlots equipmentSlot) {
             if (item.Slot != equipmentSlot) return;
             _items[equipmentSlot] = item;
-            var predicate = string.Format(item.OnEquipPredicate, _stats.ComponentID);
+            var predicate = string.Format(item.OnEquipPredicate.CodePredicate, 
+                item.OnEquipPredicate.ComponentName.Select(component => ((PredicateMonoBehaviour)GetComponent(component)).ComponentID));
             PredicateWorker.ParsePredicate(predicate, ComponentID);
             OnEquipmentChange?.Invoke();
         }
+        
         public void RemoveEquipment(EquipmentSlots equipmentSlot) {
-            var predicate = string.Format(_items[equipmentSlot].OnUnequipPredicate, _stats.ComponentID);
+            var predicate = 
+                string.Format(_items[equipmentSlot].OnUnequipPredicate.CodePredicate, 
+                    _items[equipmentSlot].OnUnequipPredicate.ComponentName.Select(component => ((PredicateMonoBehaviour)GetComponent(component)).ComponentID));
             PredicateWorker.ParsePredicate(predicate, ComponentID);
             _items[equipmentSlot] = null;
             OnEquipmentChange?.Invoke();

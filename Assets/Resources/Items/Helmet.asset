@@ -19,5 +19,5 @@ MonoBehaviour:
   _stackable: 0
   _slot: 0
   _buffs: []
-  _onEquipPredicate: '#{0}:AmplifyStat:BASE_HEALTH,100,0.3,1;#{0}:AmplifyStat:PHYSICAL_RESISTANCE,10,0,1;'
-  _onUnequipPredicate: '#{0}:AmplifyStat:BASE_HEALTH,1;#{0}:AmplifyStat:PHYSICAL_RESISTANCE,1;'
+  _onEquipPredicate: '#{0}:AmplifyStat:BASE_HEALTH,100.0,0.3,true;#{0}:AmplifyStat:PHYSICAL_RESISTANCE,10.0,0.0,true;'
+  _onUnequipPredicate: '#{0}:AmplifyStat:BASE_HEALTH,true;#{0}:AmplifyStat:PHYSICAL_RESISTANCE,true;'
