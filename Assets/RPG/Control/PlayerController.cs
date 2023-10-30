@@ -3,6 +3,7 @@ using System.Linq;
 using RPG.Combat;
 using RPG.Core.Predicate;
 using RPG.Movement;
+using RPG.UI.Cursors;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -11,9 +12,24 @@ namespace RPG.Control {
     public class PlayerController : PredicateMonoBehaviour {
         [SerializeField] private Camera _camera;
         [SerializeField] private InputActionMap _map;
+        [SerializeField] private CursorPreview[] _cursors;
         
         private Mover _mover;
         private Fighter _fighter;
+        
+        // PUBLIC
+
+        public InputActionMap Map => _map;        
+        
+        public override void Predicate(string command, object[] arguments, out object result) {
+            result = command switch {
+                "FindNearByLayer" => FindNearByLayer(arguments),
+                "FindNearByTag" => FindNearByTag(arguments),
+                _ => null
+            };
+        }
+        
+        // PRIVATE
 
         private void Awake() {
             _mover = GetComponent<Mover>();
@@ -23,42 +39,7 @@ namespace RPG.Control {
         private void OnEnable() {
             _map.Enable();
         }
-        public override void Predicate(string command, object[] arguments, out object result) {
-            result = command switch {
-               "FindNearByLayer" => FindNearByLayer(arguments),
-               "FindNearByTag" => FindNearByTag(arguments),
-                _ => null
-            };
-        }
-        private object FindNearByTag(object[] args) {
-            ValidateArgs(args, typeof(string), typeof(string), typeof(int));
-            string array = "[";
-            foreach (var obj in Physics.OverlapSphere(transform.position, (float)Convert.ToDouble(args[2]))) {
-                if (!obj.gameObject.CompareTag(Convert.ToString(args[0]))) continue;
-                var component = obj.GetComponent(Convert.ToString(args[1]));
-                if (component.GetType() == typeof(PredicateMonoBehaviour))
-                    array += ((PredicateMonoBehaviour)component).ComponentID + ",";
-            }
-            if (array.Length != 1) array = array.Substring(0, array.Length - 1);
-            array += "]";
-            
-            return array;
-        }
-        private object FindNearByLayer(object[] args) {
-            ValidateArgs(args, typeof(string), typeof(string), typeof(int));
-            string array = "[";
-            foreach (var obj in Physics.OverlapSphere(transform.position, (float)Convert.ToDouble(args[2]))) {
-                if (!obj.gameObject.CompareTag(Convert.ToString(args[0]))) continue;
-                var component = obj.GetComponent(Convert.ToString(args[1]));
-                if (component.GetType() == typeof(PredicateMonoBehaviour))
-                    array += ((PredicateMonoBehaviour)component).ComponentID + ",";
-            }
-            if (array.Length != 1) array = array.Substring(0, array.Length - 1);
-            array += "]";
-            
-            return array;
-        }
-
+        
         private void OnDisable() {
             _map.Disable();
         }
@@ -67,12 +48,15 @@ namespace RPG.Control {
             if (InteractWithUI()) return;
             if (InteractWithComponent()) return;
             if (MoveTowardPoint()) return;
+            SetCursor(CursorType.EMPTY);
         }
         private bool InteractWithUI() {
             var isOverUI = EventSystem.current.IsPointerOverGameObject();
-            return isOverUI && _map["Action"].WasPressedThisFrame();
+            var shouldActive = isOverUI && _map["Action"].WasPressedThisFrame();
+            if (shouldActive) SetCursor(CursorType.UI);
+            return shouldActive;
         }
-        
+
         private bool InteractWithComponent() {
             if (!_map["Action"].WasPressedThisFrame()) return false;
             var hits = SortedRaycast();
@@ -104,9 +88,54 @@ namespace RPG.Control {
             Physics.Raycast(direction, out var hit, 100F);
             if (hit.collider != null) {
                 _mover.StartMovingToPoint(hit.point);
+                SetCursor(CursorType.MOVEMENT);
                 return true;
             }
             return false;
         }
+        
+        private void SetCursor(CursorType type) {
+            var cursor = _cursors.Single(cursor => cursor.Type == type);
+            Cursor.SetCursor(cursor.Image, cursor.Hotspot, CursorMode.Auto);
+        }
+        
+        // PREDICATES
+        
+        private object FindNearByTag(object[] args) {
+            ValidateArgs(args, typeof(string), typeof(string), typeof(int));
+            string array = "[";
+            foreach (var obj in Physics.OverlapSphere(transform.position, (float)Convert.ToDouble(args[2]))) {
+                if (!obj.gameObject.CompareTag(Convert.ToString(args[0]))) continue;
+                var component = obj.GetComponent(Convert.ToString(args[1]));
+                if (component.GetType() == typeof(PredicateMonoBehaviour))
+                    array += ((PredicateMonoBehaviour)component).ComponentID + ",";
+            }
+            if (array.Length != 1) array = array.Substring(0, array.Length - 1);
+            array += "]";
+            
+            return array;
+        }
+        private object FindNearByLayer(object[] args) {
+            ValidateArgs(args, typeof(string), typeof(string), typeof(int));
+            string array = "[";
+            foreach (var obj in Physics.OverlapSphere(transform.position, 
+                         (float)Convert.ToDouble(args[2]), LayerMask.NameToLayer(Convert.ToString(args[0])))) {
+                
+                var component = obj.GetComponent(Convert.ToString(args[1]));
+                if (component.GetType() == typeof(PredicateMonoBehaviour))
+                    array += ((PredicateMonoBehaviour)component).ComponentID + ",";
+            }
+            if (array.Length != 1) array = array.Substring(0, array.Length - 1);
+            array += "]";
+            
+            return array;
+        }
+    }
+
+    [Serializable]
+    internal sealed class CursorPreview {
+        public CursorType Type;
+        public Texture2D Image;
+        public Vector2 Hotspot;
     }
 }

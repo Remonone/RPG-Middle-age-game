@@ -1,11 +1,13 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 using RPG.Combat.DamageDefinition;
+using RPG.Control;
 using RPG.Core;
 using RPG.Core.Predicate;
 using RPG.Movement;
 using RPG.Saving;
 using RPG.Stats;
+using RPG.UI.Cursors;
 using RPG.Utils;
 using UnityEngine;
 
@@ -29,6 +31,24 @@ namespace RPG.Combat {
         private readonly int _hTrigger = Animator.StringToHash("Trigger");
 
         private string AmplifyPredicate = "#{0}:AmplifyStat:BASE_ATTACK;5;0.";
+        
+        // PUBLIC
+
+        public bool CanAttack(Health target) => target is { IsAlive: true };
+        
+        public void Cancel() {
+            _target = null;
+        }
+
+        public void Attack(SelectableEnemy target) {
+            if (!target._isTargetable) return;
+            var health = target.GetComponent<Health>();
+            if (health == null || !health.IsAlive) return;
+            _scheduler.SwitchAction(this);
+            _target = health;
+        }
+        
+        // PRIVATE
 
         private void Awake() {
             _mover = GetComponent<Mover>();
@@ -65,16 +85,5 @@ namespace RPG.Combat {
             _target.HitEntity(report);
         }
 
-        public void Cancel() {
-            _target = null;
-        }
-
-        public void Attack(SelectableEnemy target) {
-            if (!target._isTargetable) return;
-            var health = target.GetComponent<Health>();
-            if (health == null || !health.IsAlive) return;
-            _scheduler.SwitchAction(this);
-            _target = health;
-        }
     }
 }

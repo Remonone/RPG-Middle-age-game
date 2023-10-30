@@ -23,7 +23,9 @@ namespace RPG.Core.Predicate {
             {"CONDITION_END", new TokenType("CONDITION_END", @">")},
             {"LPAR", new TokenType("LPAR", @"\(")},
             {"RPAR", new TokenType("RPAR", @"\)")},
-            {"DELETE", new TokenType("DELETE", @"DEL")}
+            {"DELETE", new TokenType("DELETE", @"DEL")},
+            {"[", new TokenType("ARRAY_START", @"\[")},
+            {"]", new TokenType("ARRAY_END", @"\]")}
             //TODO: Array object;
         };
         
