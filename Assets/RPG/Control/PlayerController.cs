@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using RPG.Combat;
 using RPG.Core.Predicate;
 using RPG.Movement;
 using RPG.UI.Cursors;
+using RPG.UI.Templates;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -15,6 +17,15 @@ namespace RPG.Control {
         [SerializeField] private CursorPreview[] _cursors;
         private Mover _mover;
         private Fighter _fighter;
+
+        [Serializable]
+        public class Test { 
+            public string test1;
+            public int test2;
+            public float test3;
+            public Vector3 test4;
+        }
+        [SerializeField] [Foldout] private Test list;
 
         
         // PUBLIC
