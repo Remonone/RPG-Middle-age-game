@@ -89,13 +89,11 @@ namespace RPG.Core.Predicate {
 
         }
         private ExpressionNode ParseVariableOrNumber() {
-            var token = Match(PredicateLexicon.TokenTypes["VALUE"], PredicateLexicon.TokenTypes["REFERENCE"], PredicateLexicon.TokenTypes["IDENTIFIER"]);
+            var token = Match(PredicateLexicon.TokenTypes["VALUE"], PredicateLexicon.TokenTypes["REFERENCE"]);
             if (token == null) throw new Exception("Awaits reference or value...");
             if (token.type.name == "VALUE") return new ValueNode { Value = token };
             if(token.type.name == "REFERENCE") return new VariableNode { Variable = token };
-            var identifier = ParseIdentifier();
-            var function = ParseFunctionInvocation();
-            return new SenderNode{Receiver = identifier, Action = function};
+            throw new Exception("Type does not match.");
         }
 
         private ExpressionNode ParseFormula() {

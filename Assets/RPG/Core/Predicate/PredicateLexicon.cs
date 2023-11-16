@@ -8,8 +8,6 @@ namespace RPG.Core.Predicate {
             {"VALUE", new TokenType("VALUE", @"[A-Za-z0-9._]*")},
             {"IDENTIFIER", new TokenType("IDENTIFIER", @"#")},
             {"STEP", new TokenType("STEP", @":")},
-            {"PRE_CONDITION", new TokenType("PRE_CONDITION", @"[c_]")},
-            {"POST_CONDITION", new TokenType("POST_CONDITION", @"[_c]")},
             {"VARIABLE", new TokenType("VARIABLE", @"VAR")},
             {"REFERENCE", new TokenType("REFERENCE", @"&")},
             {"PLUS", new TokenType("PLUS", @"+")},

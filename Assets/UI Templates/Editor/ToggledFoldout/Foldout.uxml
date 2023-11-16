@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="gp-foldout" class="gp-foldout__toggle">
+        <ui:VisualElement name="header" class="gp-foldout__header">
+            <uie:Toolbar>
+                <ui:Toggle name="Toggle" />
+                <ui:Toggle label="Toggle" name="Toggle" class="unity-foldout__toggle" style="flex-direction: row-reverse; justify-content: flex-start; align-items: stretch; align-self: auto; max-width: none;" />
+            </uie:Toolbar>
+        </ui:VisualElement>
+        <ui:VisualElement name="VisualElement" class="gp-foldout__content" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-shrink: 0; transition-timing-function: ease-in-out; transition-duration: 0.3s; height: auto;" />
+    </ui:VisualElement>
+</ui:UXML>

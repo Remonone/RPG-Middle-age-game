@@ -13,9 +13,9 @@ namespace RPG.Control {
         [SerializeField] private Camera _camera;
         [SerializeField] private InputActionMap _map;
         [SerializeField] private CursorPreview[] _cursors;
-        
         private Mover _mover;
         private Fighter _fighter;
+
         
         // PUBLIC
 
