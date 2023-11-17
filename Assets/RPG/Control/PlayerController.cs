@@ -24,8 +24,9 @@ namespace RPG.Control {
             public int test2;
             public float test3;
             public Vector3 test4;
+            public List<string> list;
         }
-        [SerializeField] [Foldout] private Test list;
+        [SerializeField] [Foldout] private Test test;
 
         
         // PUBLIC

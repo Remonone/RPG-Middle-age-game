@@ -1,2 +1,7 @@
-.gp-foldout__header > .gp-foldout__drop > .unity-toggle__checkmark {
+.gp-foldout__content{
+    overflow: hidden;
+    max-height: 0;
+}
+.gp-foldout__content_visible{
+    max-height: none;
 }

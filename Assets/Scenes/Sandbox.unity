@@ -6680,6 +6680,16 @@ PrefabInstance:
       objectReference: {fileID: 186267743}
     - target: {fileID: 5334357305607278873, guid: d38ab1ba7cecb6e4db43e7b9473a30cc,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334357305607278873, guid: d38ab1ba7cecb6e4db43e7b9473a30cc,
+        type: 3}
+      propertyPath: list.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334357305607278873, guid: d38ab1ba7cecb6e4db43e7b9473a30cc,
+        type: 3}
       propertyPath: strings.Array.size
       value: 0
       objectReference: {fileID: 0}
