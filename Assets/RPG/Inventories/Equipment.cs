@@ -16,16 +16,11 @@ namespace RPG.Inventories {
         // 3. Make function in PlayerController which work with environment
         // 4. Call PlayerController and receive id of the component which would be written in variable
         // 5. When you call component you may call id of the component by variable
-
-        private Dictionary<EquipmentSlots, EquipmentItem> _items = new Dictionary<EquipmentSlots, EquipmentItem>();
-
-        private BaseStats _stats;
-
+        
+        private Dictionary<EquipmentSlots, EquipmentItem> _items = new();
+        
         public event Action OnEquipmentChange;
 
-        private void Awake() {
-            _stats = GetComponent<BaseStats>();
-        }
         
         public EquipmentItem GetEquipmentItem(EquipmentSlots equipmentSlot) {
             if(_items.ContainsKey(equipmentSlot)) return _items[equipmentSlot];
@@ -37,6 +32,7 @@ namespace RPG.Inventories {
             var predicate = string.Format(item.OnEquipPredicate.CodePredicate, 
                 item.OnEquipPredicate.ComponentName.Select(component => ((PredicateMonoBehaviour)GetComponent(component)).ComponentID));
             PredicateWorker.ParsePredicate(predicate, ComponentID);
+            item.RegisterAmplifiers(gameObject);
             OnEquipmentChange?.Invoke();
         }
         

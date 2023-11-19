@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RPG.Inventories.Modifiers;
 using UnityEngine;
 
 namespace RPG.Inventories.Items {
@@ -9,6 +10,7 @@ namespace RPG.Inventories.Items {
         [SerializeField] private string _itemDescription;
         [SerializeField] private Sprite _itemIcon;
         [SerializeField] private bool _stackable;
+        [SerializeField] private List<Modification> _modifications;
 
         private static Dictionary<string, InventoryItem> _itemStore;
 
@@ -29,6 +31,12 @@ namespace RPG.Inventories.Items {
 
         public void DropPickup(int count) {
             
+        }
+
+        public void RegisterAmplifiers(GameObject invoker) {
+            foreach (var mod in _modifications) {
+                mod.PerformModification(invoker);
+            }
         }
 
         public static InventoryItem GetItemByGuid(string itemID) {
