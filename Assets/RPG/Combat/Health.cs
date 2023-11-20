@@ -4,27 +4,28 @@ using RPG.Core.Predicate;
 using RPG.Saving;
 using RPG.Stats;
 using RPG.Utils;
-using UnityEditor;
 using UnityEngine;
 
 namespace RPG.Combat {
     public class Health : PredicateMonoBehaviour, ISaveable {
         private BaseStats _stats;
-        [ReadOnly] [SerializeField] private float _currentHealth = 0;
+        [ReadOnly] [SerializeField] private float _currentHealth;
         [ReadOnly] [SerializeField] private float _maxHealth;
         public bool IsAlive => _currentHealth > 0;
         public event Action OnHitEvent;
         public event Action OnDieEvent;
 
-        private void Awake() {
+        protected override void OnAwake() {
             _stats = GetComponent<BaseStats>();
         }
 
-        private void OnEnable() {
+        protected override void OnEnableEvent() {
             _stats.OnStatUpdated += OnStatUpdated;
         }
         public override void Predicate(string command, object[] arguments, out object result) {
-            throw new NotImplementedException();
+            result = command switch {
+                _ => ""
+            };
         }
         private void OnStatUpdated() {
             _maxHealth = _stats.GetStatValue(Stat.BASE_HEALTH);

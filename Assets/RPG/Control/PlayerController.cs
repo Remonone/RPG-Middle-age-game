@@ -1,45 +1,24 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using RPG.Combat;
-using RPG.Core.Predicate;
 using RPG.Movement;
 using RPG.UI.Cursors;
-using RPG.UI.Templates;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace RPG.Control {
-    public class PlayerController : PredicateMonoBehaviour {
+    public class PlayerController : MonoBehaviour {
         [SerializeField] private Camera _camera;
         [SerializeField] private InputActionMap _map;
         [SerializeField] private CursorPreview[] _cursors;
+        
         private Mover _mover;
         private Fighter _fighter;
-
-        [Serializable]
-        public class Test { 
-            public string test1;
-            public int test2;
-            public float test3;
-            public Vector3 test4;
-            public List<string> list;
-        }
-        [SerializeField] [Foldout] private Test test;
-
         
         // PUBLIC
-
         public InputActionMap Map => _map;        
         
-        public override void Predicate(string command, object[] arguments, out object result) {
-            result = command switch {
-                "FindNearByLayer" => FindNearByLayer(arguments),
-                "FindNearByTag" => FindNearByTag(arguments),
-                _ => null
-            };
-        }
         
         // PRIVATE
 
@@ -109,38 +88,6 @@ namespace RPG.Control {
         private void SetCursor(CursorType type) {
             var cursor = _cursors.Single(cursor => cursor.Type == type);
             Cursor.SetCursor(cursor.Image, cursor.Hotspot, CursorMode.Auto);
-        }
-        
-        // PREDICATES
-        
-        private object FindNearByTag(object[] args) {
-            ValidateArgs(args, typeof(string), typeof(string), typeof(int));
-            string array = "[";
-            foreach (var obj in Physics.OverlapSphere(transform.position, (float)Convert.ToDouble(args[2]))) {
-                if (!obj.gameObject.CompareTag(Convert.ToString(args[0]))) continue;
-                var component = obj.GetComponent(Convert.ToString(args[1]));
-                if (component.GetType() == typeof(PredicateMonoBehaviour))
-                    array += ((PredicateMonoBehaviour)component).ComponentID + ",";
-            }
-            if (array.Length != 1) array = array.Substring(0, array.Length - 1);
-            array += "]";
-            
-            return array;
-        }
-        private object FindNearByLayer(object[] args) {
-            ValidateArgs(args, typeof(string), typeof(string), typeof(int));
-            string array = "[";
-            foreach (var obj in Physics.OverlapSphere(transform.position, 
-                         (float)Convert.ToDouble(args[2]), LayerMask.NameToLayer(Convert.ToString(args[0])))) {
-                
-                var component = obj.GetComponent(Convert.ToString(args[1]));
-                if (component.GetType() == typeof(PredicateMonoBehaviour))
-                    array += ((PredicateMonoBehaviour)component).ComponentID + ",";
-            }
-            if (array.Length != 1) array = array.Substring(0, array.Length - 1);
-            array += "]";
-            
-            return array;
         }
     }
 

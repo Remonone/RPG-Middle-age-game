@@ -5,8 +5,6 @@ using Newtonsoft.Json.Linq;
 using RPG.Core.Predicate;
 using RPG.Inventories.Items;
 using RPG.Saving;
-using RPG.Stats;
-using UnityEngine;
 
 namespace RPG.Inventories {
     public class Equipment : PredicateMonoBehaviour, ISaveable {
@@ -41,6 +39,7 @@ namespace RPG.Inventories {
                 string.Format(_items[equipmentSlot].OnUnequipPredicate.CodePredicate, 
                     _items[equipmentSlot].OnUnequipPredicate.ComponentName.Select(component => ((PredicateMonoBehaviour)GetComponent(component)).ComponentID));
             PredicateWorker.ParsePredicate(predicate, ComponentID);
+            _items[equipmentSlot].UnregisterModifications();
             _items[equipmentSlot] = null;
             OnEquipmentChange?.Invoke();
         }

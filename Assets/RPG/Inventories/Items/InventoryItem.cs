@@ -35,7 +35,13 @@ namespace RPG.Inventories.Items {
 
         public void RegisterAmplifiers(GameObject invoker) {
             foreach (var mod in _modifications) {
-                mod.PerformModification(invoker);
+                mod.RegisterModification(invoker);
+            }
+        }
+
+        public void UnregisterModifications() {
+            foreach (var mod in _modifications) {
+                mod.UnregisterModification();
             }
         }
 

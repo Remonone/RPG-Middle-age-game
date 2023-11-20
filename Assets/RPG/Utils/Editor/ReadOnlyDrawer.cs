@@ -20,9 +20,5 @@ namespace RPG.Utils.Editor {
                 _ => ""
             };
         }
-
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            return base.GetPropertyHeight(property, label);
-        }
     }
 }

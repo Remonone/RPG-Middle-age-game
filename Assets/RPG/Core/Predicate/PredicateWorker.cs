@@ -7,32 +7,38 @@ using UnityEngine;
 namespace RPG.Core.Predicate {
     public static class PredicateWorker {
         
-        private static Dictionary<string, PredicateMonoBehaviour> _predicateStore = new Dictionary<string, PredicateMonoBehaviour>();
+        private static readonly Dictionary<string, PredicateMonoBehaviour> PredicateStore = new Dictionary<string, PredicateMonoBehaviour>();
 
-        private static PredicateLexer _lexer = new PredicateLexer();
-        private static PredicateParser _parser = new PredicateParser();
+        private static readonly PredicateLexer Lexer = new();
+        private static readonly PredicateParser Parser = new();
 
         // Internal 
-        private static Dictionary<string, Dictionary<string, object>> _variableStore = new Dictionary<string, Dictionary<string, object>>();
+        private static readonly Dictionary<string, Dictionary<string, object>> VariableStore = new Dictionary<string, Dictionary<string, object>>();
 
         public static bool RegisterPredicate(string id, PredicateMonoBehaviour predicate) {
-            if (_predicateStore.ContainsKey(id)) return false;
-            _predicateStore[id] = predicate;
+            if (PredicateStore.ContainsKey(id)) return false;
+            PredicateStore[id] = predicate;
             return true;
         }
 
         public static bool DestroyPredicate(string id) {
-            return _predicateStore.Remove(id);
+            return PredicateStore.Remove(id);
+        }
+
+        public static PredicateMonoBehaviour GetPredicateMonoBehaviour(string id) {
+            return PredicateStore[id];
         }
 
         public static void ParsePredicate(string parse, string sessionID) {
+            Debug.Log(parse);
             try {
-                var list = _lexer.LexAnalysis(parse);
+                var list = Lexer.LexAnalysis(parse);
                 // foreach (var item in list) {
                 //     Debug.Log("Type: " + item.type + "; Value: " + item.text);
                 // }
-                var treeNode = _parser.ParseCode(list);
-                var result = RunNodes(treeNode, sessionID);
+                var treeNode = Parser.ParseCode(list);
+                // TODO: Log information
+                RunNodes(treeNode, sessionID);
             }
             catch (Exception e) {
                 Debug.LogError(e);
@@ -48,7 +54,7 @@ namespace RPG.Core.Predicate {
                 var sender = (SenderNode)node;
                 var receiver = sender.Receiver.ID;
                 var id = Convert.ToString(RunNodes(receiver, sessionID));
-                var component = _predicateStore[id];
+                var component = PredicateStore[id];
                 if (component != null) {
                     component.Predicate(sender.Action.Name.text,
                         sender.Action.Args.Select(arg => RunNodes(arg, sessionID)).ToArray(), out var result);
@@ -58,12 +64,12 @@ namespace RPG.Core.Predicate {
 
             if (node.GetType() == typeof(AssignNode)) {
                 var assign = (AssignNode)node;
-                _variableStore[sessionID][assign.Name.text] = RunNodes(assign.Value, sessionID);
+                VariableStore[sessionID][assign.Name.text] = RunNodes(assign.Value, sessionID);
             }
 
             if (node.GetType() == typeof(DeleteNode)) {
                 var delete = (DeleteNode)node;
-                _variableStore[sessionID].Remove(delete.ToDelete.text);
+                VariableStore[sessionID].Remove(delete.ToDelete.text);
             }
 
             if (node.GetType() == typeof(ValueNode)) {
@@ -73,8 +79,8 @@ namespace RPG.Core.Predicate {
             if (node.GetType() == typeof(VariableNode)) {
                 var variable = (VariableNode)node;
 
-                if (_variableStore[sessionID].ContainsKey(variable.Variable.text)) {
-                    objects = _variableStore[sessionID][variable.Variable.text];
+                if (VariableStore[sessionID].ContainsKey(variable.Variable.text)) {
+                    objects = VariableStore[sessionID][variable.Variable.text];
                 }
                 else {
                     throw new Exception($"Variable {variable.Variable.text} has not declared");

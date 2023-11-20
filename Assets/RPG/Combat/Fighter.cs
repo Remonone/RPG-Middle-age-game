@@ -1,22 +1,16 @@
 ﻿using System;
-using Newtonsoft.Json.Linq;
 using RPG.Combat.DamageDefinition;
-using RPG.Control;
 using RPG.Core;
 using RPG.Core.Predicate;
 using RPG.Movement;
-using RPG.Saving;
 using RPG.Stats;
-using RPG.UI.Cursors;
 using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Combat {
-    public class Fighter : MonoBehaviour, IAction{
+    public class Fighter : PredicateMonoBehaviour, IAction{
 
         [SerializeField] private Cooldown _cooldown;
-
-        private string _sessionID;
 
         private BaseStats _stats;
         private Mover _mover;
@@ -30,8 +24,6 @@ namespace RPG.Combat {
         private readonly int _hTriggerAction = Animator.StringToHash("TriggerNumber");
         private readonly int _hTrigger = Animator.StringToHash("Trigger");
 
-        private string AmplifyPredicate = "#{0}:AmplifyStat:BASE_ATTACK;5;0.";
-        
         // PUBLIC
 
         public bool CanAttack(Health target) => target is { IsAlive: true };
@@ -50,14 +42,29 @@ namespace RPG.Combat {
         
         // PRIVATE
 
-        private void Awake() {
+        protected override void OnAwake() {
             _mover = GetComponent<Mover>();
             _stats = GetComponent<BaseStats>();
             _scheduler = GetComponent<TaskScheduler>();
             _animator = GetComponent<Animator>();
-            _sessionID = Guid.NewGuid().ToString();
         }
         
+        public override void Predicate(string command, object[] arguments, out object result) {
+            result = command switch {
+                "AttackTarget" => PerformHit(arguments),
+                _ => null
+            };
+        }
+        private object PerformHit(object[] arguments) {
+            var objToHit = PredicateWorker.GetPredicateMonoBehaviour((string)arguments[0]);
+            if (objToHit is not Health target) return null;
+            var report =
+                DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), gameObject);
+            Debug.Log(report.Attacker + (report.Damage + "") + report.Type);
+            target.HitEntity(report);
+            return true;
+        }
+
         private void Update() {
             if (_target == null || !_target.IsAlive) return;
             
@@ -76,12 +83,11 @@ namespace RPG.Combat {
             _animator.SetTrigger(_hTrigger);
         }
 
+        // ReSharper disable once ArrangeTypeMemberModifiers
         void Hit() {
-            PredicateWorker.ParsePredicate(string.Format(AmplifyPredicate, GetComponent<BaseStats>().ComponentID), _sessionID);
             // TODO: Change DamageType by player equipment;
             var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), DamageType.PHYSICAL, gameObject); 
             // TODO: By player equipment or buffs cast additional changes to target;
-            Debug.Log(report);
             _target.HitEntity(report);
         }
 

@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e23026d1c0cb4007a0eacddb1c93bf10, type: 3}
   m_Name: BurnArea
   m_EditorClassIdentifier: 
-  _actionPredicate: 
+  _actionPredicate: '#{0}:'
   _range: 0
   _layer:
     serializedVersion: 2
     m_Bits: 0
   _prerequisites: []
+  _performComponent: 
