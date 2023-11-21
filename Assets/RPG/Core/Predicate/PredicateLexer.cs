@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using UnityEngine;
 
 namespace RPG.Core.Predicate {
     public class PredicateLexer {
         private string _code;
         private int _position;
-        private List<PredicateToken> _predicateTokens = new List<PredicateToken>();
+        private readonly List<PredicateToken> _predicateTokens = new();
         
         private const int MAX_ITER = 100;
 

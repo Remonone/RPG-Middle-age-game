@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace RPG.Core.Predicate {
     
@@ -18,8 +17,6 @@ namespace RPG.Core.Predicate {
             {"EMPTY", new TokenType("EMPTY", @"@")},
             {"END", new TokenType("END", @"\;")},
             {"NEXT", new TokenType("NEXT", @"\,")},
-            // {"CONDITION_START", new TokenType("CONDITION_START", @"<")},
-            // {"CONDITION_END", new TokenType("CONDITION_END", @">")},
             {"LPAR", new TokenType("LPAR", @"\(")},
             {"RPAR", new TokenType("RPAR", @"\)")},
             

@@ -8,14 +8,8 @@ using RPG.Saving;
 
 namespace RPG.Inventories {
     public class Equipment : PredicateMonoBehaviour, ISaveable {
-        
-        // 1. Receive Component by tag
-        // 2. Make PlayerController as PredicateMonoBehaviour
-        // 3. Make function in PlayerController which work with environment
-        // 4. Call PlayerController and receive id of the component which would be written in variable
-        // 5. When you call component you may call id of the component by variable
-        
-        private Dictionary<EquipmentSlots, EquipmentItem> _items = new();
+
+        private readonly Dictionary<EquipmentSlots, EquipmentItem> _items = new();
         
         public event Action OnEquipmentChange;
 

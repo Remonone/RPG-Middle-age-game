@@ -56,8 +56,11 @@ namespace RPG.Core.Predicate {
                 var id = Convert.ToString(RunNodes(receiver, sessionID));
                 var component = PredicateStore[id];
                 if (component != null) {
+                    var args = sender.Action.Args;
+                    var argsToSend = args != null ? 
+                        args.Select(arg => RunNodes(arg, sessionID)).ToArray() : Array.Empty<object>();
                     component.Predicate(sender.Action.Name.text,
-                        sender.Action.Args.Select(arg => RunNodes(arg, sessionID)).ToArray(), out var result);
+                        argsToSend, out var result);
                     objects = result;
                 }
             }
@@ -94,12 +97,12 @@ namespace RPG.Core.Predicate {
 
             if (node.GetType() == typeof(BinOperationNode)) {
                 var oper = (BinOperationNode)node;
-                var left = (decimal)RunNodes(oper.LeftExpression, sessionID);
-                var right = (decimal)RunNodes(oper.LeftExpression, sessionID);
-                if (oper.Operator.type.name == PredicateLexicon.TokenTypes["PLUS"].name) objects = left + right;
-                if (oper.Operator.type.name == PredicateLexicon.TokenTypes["MINUS"].name) objects = left - right;
-                if (oper.Operator.type.name == PredicateLexicon.TokenTypes["MULTIPLY"].name) objects = left * right;
-                if (oper.Operator.type.name == PredicateLexicon.TokenTypes["DIVIDE"].name) objects = left / right;
+                var left = Convert.ToDouble(RunNodes(oper.LeftExpression, sessionID));
+                var right = Convert.ToDouble(RunNodes(oper.RightExpression, sessionID));
+                if (oper.Operator.type == PredicateLexicon.TokenTypes["PLUS"]) objects = left + right;
+                if (oper.Operator.type == PredicateLexicon.TokenTypes["MINUS"]) objects = left - right;
+                if (oper.Operator.type == PredicateLexicon.TokenTypes["MULTIPLY"]) objects = left * right;
+                if (oper.Operator.type == PredicateLexicon.TokenTypes["DIVIDE"]) objects = left / right;
             }
             
             return objects;

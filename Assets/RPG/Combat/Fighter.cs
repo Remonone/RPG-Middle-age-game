@@ -24,6 +24,8 @@ namespace RPG.Combat {
         private readonly int _hTriggerAction = Animator.StringToHash("TriggerNumber");
         private readonly int _hTrigger = Animator.StringToHash("Trigger");
 
+        public event Action<DamageReport> OnAttack;
+
         // PUBLIC
 
         public bool CanAttack(Health target) => target is { IsAlive: true };
@@ -85,9 +87,10 @@ namespace RPG.Combat {
 
         // ReSharper disable once ArrangeTypeMemberModifiers
         void Hit() {
+            if (_target == null) return;
             // TODO: Change DamageType by player equipment;
             var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), DamageType.PHYSICAL, gameObject); 
-            // TODO: By player equipment or buffs cast additional changes to target;
+            OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
             _target.HitEntity(report);
         }
 

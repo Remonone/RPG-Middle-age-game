@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RPG.Combat.Modifiers.BaseTypes {
     public abstract class Modification : ScriptableObject, IModification {
