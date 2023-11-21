@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using RPG.Inventories.Modifiers;
+using RPG.Combat.Modifiers;
+using RPG.Combat.Modifiers.BaseTypes;
 using UnityEngine;
 
 namespace RPG.Inventories.Items {

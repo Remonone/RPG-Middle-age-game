@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-namespace RPG.Inventories.Modifiers {
+namespace RPG.Combat.Modifiers.BaseTypes {
     public abstract class Modification : ScriptableObject, IModification {
 
         [SerializeField] protected string _actionPredicate;

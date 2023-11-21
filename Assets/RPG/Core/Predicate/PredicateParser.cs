@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using RPG.Core.Predicate.Nodes;
+using UnityEngine;
 
 namespace RPG.Core.Predicate {
     public class PredicateParser {
@@ -58,7 +59,14 @@ namespace RPG.Core.Predicate {
             var variableName = Match(PredicateLexicon.TokenTypes["VALUE"]);
             if (variableName == null) throw new Exception("Variable name is empty/incorrect");
             CheckOnStep();
-            var value = ParseFormula();
+            ExpressionNode value;
+            if (Match(PredicateLexicon.TokenTypes["IDENTIFIER"]) != null) {
+                var identifierNode = ParseIdentifier();
+                var functionNode = ParseFunctionInvocation();
+                value = new SenderNode { Receiver = identifierNode, Action = functionNode };
+            } else {
+                value = ParseFormula();   
+            }
             return new AssignNode { Name = variableName, Value = value };
         }
 
@@ -90,7 +98,7 @@ namespace RPG.Core.Predicate {
         private ExpressionNode ParseVariableOrNumber() {
             var token = Require(PredicateLexicon.TokenTypes["VALUE"], PredicateLexicon.TokenTypes["REFERENCE"]);
             if (token.type.name == "VALUE") return new ValueNode { Value = token };
-            if(token.type.name == "REFERENCE") return new VariableNode { Variable = token };
+            if(token.type.name == "REFERENCE") return new VariableNode { Variable = Require(PredicateLexicon.TokenTypes["VALUE"]) };
             throw new Exception("Type does not match.");
         }
 

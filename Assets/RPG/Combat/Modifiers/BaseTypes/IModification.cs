@@ -1,7 +1,6 @@
-﻿using RPG.Inventories.Items;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace RPG.Inventories.Modifiers {
+namespace RPG.Combat.Modifiers.BaseTypes {
     public interface IModification {
         public void RegisterModification(GameObject performer);
         public void UnregisterModification();

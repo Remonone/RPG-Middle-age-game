@@ -1,48 +1,53 @@
-﻿using System.Collections;
-using RPG.Combat;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RPG.Core.Predicate;
 using UnityEngine;
 
-namespace RPG.Inventories.Modifiers {
-    [CreateAssetMenu(fileName = "AreaModifier", menuName = "GumuPeachu/Create Modifier", order = 0)]
-    public class AreaModifier : Modification {
+namespace RPG.Combat.Modifiers.BaseTypes {
+    public abstract class AreaModifier : Modification {
 
         [SerializeField] private float _range;
         [SerializeField] private LayerMask _layer;
         [SerializeField] private string _performerComponent;
         [SerializeField] private string _performToComponent;
-        [SerializeField] private float _cooldown;
         
-        private Coroutine _registeredCoroutine;
-        private Fighter _coroutinePerformer;
+        protected PredicateMonoBehaviour Performer;
+
         
         public override void RegisterModification(GameObject performer) {
-            _coroutinePerformer = performer.GetComponent<Fighter>();
-            _registeredCoroutine = _coroutinePerformer.StartCoroutine(BurnArea(performer));
+            Performer = (PredicateMonoBehaviour)performer.GetComponent(_performerComponent);
+            OnRegisterModification(CaptureObjects);
         }
-        
-        private IEnumerator BurnArea(GameObject performer) {
-            while (true) {
-                if (string.IsNullOrEmpty(_performerComponent)) yield break;
-                var holderPosition = performer.transform.position;
-                var invokerComponent = (PredicateMonoBehaviour)performer.GetComponent(_performerComponent);
-                var targets = GetTargetsInRange(holderPosition);
-                foreach (var target in targets) {
-                    var component = (PredicateMonoBehaviour)target.GetComponent(_performToComponent);
-                    PredicateWorker.ParsePredicate(
-                        component == null
-                            ? string.Format(_actionPredicate, invokerComponent.ComponentID)
-                            : string.Format(_actionPredicate, invokerComponent.ComponentID, 
-                                component.ComponentID), "all");
-                }
 
-                yield return new WaitForSeconds(_cooldown);
+
+        protected abstract void OnRegisterModification(Func<GameObject, PredicateMonoBehaviour[]> func);
+        
+        private PredicateMonoBehaviour[] CaptureObjects(GameObject performer) {
+            if (ReferenceEquals(Performer, null)) return null;
+            var position = performer.transform.position;
+            var colliders = GetTargetsInRange(position);
+            var objects = colliders.Select(collider => collider.gameObject).ToArray();
+            return CollectBehaviours(objects);
+            
+        }
+
+        private PredicateMonoBehaviour[] CollectBehaviours(GameObject[] targets) {
+            List<PredicateMonoBehaviour> predicates = new();
+            foreach (var obj in targets) {
+                var component = (PredicateMonoBehaviour)obj.GetComponent(_performToComponent);
+                if(component == null) continue;
+                predicates.Add(component);
             }
+
+            return predicates.ToArray();
         }
         
         public override void UnregisterModification() {
-            _coroutinePerformer.StopCoroutine(_registeredCoroutine);
+            OnUnregisterModification();
         }
+        
+        protected abstract void OnUnregisterModification();
 
         private Collider[] GetTargetsInRange(Vector3 position) {
             return Physics.OverlapSphere(position, _range, _layer);
@@ -60,6 +65,9 @@ namespace RPG.Inventories.Modifiers {
         //    информацией о том, кто атаковал и кто был атакован.
         //    Вариантом станет добавление ивента в Fighter
         //    который будет отслеживать, когда был нанесен урон противнику.
-
+        
+        // Сделать разные модификаторы: Модификатор области при ивенте,
+        // модификатор области в течении некоторого времени
+        
     }
 }

@@ -24,7 +24,9 @@ namespace RPG.Combat {
         }
         public override void Predicate(string command, object[] arguments, out object result) {
             result = command switch {
-                _ => ""
+                "GetCurrentHealth" => _currentHealth,
+                "GetTotalHealth" => _maxHealth,
+                _ => "" 
             };
         }
         private void OnStatUpdated() {

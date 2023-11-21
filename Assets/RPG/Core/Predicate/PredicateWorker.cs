@@ -30,12 +30,12 @@ namespace RPG.Core.Predicate {
         }
 
         public static void ParsePredicate(string parse, string sessionID) {
-            Debug.Log(parse);
             try {
                 var list = Lexer.LexAnalysis(parse);
                 // foreach (var item in list) {
                 //     Debug.Log("Type: " + item.type + "; Value: " + item.text);
                 // }
+                if (!VariableStore.ContainsKey(sessionID)) VariableStore[sessionID] = new Dictionary<string, object>();
                 var treeNode = Parser.ParseCode(list);
                 // TODO: Log information
                 RunNodes(treeNode, sessionID);
@@ -69,7 +69,12 @@ namespace RPG.Core.Predicate {
 
             if (node.GetType() == typeof(DeleteNode)) {
                 var delete = (DeleteNode)node;
-                VariableStore[sessionID].Remove(delete.ToDelete.text);
+                if (VariableStore[sessionID].ContainsKey(delete.ToDelete.text)) {
+                    VariableStore[sessionID].Remove(delete.ToDelete.text);
+                }
+                else {
+                    throw new Exception($"Variable {delete.ToDelete.text} has not declared");
+                }
             }
 
             if (node.GetType() == typeof(ValueNode)) {
