@@ -4,7 +4,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using RPG.Inventories.Items;
 using RPG.Saving;
-using RPG.UI.Inventories;
+using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Inventories {
@@ -13,12 +13,17 @@ namespace RPG.Inventories {
 
         private InventorySlot[] _inventorySlots;
 
-        public event Action OnInventoryUpdate;
+        private EventStorage _storage;
+
+        private EventStorageFacade _storageFacade;
+        public EventStorageFacade EventStorage => _storageFacade;
 
         public int Size => _inventorySlots.Length;
 
         private void Awake() {
             _inventorySlots = new InventorySlot[_slotsCount];
+            _storage = new EventStorage();
+            _storageFacade = new EventStorageFacade(_storage);
             for (int i = 0; i < Size; i++) {
                 _inventorySlots[i] = new InventorySlot {
                     Item = null,
@@ -36,7 +41,7 @@ namespace RPG.Inventories {
                 Item = InventoryItem.GetItemByGuid("19a20eb4-eccb-4298-b58b-97d7e7fb66b4"),
                 Count = 1
             };
-            OnInventoryUpdate?.Invoke();
+            _storage.InvokeEvent("OnInventoryUpdate");
         }
 
         public void AddToInventorySlot(int slot, InventoryItem item, int count) {
@@ -45,7 +50,7 @@ namespace RPG.Inventories {
                 return;
             }
             _inventorySlots[slot] = new InventorySlot { Item = item, Count = count };
-            OnInventoryUpdate?.Invoke();
+            _storage.InvokeEvent("OnInventoryUpdate");
         }
 
         public bool AddToFirstEmptySlot(InventoryItem item, int count) {
@@ -57,7 +62,7 @@ namespace RPG.Inventories {
             int slotIndex = FindEmptySlot();
             if (slotIndex == -1) return false;
             _inventorySlots[slotIndex] = new InventorySlot { Item = item, Count = count };
-            OnInventoryUpdate?.Invoke();
+            _storage.InvokeEvent("OnInventoryUpdate");
             return true;
         }
 
@@ -75,7 +80,7 @@ namespace RPG.Inventories {
             if (_inventorySlots[slot].Count > 0) return true;
             var finalCount = _inventorySlots[slot].Count;
             _inventorySlots[slot] = new InventorySlot{ Item = null, Count = 0};
-            OnInventoryUpdate?.Invoke();
+            _storage.InvokeEvent("OnInventoryUpdate");
             return finalCount == 0;
         }
 

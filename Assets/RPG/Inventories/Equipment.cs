@@ -5,13 +5,22 @@ using Newtonsoft.Json.Linq;
 using RPG.Core.Predicate;
 using RPG.Inventories.Items;
 using RPG.Saving;
+using RPG.Utils;
 
 namespace RPG.Inventories {
     public class Equipment : PredicateMonoBehaviour, ISaveable {
 
         private readonly Dictionary<EquipmentSlots, EquipmentItem> _items = new();
+
+        private EventStorage _storage;
         
-        public event Action OnEquipmentChange;
+        private EventStorageFacade _storageFacade;
+        public EventStorageFacade EventStorage => _storageFacade;
+
+        protected override void OnAwake() {
+            _storage = new EventStorage();
+            _storageFacade = new EventStorageFacade(_storage);
+        }
 
         
         public EquipmentItem GetEquipmentItem(EquipmentSlots equipmentSlot) {
@@ -25,7 +34,7 @@ namespace RPG.Inventories {
                 item.OnEquipPredicate.ComponentName.Select(component => ((PredicateMonoBehaviour)GetComponent(component)).ComponentID));
             PredicateWorker.ParsePredicate(predicate, ComponentID);
             item.RegisterAmplifiers(gameObject);
-            OnEquipmentChange?.Invoke();
+            _storage.InvokeEvent("OnEquipmentChange");
         }
         
         public void RemoveEquipment(EquipmentSlots equipmentSlot) {
@@ -35,7 +44,7 @@ namespace RPG.Inventories {
             PredicateWorker.ParsePredicate(predicate, ComponentID);
             _items[equipmentSlot].UnregisterModifications();
             _items[equipmentSlot] = null;
-            OnEquipmentChange?.Invoke();
+            _storage.InvokeEvent("OnEquipmentChange");
         }
         
         public JToken CaptureAsJToken() {

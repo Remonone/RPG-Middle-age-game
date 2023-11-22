@@ -9,8 +9,6 @@ namespace RPG.Combat.Modifiers.BaseTypes {
 
         [SerializeField] private float _range;
         [SerializeField] private LayerMask _layer;
-        [SerializeField] private string _performerComponent;
-        [SerializeField] private string _performToComponent;
         
         protected PredicateMonoBehaviour Performer;
 

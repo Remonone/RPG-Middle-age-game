@@ -1,11 +1,9 @@
-﻿using System;
-using RPG.Inventories;
+﻿using RPG.Inventories;
 using RPG.Inventories.Items;
 using RPG.Utils.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace RPG.UI.Inventories {
+namespace RPG.UI.Inventories.Slots {
     public class EquipmentSlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem> {
 
         [SerializeField] private InventoryItemIcon _equipmentImage;
@@ -16,7 +14,7 @@ namespace RPG.UI.Inventories {
         private void Awake() {
             var player = GameObject.FindWithTag("Player");
             _equipment = player.GetComponent<Equipment>();
-            _equipment.OnEquipmentChange += RedrawSlot;
+            _equipment.EventStorage.Subscribe("OnEquipmentChange", RedrawSlot);
         }
 
         private void Start() {

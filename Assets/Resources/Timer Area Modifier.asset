@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60f3866ff88a4a02bea26b05ea0667d4, type: 3}
   m_Name: Timer Area Modifier
   m_EditorClassIdentifier: 
-  _actionPredicate: 
-  _range: 0
+  _actionPredicate: VAR:target_health:#{1}:GetTotalHealth:@;#{0}:AttackTarget:{1},&target_health/100.0*2,MAGICAL;DEL:target_health;
+  _range: 3
   _layer:
     serializedVersion: 2
-    m_Bits: 0
-  _performerComponent: 
-  _performToComponent: 
-  _cooldown: 0
+    m_Bits: 8
+  _performerComponent: Fighter
+  _performToComponent: Health
+  _cooldown: 1.5
