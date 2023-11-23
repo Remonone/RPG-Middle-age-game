@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
+using RPG.Combat.DamageDefinition;
 using RPG.Core.Predicate;
 using RPG.Saving;
 using RPG.Stats;

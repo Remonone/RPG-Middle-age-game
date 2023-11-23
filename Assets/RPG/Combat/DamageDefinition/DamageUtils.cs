@@ -8,7 +8,8 @@ namespace RPG.Combat.DamageDefinition {
             var report = new DamageReport {
                 Attacker = attacker,
                 Type = type,
-                Damage = damage
+                Damage = damage,
+                Target = target.gameObject
             };
             return report;
         }

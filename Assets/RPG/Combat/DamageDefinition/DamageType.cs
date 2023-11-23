@@ -1,4 +1,4 @@
-﻿namespace RPG.Combat {
+﻿namespace RPG.Combat.DamageDefinition {
     public enum DamageType {
         PHYSICAL = 1000,
         MAGICAL = 1001,
