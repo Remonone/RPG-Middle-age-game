@@ -13,7 +13,7 @@ namespace RPG.Combat.Modifiers {
 
         public override void RegisterModification(GameObject performer) {
             Performer = performer.GetComponent<Fighter>();
-            Performer.EventStorage.Subscribe<DamageReport>("OnAttack", OnAttackTarget);
+            Performer.OnAttack += OnAttackTarget;
         }
         private void OnAttackTarget(DamageReport report) {
             var attackerID = ((PredicateMonoBehaviour)report.Attacker.GetComponent(_performerComponent)).ComponentID;
@@ -23,7 +23,7 @@ namespace RPG.Combat.Modifiers {
             PredicateWorker.ParsePredicate(preparedString, Performer.ComponentID);
         }
         public override void UnregisterModification() {
-            Performer.EventStorage.Unsubscribe<DamageReport>("AttackTarget", OnAttackTarget);
+            Performer.OnAttack -= OnAttackTarget;
         }
     }
 }

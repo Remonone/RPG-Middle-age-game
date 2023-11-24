@@ -6,17 +6,10 @@ namespace RPG.Core.Predicate {
     public abstract class PredicateMonoBehaviour : MonoBehaviour {
 
         [ReadOnly] [SerializeField] private string _componentID;
-        
-        protected EventStorage Storage;
-
-        private EventStorageFacade _storageFacade;
-        public EventStorageFacade EventStorage => _storageFacade;
 
         public string ComponentID => _componentID;
 
         private void Awake() {
-            Storage = new EventStorage();
-            _storageFacade = new EventStorageFacade(Storage);
             if (string.IsNullOrWhiteSpace(_componentID)) {
                 _componentID = "C_" + Guid.NewGuid().ToString().Replace('-', '_');
             }

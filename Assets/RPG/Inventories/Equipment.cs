@@ -11,6 +11,8 @@ namespace RPG.Inventories {
 
         private readonly Dictionary<EquipmentSlots, EquipmentItem> _items = new();
 
+        public event Action OnEquipmentChange;
+
         public EquipmentItem GetEquipmentItem(EquipmentSlots equipmentSlot) {
             if(_items.ContainsKey(equipmentSlot)) return _items[equipmentSlot];
             return null;
@@ -22,7 +24,7 @@ namespace RPG.Inventories {
                 item.OnEquipPredicate.ComponentName.Select(component => ((PredicateMonoBehaviour)GetComponent(component)).ComponentID));
             PredicateWorker.ParsePredicate(predicate, ComponentID);
             item.RegisterAmplifiers(gameObject);
-            Storage.InvokeEvent("OnEquipmentChange");
+            OnEquipmentChange?.Invoke();
         }
         
         public void RemoveEquipment(EquipmentSlots equipmentSlot) {
@@ -32,7 +34,7 @@ namespace RPG.Inventories {
             PredicateWorker.ParsePredicate(predicate, ComponentID);
             _items[equipmentSlot].UnregisterModifications();
             _items[equipmentSlot] = null;
-            Storage.InvokeEvent("OnEquipmentChange");
+            OnEquipmentChange?.Invoke();
         }
         
         public JToken CaptureAsJToken() {

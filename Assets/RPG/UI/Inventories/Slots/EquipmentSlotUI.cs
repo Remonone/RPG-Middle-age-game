@@ -14,7 +14,7 @@ namespace RPG.UI.Inventories.Slots {
         private void Awake() {
             var player = GameObject.FindWithTag("Player");
             _equipment = player.GetComponent<Equipment>();
-            _equipment.EventStorage.Subscribe("OnEquipmentChange", RedrawSlot);
+            _equipment.OnEquipmentChange += RedrawSlot;
         }
 
         private void Start() {

@@ -14,12 +14,12 @@ namespace RPG.UI.Inventories {
         }
 
         private void Start() {
-            _inventory.EventStorage.Subscribe("OnInventoryUpdate", RedrawUI);
+            _inventory.OnInventoryUpdate += RedrawUI;
             RedrawUI();
         }
 
-        private void OnDestroy() {
-            _inventory.EventStorage.Unsubscribe("OnInventoryUpdate", RedrawUI);
+        private void OnDisable() {
+            _inventory.OnInventoryUpdate -= RedrawUI;
         }
         private void RedrawUI() {
             foreach (Transform child in transform) {

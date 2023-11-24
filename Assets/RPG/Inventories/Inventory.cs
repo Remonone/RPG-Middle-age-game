@@ -13,17 +13,12 @@ namespace RPG.Inventories {
 
         private InventorySlot[] _inventorySlots;
 
-        private EventStorage _storage;
-
-        private EventStorageFacade _storageFacade;
-        public EventStorageFacade EventStorage => _storageFacade;
-
         public int Size => _inventorySlots.Length;
+
+        public event Action OnInventoryUpdate;
 
         private void Awake() {
             _inventorySlots = new InventorySlot[_slotsCount];
-            _storage = new EventStorage();
-            _storageFacade = new EventStorageFacade(_storage);
             for (int i = 0; i < Size; i++) {
                 _inventorySlots[i] = new InventorySlot {
                     Item = null,
@@ -41,7 +36,7 @@ namespace RPG.Inventories {
                 Item = InventoryItem.GetItemByGuid("19a20eb4-eccb-4298-b58b-97d7e7fb66b4"),
                 Count = 1
             };
-            _storage.InvokeEvent("OnInventoryUpdate");
+            OnInventoryUpdate?.Invoke();
         }
 
         public void AddToInventorySlot(int slot, InventoryItem item, int count) {
@@ -50,7 +45,7 @@ namespace RPG.Inventories {
                 return;
             }
             _inventorySlots[slot] = new InventorySlot { Item = item, Count = count };
-            _storage.InvokeEvent("OnInventoryUpdate");
+            OnInventoryUpdate?.Invoke();
         }
 
         public bool AddToFirstEmptySlot(InventoryItem item, int count) {
@@ -62,7 +57,7 @@ namespace RPG.Inventories {
             int slotIndex = FindEmptySlot();
             if (slotIndex == -1) return false;
             _inventorySlots[slotIndex] = new InventorySlot { Item = item, Count = count };
-            _storage.InvokeEvent("OnInventoryUpdate");
+            OnInventoryUpdate?.Invoke();
             return true;
         }
 
@@ -80,7 +75,7 @@ namespace RPG.Inventories {
             if (_inventorySlots[slot].Count > 0) return true;
             var finalCount = _inventorySlots[slot].Count;
             _inventorySlots[slot] = new InventorySlot{ Item = null, Count = 0};
-            _storage.InvokeEvent("OnInventoryUpdate");
+            OnInventoryUpdate?.Invoke();
             return finalCount == 0;
         }
 
