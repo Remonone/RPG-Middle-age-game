@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: Timer Area Modifier
   m_EditorClassIdentifier: 
   _actionPredicate: VAR:target_health:#{1}:GetTotalHealth:@;#{0}:AttackTarget:{1},&target_health/100.0*2,MAGICAL;DEL:target_health;
+  _modificationName: Incineration
+  _modificationDescription: You burn all around you. Your enemies take damage in
+    size of <i>2% magical damage</i> of their max health
+  _performerComponent: Fighter
+  _performToComponent: Health
   _range: 3
   _layer:
     serializedVersion: 2
     m_Bits: 8
-  _performerComponent: Fighter
-  _performToComponent: Health
   _cooldown: 1.5

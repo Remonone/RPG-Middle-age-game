@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using RPG.Combat.Modifiers;
 using RPG.Combat.Modifiers.BaseTypes;
+using RPG.Inventories.Pickups;
 using UnityEngine;
 
 namespace RPG.Inventories.Items {
@@ -8,10 +9,10 @@ namespace RPG.Inventories.Items {
     public abstract class InventoryItem : ScriptableObject, ISerializationCallbackReceiver {
         [SerializeField] private string _itemID;
         [SerializeField] private string _itemName;
-        [SerializeField] private string _itemDescription;
+        [SerializeField] [TextArea] private string _itemDescription;
         [SerializeField] private Sprite _itemIcon;
         [SerializeField] private bool _stackable;
-        [SerializeField] private List<Modification> _modifications;
+        [SerializeField] private Pickup _pickup;
 
         private static Dictionary<string, InventoryItem> _itemStore;
 
@@ -30,20 +31,8 @@ namespace RPG.Inventories.Items {
 
         void ISerializationCallbackReceiver.OnAfterDeserialize() { }
 
-        public void DropPickup(int count) {
-            
-        }
-
-        public void RegisterAmplifiers(GameObject invoker) {
-            foreach (var mod in _modifications) {
-                mod.RegisterModification(invoker);
-            }
-        }
-
-        public void UnregisterModifications() {
-            foreach (var mod in _modifications) {
-                mod.UnregisterModification();
-            }
+        public virtual string GetDescription() {
+            return _itemDescription;
         }
 
         public static InventoryItem GetItemByGuid(string itemID) {

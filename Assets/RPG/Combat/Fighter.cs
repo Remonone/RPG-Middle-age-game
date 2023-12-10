@@ -2,6 +2,8 @@
 using RPG.Combat.DamageDefinition;
 using RPG.Core;
 using RPG.Core.Predicate;
+using RPG.Inventories;
+using RPG.Inventories.Items;
 using RPG.Movement;
 using RPG.Stats;
 using RPG.Utils;
@@ -17,6 +19,7 @@ namespace RPG.Combat {
         private TaskScheduler _scheduler;
 
         private Health _target;
+        private Equipment _equipment;
         private Animator _animator;
 
         public event Action<DamageReport> OnAttack;
@@ -48,6 +51,7 @@ namespace RPG.Combat {
             _stats = GetComponent<BaseStats>();
             _scheduler = GetComponent<TaskScheduler>();
             _animator = GetComponent<Animator>();
+            _equipment = GetComponent<Equipment>();
         }
         
         public override void Predicate(string command, object[] arguments, out object result) {
@@ -87,8 +91,8 @@ namespace RPG.Combat {
         // ReSharper disable once ArrangeTypeMemberModifiers
         void Hit() {
             if (_target == null) return;
-            // TODO: Change DamageType by player equipment;
-            var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), DamageType.PHYSICAL, gameObject); 
+            EquipmentItem weapon = _equipment.GetEquipmentItem(EquipmentSlots.WEAPON);
+            var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), weapon.Type, gameObject); 
             OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
             _target.HitEntity(report);
         }

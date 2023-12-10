@@ -9,7 +9,7 @@ namespace RPG.Combat.Modifiers {
     public class OnHitEventModifier : Modification {
         
         protected Health Performer;
-        [ReadOnly] [TextArea] public string returnArguments = "(0): attacker, (1): damage, (2): type, (3): target";
+        [ReadOnly] [TextArea] public string returnArguments = "(0): attacker, (1): damage, (2): type, (3): target, (4): strength";
 
         public override void RegisterModification(GameObject performer) {
             Performer = performer.GetComponent<Health>();
@@ -19,7 +19,7 @@ namespace RPG.Combat.Modifiers {
             var attackerID = ((PredicateMonoBehaviour)report.Attacker.GetComponent(_performerComponent)).ComponentID;
             var targetID = ((PredicateMonoBehaviour)report.Target.GetComponent(_performToComponent)).ComponentID;
             var preparedString = string.Format(_actionPredicate, attackerID, report.Damage, report.Type,
-                targetID);
+                targetID, Strength);
             PredicateWorker.ParsePredicate(preparedString, Performer.ComponentID);
         }
         public override void UnregisterModification() {

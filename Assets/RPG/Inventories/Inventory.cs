@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using RPG.Inventories.Items;
+using RPG.Inventories.Pickups;
 using RPG.Saving;
 using RPG.Utils;
 using UnityEngine;
@@ -10,6 +11,7 @@ using UnityEngine;
 namespace RPG.Inventories {
     public class Inventory : MonoBehaviour, ISaveable {
         [SerializeField] private int _slotsCount;
+        [SerializeField] private Pickup _pickup;
 
         private InventorySlot[] _inventorySlots;
 
@@ -77,6 +79,22 @@ namespace RPG.Inventories {
             _inventorySlots[slot] = new InventorySlot{ Item = null, Count = 0};
             OnInventoryUpdate?.Invoke();
             return finalCount == 0;
+        }
+
+        public void DropItem(int slot, int count) {
+            if (_inventorySlots[slot] == null) return;
+            int itemActual = _inventorySlots[slot].Count;
+            InventoryItem item = _inventorySlots[slot].Item;
+            if (RemoveCountFromSlot(slot, count)) {
+                SpawnPickup(item, count);
+                return;
+            }
+            SpawnPickup(item, itemActual);
+        }
+        
+        private void SpawnPickup(InventoryItem item, int count) {
+            var pickup = Instantiate(_pickup, transform.forward, Quaternion.identity);
+            pickup.Setup(item, count);
         }
 
         public InventorySlot GetItemInSlot(int slot) => _inventorySlots[slot];

@@ -23,7 +23,7 @@ namespace RPG.Inventories {
             var predicate = string.Format(item.OnEquipPredicate.CodePredicate, 
                 item.OnEquipPredicate.ComponentName.Select(component => ((PredicateMonoBehaviour)GetComponent(component)).ComponentID));
             PredicateWorker.ParsePredicate(predicate, ComponentID);
-            item.RegisterAmplifiers(gameObject);
+            item.RegisterModifications(gameObject);
             OnEquipmentChange?.Invoke();
         }
         

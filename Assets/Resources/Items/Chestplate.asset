@@ -17,13 +17,14 @@ MonoBehaviour:
   _itemDescription: Just a Chestplate
   _itemIcon: {fileID: 21300000, guid: 603e026921ee6c44ab5c48b149bb31e9, type: 3}
   _stackable: 0
-  _modifications:
-  - {fileID: 11400000, guid: 23a475f0b8b1bee458cff12c0b4263eb, type: 2}
   _slot: 1
-  _buffs: []
   _onEquipPredicate:
     CodePredicate: 
     ComponentName: []
   _onUnequipPredicate:
     CodePredicate: 
     ComponentName: []
+  _modifications:
+  - {fileID: 11400000, guid: 63bda61794e5768479fe0c75a8304d3a, type: 2}
+  - {fileID: 11400000, guid: 23a475f0b8b1bee458cff12c0b4263eb, type: 2}
+  _test: {fileID: 88551675355595030, guid: 99f2e741138a1354a837bfc29ecae0ea, type: 3}

@@ -20,7 +20,8 @@ namespace RPG.Combat.Modifiers {
             while (true) {
                 var components = func.Invoke(Performer.gameObject);
                 foreach (var com in components) {
-                    PredicateWorker.ParsePredicate(string.Format(_actionPredicate, Performer.ComponentID, com.ComponentID), Performer.ComponentID);
+                    string predicate = string.Format(_actionPredicate, Performer.ComponentID, com.ComponentID);
+                    PredicateWorker.ParsePredicate(predicate, Performer.ComponentID);
                 }
                 yield return new WaitForSeconds(_cooldown);
             }

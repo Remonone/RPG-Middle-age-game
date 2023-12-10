@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Thorns
   m_EditorClassIdentifier: 
   _actionPredicate: '#{3}:AttackTarget:{0},{1}/100.0*2.0,MAGICAL;'
-  _modifierDescription: Thorns
+  _modificationName: Hedgehog
+  _modificationDescription: Whenever you got attacked by foe, foe got back partial
+    damage(<i>2% of received damage</i>) from you.
   _performerComponent: Health
   _performToComponent: Fighter
   returnArguments: '(0): attacker, (1): damage, (2): type, (3): target'

@@ -6844,6 +6844,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.000061035156
       objectReference: {fileID: 0}
+    - target: {fileID: 1334706635491658812, guid: 71e8b18b12a037e4fab8b182f6f8139e,
+        type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 1567391055294313308, guid: 71e8b18b12a037e4fab8b182f6f8139e,
         type: 3}
       propertyPath: m_AnchorMax.y
