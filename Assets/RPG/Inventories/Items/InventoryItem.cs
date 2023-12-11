@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using RPG.Combat.Modifiers;
-using RPG.Combat.Modifiers.BaseTypes;
-using RPG.Inventories.Pickups;
 using UnityEngine;
 
 namespace RPG.Inventories.Items {
@@ -12,7 +9,6 @@ namespace RPG.Inventories.Items {
         [SerializeField] [TextArea] private string _itemDescription;
         [SerializeField] private Sprite _itemIcon;
         [SerializeField] private bool _stackable;
-        [SerializeField] private Pickup _pickup;
 
         private static Dictionary<string, InventoryItem> _itemStore;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RPG.Combat.Modifiers.BaseTypes;
 using RPG.Utils;
 using UnityEngine;
@@ -49,8 +50,23 @@ namespace RPG.Combat.Upgrades {
         public string Name;
         public int Cost;
         [TextArea] public string Description;
-        public Modification[] Modifications;
+        [SerializeField] private Modification[] _modifications;
         [Tooltip("A list of node ids to open this upgrade")]
-        public string[] Requisites;
+        [SerializeField] private string[] _requisites;
+
+        public bool IsUpgradeSatisfied(string[] upgradeList) =>
+            _requisites.All(upgradeList.Contains);
+
+        public void Apply(GameObject invoker) {
+            foreach (var modification in _modifications) {
+                modification.RegisterModification(invoker);
+            }
+        }
+
+        public void Cancel() {
+            foreach (var modification in _modifications) {
+                modification.UnregisterModification();
+            }
+        }
     }
 }

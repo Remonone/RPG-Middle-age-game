@@ -4,6 +4,7 @@ using RPG.Core;
 using RPG.Core.Predicate;
 using RPG.Inventories;
 using RPG.Inventories.Items;
+using RPG.Movement;
 using RPG.Stats;
 using RPG.Utils;
 using UnityEngine;
@@ -15,11 +16,11 @@ namespace RPG.Combat {
 
         [SerializeField] private Cooldown _cooldown;
 
-        private Health _target;
-        private CreatureInfo _info;
-        
+        private BaseStats _stats;
+        private Mover _mover;
         private TaskScheduler _scheduler;
-        
+
+        private Health _target;
         private Equipment _equipment;
         private Animator _animator;
 
@@ -48,7 +49,8 @@ namespace RPG.Combat {
         // PRIVATE
 
         protected override void OnAwake() {
-            _info = GetComponent<CreatureInfo>();
+            _mover = GetComponent<Mover>();
+            _stats = GetComponent<BaseStats>();
             _scheduler = GetComponent<TaskScheduler>();
             _animator = GetComponent<Animator>();
             _equipment = GetComponent<Equipment>();
@@ -74,12 +76,12 @@ namespace RPG.Combat {
             if (_target == null || !_target.IsAlive) return;
             
             var distanceToTarget = Vector3.Distance(transform.position, _target.transform.position);
-            if (distanceToTarget <= _info.Stats.GetStatValue(Stat.ATTACK_RANGE) && _cooldown.IsAvailable) {
+            if (distanceToTarget <= _stats.GetStatValue(Stat.ATTACK_RANGE) && _cooldown.IsAvailable) {
                 AttackTarget();
                 _cooldown.Reset();
                 return;
             }
-            _info.Mover.MoveToPoint(_target.transform.position);
+            _mover.MoveToPoint(_target.transform.position);
         }
         private void AttackTarget() {
             _animator.SetBool(_hMoving, false);
@@ -92,7 +94,7 @@ namespace RPG.Combat {
         void Hit() {
             if (_target == null) return;
             EquipmentItem weapon = _equipment.GetEquipmentItem(EquipmentSlots.WEAPON);
-            var report = DamageUtils.CreateReport(_target, _info.Stats.GetStatValue(Stat.BASE_ATTACK), weapon.Type, gameObject); 
+            var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), weapon.Type, gameObject); 
             OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
             _target.HitEntity(report);
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using RPG.Combat;
 using RPG.Combat.Buffs;
@@ -16,16 +15,18 @@ namespace RPG.Stats {
 
         [SerializeField] private int _level;
         [SerializeField] private float _experience;
-
-        public BuffContainer Buffs;
         
+        public BuffContainer Buffs;
 
+
+        public CreatureClass CreatureClass => _stats.CreatureClass;
+        
         public event Action OnLevelUp;
         public event Action OnStatUpdated;
         
         //TODO: CHANGE IT TO MODIFICATIONS
-        private List<PredicatedStats> _predicatedStats = new List<PredicatedStats>();
-        private List<PredicatedStats> _temporaryStats = new List<PredicatedStats>();
+        private List<PredicatedStats> _predicatedStats = new();
+        private List<PredicatedStats> _temporaryStats = new();
         
 
         protected override void OnAwake() {

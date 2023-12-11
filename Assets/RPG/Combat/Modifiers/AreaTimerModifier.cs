@@ -26,6 +26,7 @@ namespace RPG.Combat.Modifiers {
                 yield return new WaitForSeconds(_cooldown);
             }
         }
+        
         protected override void OnUnregisterModification() {
             Performer.StopCoroutine(_performerCoroutine);
         }

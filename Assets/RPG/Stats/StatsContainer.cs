@@ -8,12 +8,14 @@ namespace RPG.Stats {
     [CreateAssetMenu(fileName = "New Stats", menuName = "GumuPeachu/Create New Stats", order = 0)]
     public class StatsContainer : ScriptableObject, ISerializationCallbackReceiver {
         
-        [SerializeField] private string _raceName;
+        [SerializeField] private CreatureClass _class;
         
-        [SerializeField] private List<StatValue> _baseStats = new List<StatValue>();
-        [SerializeField] private List<StatValue> _scaleStats = new List<StatValue>();
-        
+        [SerializeField] private List<StatValue> _baseStats = new();
+        [SerializeField] private List<StatValue> _scaleStats = new();
 
+
+        public CreatureClass CreatureClass => _class; 
+        
         public float GetBaseStat(Stat stat) {
             return _baseStats.Single(basic => basic.stat == stat).value;
         }
