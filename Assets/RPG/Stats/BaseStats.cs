@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
+using RPG.Combat;
 using RPG.Combat.Buffs;
 using RPG.Core.Predicate;
 using RPG.Saving;
@@ -22,8 +23,10 @@ namespace RPG.Stats {
         public event Action OnLevelUp;
         public event Action OnStatUpdated;
         
+        //TODO: CHANGE IT TO MODIFICATIONS
         private List<PredicatedStats> _predicatedStats = new List<PredicatedStats>();
         private List<PredicatedStats> _temporaryStats = new List<PredicatedStats>();
+        
 
         protected override void OnAwake() {
             Buffs = GetComponent<BuffContainer>();
