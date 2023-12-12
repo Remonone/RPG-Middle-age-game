@@ -2,43 +2,47 @@
 using System.Collections.Generic;
 using System.Linq;
 using RPG.Core.Predicate.Nodes;
+using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Core.Predicate {
     public static class PredicateWorker {
         
-        private static readonly Dictionary<string, PredicateMonoBehaviour> PredicateStore = new Dictionary<string, PredicateMonoBehaviour>();
+        private static readonly Dictionary<string, PredicateMonoBehaviour> PredicateBehavioursStore = new();
 
         private static readonly PredicateLexer Lexer = new();
         private static readonly PredicateParser Parser = new();
 
-        // Internal 
-        private static readonly Dictionary<string, Dictionary<string, object>> VariableStore = new Dictionary<string, Dictionary<string, object>>();
+        private static readonly Dictionary<string, Dictionary<string, object>> VariableStore = new();
 
         public static bool RegisterPredicate(string id, PredicateMonoBehaviour predicate) {
-            if (PredicateStore.ContainsKey(id)) return false;
-            PredicateStore[id] = predicate;
+            if (PredicateBehavioursStore.ContainsKey(id)) return false;
+            PredicateBehavioursStore[id] = predicate;
             return true;
         }
 
         public static bool DestroyPredicate(string id) {
-            return PredicateStore.Remove(id);
+            return PredicateBehavioursStore.Remove(id);
         }
 
         public static PredicateMonoBehaviour GetPredicateMonoBehaviour(string id) {
-            return PredicateStore[id];
+            return PredicateBehavioursStore[id];
         }
 
         public static void ParsePredicate(string parse, string sessionID) {
             try {
                 var list = Lexer.LexAnalysis(parse);
-                // foreach (var item in list) {
-                //     Debug.Log("Type: " + item.type + "; Value: " + item.text);
-                // }
+                if (PropertyConstants.SHOULD_PRINT_PREDICATES) {
+                    foreach (var item in list) {
+                        Debug.Log("Type: " + item.type + "; Value: " + item.text);
+                    }
+                }
                 if (!VariableStore.ContainsKey(sessionID)) VariableStore[sessionID] = new Dictionary<string, object>();
                 var treeNode = Parser.ParseCode(list);
-                // TODO: Log information
-                RunNodes(treeNode, sessionID);
+                var result = RunNodes(treeNode, sessionID);
+                if (PropertyConstants.PREVIEW_PREDICATE_RESULT) {
+                    Debug.Log(result);
+                }
             }
             catch (Exception e) {
                 Debug.LogError(e);
@@ -54,7 +58,7 @@ namespace RPG.Core.Predicate {
                 var sender = (SenderNode)node;
                 var receiver = sender.Receiver.ID;
                 var id = Convert.ToString(RunNodes(receiver, sessionID));
-                var component = PredicateStore[id];
+                var component = PredicateBehavioursStore[id];
                 if (component != null) {
                     var args = sender.Action.Args;
                     var argsToSend = args != null ? 

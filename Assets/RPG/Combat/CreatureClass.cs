@@ -7,5 +7,6 @@
         BERSERKER,
         BRUSIER,
         TANK,
+        DUMMY
     }
 }

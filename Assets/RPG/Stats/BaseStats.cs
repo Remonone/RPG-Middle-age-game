@@ -16,6 +16,7 @@ namespace RPG.Stats {
         [SerializeField] private int _level;
         [SerializeField] private float _experience;
         
+        // TODO: Complete Buff system
         public BuffContainer Buffs;
 
 
@@ -59,7 +60,7 @@ namespace RPG.Stats {
         }
         
         private bool AmplifyStat(object[] args) {
-            ValidateArgs(args, typeof(string), typeof(float), typeof(float), typeof(bool));
+            if(!ValidateArgs(args, typeof(string), typeof(float), typeof(float), typeof(bool))) return false;
             for (int i = 0; i < args.Length; i++) args[i] = Convert.ToString(args[i]);
             var stats = new PredicatedStats {
                 Stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0])),
@@ -74,7 +75,7 @@ namespace RPG.Stats {
         }
 
         private bool CancelStat(object[] args) {
-            ValidateArgs(args, typeof(string), typeof(bool));
+            if(!ValidateArgs(args, typeof(string), typeof(bool))) return false;
             var stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0]));
             if (Convert.ToInt32(args[1]) == 0) {
                 _temporaryStats.RemoveAll(predicate => predicate.Stat == stat);

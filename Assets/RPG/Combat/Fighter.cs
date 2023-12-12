@@ -94,7 +94,8 @@ namespace RPG.Combat {
         void Hit() {
             if (_target == null) return;
             EquipmentItem weapon = _equipment.GetEquipmentItem(EquipmentSlots.WEAPON);
-            var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), weapon.Type, gameObject); 
+            DamageType type = weapon != null ? weapon.Type : DamageType.PHYSICAL;
+            var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), type, gameObject); 
             OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
             _target.HitEntity(report);
         }

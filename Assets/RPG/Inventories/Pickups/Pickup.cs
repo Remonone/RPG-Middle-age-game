@@ -5,16 +5,16 @@ using UnityEngine;
 namespace RPG.Inventories.Pickups {
     public class Pickup : MonoBehaviour {
 
-        private Pickable _picable = new ();
+        private readonly Pickable _pickable = new();
 
         public void Setup(InventoryItem item, int count) {
-            _picable.StoredItem = item;
-            _picable.Count = count;
+            _pickable.StoredItem = item;
+            _pickable.Count = count;
         }
         // TODO: Make able to pickup it through PlayerController class
         public Pickable PickUp() {
             Destroy(this, .1f);
-            return _picable;
+            return _pickable;
         }
         
     }

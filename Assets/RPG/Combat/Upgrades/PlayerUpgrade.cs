@@ -13,7 +13,7 @@ namespace RPG.Combat.Upgrades {
         private BaseStats _stats;
         private UpgradeTree _upgradeTree;
         private int _availableUpgradePoints;
-        private List<string> _upgradeList = new();
+        private readonly List<string> _upgradeList = new();
 
         private void Awake() {
             _stats = GetComponent<BaseStats>();

@@ -44,7 +44,7 @@ namespace RPG.Inventories.Items {
             var itemList = Resources.LoadAll<InventoryItem>("Items");
             foreach (var item in itemList) {
                 if (_itemStore.ContainsKey(item._itemID)) {
-                    Debug.LogError(string.Format("There's a duplicate for objects: {0} and {1}", _itemStore[item._itemID], item));
+                    Debug.LogError($"There's a duplicate for objects: {_itemStore[item._itemID]} and {item}");
                     continue;
                 }
                 _itemStore[item._itemID] = item;

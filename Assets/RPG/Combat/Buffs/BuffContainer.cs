@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using RPG.Saving;
-using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Combat.Buffs {
