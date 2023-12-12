@@ -40,7 +40,6 @@ namespace RPG.Core.Predicate {
             return true;
         }
         
-        // TODO: Might be changed...
         protected virtual void OnAwake() {}
         protected virtual void OnEnableEvent() {}
         protected virtual void OnDestroyEvent() {}

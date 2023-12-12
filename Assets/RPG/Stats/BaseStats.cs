@@ -15,10 +15,6 @@ namespace RPG.Stats {
 
         [SerializeField] private int _level;
         [SerializeField] private float _experience;
-        
-        // TODO: Complete Buff system
-        public BuffContainer Buffs;
-
 
         public CreatureClass CreatureClass => _stats.CreatureClass;
         
@@ -29,10 +25,6 @@ namespace RPG.Stats {
         private List<PredicatedStats> _predicatedStats = new();
         private List<PredicatedStats> _temporaryStats = new();
         
-
-        protected override void OnAwake() {
-            Buffs = GetComponent<BuffContainer>();
-        }
 
         public void AddExperience(float amount) {
             var exp = Stat.EXPERIENCE_TO_PROMOTE;

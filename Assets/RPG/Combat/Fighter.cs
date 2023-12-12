@@ -8,6 +8,7 @@ using RPG.Movement;
 using RPG.Stats;
 using RPG.Utils;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 // TODO: REDUCE DEPENDENCY LIST
 
@@ -86,11 +87,11 @@ namespace RPG.Combat {
         private void AttackTarget() {
             _animator.SetBool(_hMoving, false);
             _animator.SetInteger(_hTriggerAction, 4);
-            _animator.SetInteger(_hAttack, 4); // TODO: Create a list of random attack list;
+            var randAttack = Random.Range(1, 4);
+            _animator.SetInteger(_hAttack, randAttack);
             _animator.SetTrigger(_hTrigger);
         }
 
-        // ReSharper disable once ArrangeTypeMemberModifiers
         void Hit() {
             if (_target == null) return;
             EquipmentItem weapon = _equipment.GetEquipmentItem(EquipmentSlots.WEAPON);
