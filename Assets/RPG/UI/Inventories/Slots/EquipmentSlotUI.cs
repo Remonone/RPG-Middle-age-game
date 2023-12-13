@@ -7,7 +7,7 @@ namespace RPG.UI.Inventories.Slots {
     public class EquipmentSlotUI : MonoBehaviour, IItemHolder, IDragContainer<InventoryItem> {
 
         [SerializeField] private InventoryItemIcon _equipmentImage;
-        [SerializeField] private EquipmentSlots _equipmentSlot;
+        [SerializeField] private EquipmentSlot _equipmentSlot;
 
         private Equipment _equipment;
 

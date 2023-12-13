@@ -9,19 +9,21 @@ namespace RPG.Inventories.Items {
     [CreateAssetMenu(fileName = "Equipment Item", menuName = "GumuPeachu/Inventory/Create new Equipment")]
     public class EquipmentItem : InventoryItem {
 
-        [SerializeField] private EquipmentSlots _slot;
+        [SerializeField] private EquipmentSlot _slot;
         [SerializeField] private DamageType _type;
         [SerializeField] private Predicate _onEquipPredicate;
         [SerializeField] private Predicate _onUnequipPredicate;
         [SerializeField] private List<Modification> _modifications;
         [SerializeField] private TextMeshProUGUI _test;
+        [SerializeField] private GameObject _itemModel;
 
-        public EquipmentSlots Slot => _slot;
+        public EquipmentSlot Slot => _slot;
         public DamageType Type => _type;
         public Predicate OnEquipPredicate => _onEquipPredicate;
         public Predicate OnUnequipPredicate => _onUnequipPredicate;
+        public GameObject ItemModel => _itemModel;
         
-        public bool CanEquip(EquipmentSlots location) {
+        public bool CanEquip(EquipmentSlot location) {
             return _slot == location;
         }
         

@@ -1,5 +1,5 @@
 ﻿namespace RPG.Inventories {
-    public enum EquipmentSlots {
+    public enum EquipmentSlot {
         HEAD,
         CHEST,
         PANTS,
