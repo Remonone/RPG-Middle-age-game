@@ -2,7 +2,7 @@ using Movement.Patrols;
 using RPG.Movement;
 using UnityEngine;
 
-namespace RPG.Control {
+namespace RPG.Creatures.Controls {
     public class EnemyMovement : MonoBehaviour {
 
         [SerializeField] private Patrol _patrol; 

@@ -1,5 +1,5 @@
 ﻿using System;
-using RPG.Control;
+using RPG.Creatures.Controls;
 using RPG.UI.Cursors;
 using UnityEngine;
 

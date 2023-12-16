@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using RPG.Combat;
-using RPG.Control;
 using RPG.Core;
 using RPG.Saving;
 using RPG.Stats;

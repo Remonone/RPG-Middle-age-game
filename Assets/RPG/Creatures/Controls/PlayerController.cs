@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-namespace RPG.Control {
+namespace RPG.Creatures.Controls {
     public class PlayerController : MonoBehaviour {
         [SerializeField] private Camera _camera;
         [SerializeField] private InputActionMap _map;

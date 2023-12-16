@@ -1,4 +1,4 @@
-﻿using RPG.Control;
+﻿using RPG.Creatures.Controls;
 
 namespace RPG.UI.Cursors {
     public interface ITrajectory {
