@@ -9,8 +9,8 @@ namespace RPG.Dialogs {
     
     public class DialogNode : ScriptableObject {
         [SerializeField] private string _text;
-        [SerializeField] private List<string> _children;
-        [SerializeField] private Rect _rectangle = new Rect(10,10,200,100);
+        [SerializeField] private List<string> _children = new();
+        [SerializeField] private Rect _rectangle = new(10,10,200,100);
         [SerializeField] private bool _isPlayer;
         // TODO: Invoke predicate worker on entering and exiting dialog node
         [SerializeField] private string _onExitPredicate;
@@ -43,6 +43,17 @@ namespace RPG.Dialogs {
             _rectangle.position = newPosition;
             EditorUtility.SetDirty(this);
         }
-
+        
+        public void AddChild(string childID) {
+            Undo.RecordObject(this, "Link Node");
+            _children.Add(childID);
+            EditorUtility.SetDirty(this);
+        }
+        
+        public void RemoveChild(string childID) {
+            Undo.RecordObject(this, "Unlink Node");
+            _children.Remove(childID);
+            EditorUtility.SetDirty(this);
+        }
     }
 }

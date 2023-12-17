@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,6 +16,14 @@ namespace RPG.Dialogs {
 
         public DialogNode GetNode(Vector2 point) => _nodes.FindLast(node => node.Rectangle.Contains(point));
 
+        public IEnumerable<DialogNode> GetAllNodes() => _nodes;
+        
+        public IEnumerable<DialogNode> GetAllChildren(DialogNode node) {
+            foreach (var id in node.Children) {
+                if (_nodeLookup.ContainsKey(id)) yield return _nodeLookup[id];
+            }
+        }
+
         private void Awake() {
             FillNodesDict();
         }
@@ -27,13 +36,14 @@ namespace RPG.Dialogs {
             FillNodesDict();
         }
         
-        private void AddNewNode(DialogNode node) {
+        public void AddNewNode(DialogNode node) {
             var newNode = CreateNode(node);
             Undo.RegisterCreatedObjectUndo(newNode, "Create Dialog Node");
             Undo.RecordObject(this, "Added Dialog Node");
             _nodes.Add(newNode);
             OnValidate();
         }
+        
         private DialogNode CreateNode(DialogNode parent) {
             var node = CreateInstance<DialogNode>();
             node.name = Guid.NewGuid().ToString();
@@ -58,6 +68,7 @@ namespace RPG.Dialogs {
             }
         }
 
+
         private void FillNodesDict() {
             foreach (var node in _nodes) {
                 _nodeLookup[node.name] = node;
@@ -65,7 +76,11 @@ namespace RPG.Dialogs {
         }
         
         public void OnBeforeSerialize() {
-            if (_nodes.Count == 0) CreateNode(null);
+            if (_nodes.Count == 0) {
+                DialogNode node = CreateNode(null);
+                _nodes.Add(node);
+                OnValidate();
+            }
             if (AssetDatabase.GetAssetPath(this) != null) {
                 foreach (var node in _nodes) {
                     if (AssetDatabase.GetAssetPath(node) == "") {
