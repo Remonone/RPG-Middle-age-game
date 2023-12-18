@@ -7,7 +7,6 @@ using UnityEngine;
 namespace RPG.Dialogs {
     [CreateAssetMenu(fileName = "New Dialog", menuName = "GumuPeachu/Dialogs/Create New Dialog", order = 0)]
     public class Dialog : ScriptableObject, ISerializationCallbackReceiver {
-        // TODO: Create proper handling of dialogNodes
         [SerializeField] private List<DialogNode> _nodes = new();
 
         private Dictionary<string, DialogNode> _nodeLookup = new();
@@ -18,11 +17,20 @@ namespace RPG.Dialogs {
 
         public IEnumerable<DialogNode> GetAllNodes() => _nodes;
         
-        public IEnumerable<DialogNode> GetAllChildren(DialogNode node) {
-            foreach (var id in node.Children) {
+        public IEnumerable<DialogNode> GetAllChildren(DialogNode current) {
+            foreach (var id in current.Children) {
                 if (_nodeLookup.ContainsKey(id)) yield return _nodeLookup[id];
             }
         }
+
+        public IEnumerable<DialogNode> GetPlayerChildren(DialogNode current) {
+            return GetAllChildren(current).Where(node => node.IsPlayer);
+        }
+
+        public IEnumerable<DialogNode> GetAIChildren(DialogNode current) {
+            return GetAllChildren(current).Where(node => !node.IsPlayer);
+        }
+
 
         private void Awake() {
             FillNodesDict();

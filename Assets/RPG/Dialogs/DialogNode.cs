@@ -15,6 +15,9 @@ namespace RPG.Dialogs {
         // TODO: Invoke predicate worker on entering and exiting dialog node
         [SerializeField] private string _onExitPredicate;
         [SerializeField] private string _onEnterPredicate;
+
+        public string OnExitPredicate => _onExitPredicate;
+        public string OnEnterPredicate => _onEnterPredicate;
         
         public string Text {
             get => _text;
