@@ -17,6 +17,7 @@ namespace RPG.UI.Dialog {
         private void UpdateUI() {
             gameObject.SetActive(_selectedConversant.IsActive);
             if (!_selectedConversant.IsActive) return;
+            
         }
     }
 }

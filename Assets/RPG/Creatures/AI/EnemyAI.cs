@@ -1,13 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace RPG.Creatures.AI {
     public class EnemyAI : MonoBehaviour {
-        [SerializeField] private string[] _enemyTag; // TODO: Swap to fractions
-        [SerializeField] private int _fieldOfView;
-        [SerializeField] private float _visionRange;
+        [SerializeField] private string[] _enemyTag;
+        
         [SerializeField] private float _soundDetectionRange;
-        
-        
+        [SerializeField] private AiVision _vision;
+
+        private void Awake() {
+            _vision.OnAwake();
+        }
+
         // TODO: Implement Goal Oriented Action Planning
     }
 }

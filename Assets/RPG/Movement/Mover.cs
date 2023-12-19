@@ -3,7 +3,6 @@ using RPG.Combat;
 using RPG.Core;
 using RPG.Saving;
 using RPG.Stats;
-using RPG.UI.Cursors;
 using RPG.Utils;
 using UnityEngine;
 using UnityEngine.AI;
