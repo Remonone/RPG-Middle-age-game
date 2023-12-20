@@ -1,0 +1,9 @@
+.gp__button {
+    border-radius: 3px;
+    margin: 0;
+}
+
+.gp-container{
+    flex-grow: 1;
+    flex-shrink: 0;
+}

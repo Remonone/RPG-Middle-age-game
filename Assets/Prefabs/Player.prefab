@@ -20,9 +20,12 @@ GameObject:
   - component: {fileID: 5334357305607278865}
   - component: {fileID: 2291291233203980339}
   - component: {fileID: 1109077603898358654}
+  - component: {fileID: 5735539229772562644}
+  - component: {fileID: 5735539229772562600}
+  - component: {fileID: 1244053959}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,7 +45,7 @@ Transform:
   - {fileID: 6481189361240403948}
   - {fileID: 8235669467567064195}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5334357305607278873
 MonoBehaviour:
@@ -78,6 +81,14 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
+    - m_Name: Inventory
+      m_Type: 1
+      m_ExpectedControlType: Button
+      m_Id: 148e6be4-88e6-4a3a-93a0-8ac17dd2e0e7
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
     m_Bindings:
     - m_Name: 
       m_Id: 01ea5194-9c98-4595-8a47-8b9995cb4b0f
@@ -95,7 +106,27 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Position
       m_Flags: 0
-  _cursors: []
+    - m_Name: 
+      m_Id: a0b79c75-83b1-4ec9-a6ba-bda801a2434f
+      m_Path: <Keyboard>/i
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Inventory
+      m_Flags: 0
+  _cursors:
+  - Type: 2
+    Image: {fileID: 2800000, guid: aaa9d832f967d2c4f863066eaf3a277e, type: 3}
+    Hotspot: {x: 0, y: 0}
+  - Type: 1
+    Image: {fileID: 2800000, guid: 5988a2020badc834c96521b52b6a08f5, type: 3}
+    Hotspot: {x: 0, y: 0}
+  - Type: 3
+    Image: {fileID: 2800000, guid: 8589811d8f6629443ad2c9be7e027110, type: 3}
+    Hotspot: {x: 0, y: 0}
+  - Type: 0
+    Image: {fileID: 2800000, guid: 8bf839021e420dd459a61f9c1c0354f7, type: 3}
+    Hotspot: {x: 0, y: 0}
 --- !u!195 &5334357305607278874
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -107,7 +138,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 60
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -273,6 +304,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 5334357305607278869}
   _threshold: 2
+--- !u!114 &5735539229772562644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5334357305607278876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d84f32d2388945b48664c01408607ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _slotsCount: 40
+  _pickup: {fileID: 0}
+--- !u!114 &5735539229772562600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5334357305607278876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dacacc49cb2f47a78331d5e65cc2440a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentID: 
+--- !u!114 &1244053959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5334357305607278876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e79664dafe542039bfa19184e9c6a16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentID: 
+  _entityName: Player
+  _isPlayer: 1
 --- !u!1 &6940914554887072667
 GameObject:
   m_ObjectHideFlags: 0

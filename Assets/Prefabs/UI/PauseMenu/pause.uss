@@ -1,0 +1,25 @@
+.pause{
+    background-color: rgba(110, 110, 110, 1);
+    padding: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 40%;
+}
+
+.pause Label{
+    color: white;
+    -unity-text-align: middle-center;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.pause-list Button{
+    margin-bottom: 10px;
+}
+
+.pause-list {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}

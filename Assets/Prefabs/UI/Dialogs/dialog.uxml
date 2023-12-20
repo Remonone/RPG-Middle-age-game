@@ -1,14 +1,15 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Prefabs/UI/Dialogs/dialog.uss?fileID=7433441132597879392&amp;guid=6b24ce45c1ab7c34bba0545dbf128bca&amp;type=3#dialog" />
+    <Style src="project://database/Assets/Prefabs/UI/gp-ui.uss?fileID=7433441132597879392&amp;guid=de4531f42011df44f9611db9c5e73937&amp;type=3#gp-ui" />
     <ui:VisualElement style="flex-grow: 1;">
-        <ui:Box name="dialog-box" class="dialog" style="align-items: stretch; align-self: center; justify-content: center; min-width: 75%; min-height: 40%;">
+        <ui:Box name="dialog-box" class="dialog">
             <ui:Button name="close" text="X" class="dialog__button_close" />
-            <ui:Label name="conversant" text="sample" style="margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px;" />
-            <ui:Box name="Box" class="dialog-content" style="width: auto; flex-grow: 1; flex-shrink: 0; align-self: stretch; justify-content: space-between; align-items: stretch;">
-                <ui:Label name="dialog" text="dialog" style="align-self: auto; flex-grow: 1; margin-bottom: 10px; min-height: 40%;" />
+            <ui:Label name="conversant" text="sample" />
+            <ui:Box name="Box" class="dialog-content">
+                <ui:Label name="dialog" text="dialog" />
                 <ui:Box name="choices">
-                    <ui:Button text="Variant 1" class="dialog__button" />
-                    <ui:Button text="Variant 2" class="dialog__button" />
+                    <ui:Button text="Variant 1" class="gp__button" />
+                    <ui:Button text="Variant 2" class="gp__button" />
                 </ui:Box>
             </ui:Box>
         </ui:Box>

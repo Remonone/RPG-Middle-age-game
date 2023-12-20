@@ -1,13 +1,12 @@
 .dialog {
-    align-items: center;
     justify-content: center;
     align-self: center;
     position: absolute;
+    align-items: stretch;
     left: 50%;
     top: auto;
     max-width: none;
-    min-width: 50%;
-    min-height: 28%;
+    min-width: 75%;
     translate: -50% 0;
     bottom: 30px;
     transform-origin: bottom;
@@ -34,7 +33,7 @@
 }
 
 .dialog-content {
-    width: 100%;
+    width: auto;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
@@ -44,13 +43,19 @@
     margin-top: 0;
     margin-bottom: 10px;
     justify-content: space-between;
-    align-self: auto;
+    align-self: stretch;
+    align-items: stretch;
     flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 0;
     background-color: rgba(110, 110, 110, 1);
 }
 
 .dialog-content Label{
     color: white;
+    flex-grow: 1;
+    margin-bottom: 10px; 
+    min-height: 300px;
 }
 
 .disabled {
@@ -59,6 +64,10 @@
 
 #conversant {
     -unity-font-style: bold;
+    margin-left: 10px; 
+    margin-right: 10px; 
+    margin-top: 10px; 
+    margin-bottom: 10px;
 }
 
 .dialog__button{
@@ -67,12 +76,4 @@
 
 Box{
     border-radius: 3px;
-}
-
-Button{
-    margin: 0;
-}
-
-#dialog {
-    min-height: 35%;
 }

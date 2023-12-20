@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Prefabs/UI/PauseMenu/pause.uss?fileID=7433441132597879392&amp;guid=445a0a6fd6014c5499aac64d228e2261&amp;type=3#pause" />
+    <Style src="project://database/Assets/Prefabs/UI/gp-ui.uss?fileID=7433441132597879392&amp;guid=de4531f42011df44f9611db9c5e73937&amp;type=3#gp-ui" />
+    <ui:VisualElement class="gp-container">
+        <ui:Box class="pause">
+            <ui:Label text="PAUSE" />
+            <ui:Box class="pause-list">
+                <ui:Button text="Resume" name="resume" class="gp__button" />
+                <ui:Button text="Settings" name="settings" class="gp__button" />
+                <ui:Button text="Exit" name="exit" class="gp__button" />
+            </ui:Box>
+        </ui:Box>
+    </ui:VisualElement>
+</ui:UXML>
