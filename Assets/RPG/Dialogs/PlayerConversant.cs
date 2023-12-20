@@ -1,29 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RPG.Core.Predicate;
 using UnityEngine;
 
 namespace RPG.Dialogs {
-    public class Conversant : PredicateMonoBehaviour {
+    public class PlayerConversant : PredicateMonoBehaviour {
         [SerializeField] private string _entityName;
         [SerializeField] private bool _isPlayer;
         
         private Dialog _dialog;
         private DialogNode _currentNode;
         private bool _isChoosing;
-        private Conversant _conversant;
+        private AIConversant _aiConversant;
 
         public event Action OnUpdate;
 
-        public string CurrentConversantName => _isChoosing ? _entityName : _conversant._entityName;
+        public string CurrentConversantName => _isChoosing ? _entityName : _aiConversant.EntityName;
         public bool IsActive => _dialog != null;
-        
-        public string GetCurrentText() {
-            return _currentNode == null ? "" : _currentNode.Text;
-        }
+        public bool IsChoosing => _isChoosing;
 
-        public void StartDialog(Dialog dialog, Conversant associate) {
-            _conversant = associate;
+        
+        public string GetCurrentText() => _currentNode == null ? "" : _currentNode.Text;
+
+        public IEnumerable<DialogNode> GetChoices() => _dialog.GetPlayerChildren(_currentNode);
+
+        public void StartDialog(Dialog dialog, AIConversant associate) {
+            _aiConversant = associate;
             _dialog = dialog;
             _currentNode = dialog.GetRootNode();
             OnEnterAction();
@@ -32,7 +35,7 @@ namespace RPG.Dialogs {
 
         public void Quit() {
             OnExitAction();
-            _conversant = null;
+            _aiConversant = null;
             _currentNode = null;
             _dialog = null;
             _isChoosing = false;
@@ -40,22 +43,18 @@ namespace RPG.Dialogs {
         }
 
         public void Next() {
-            if (_isPlayer) {
-                var nodes = _dialog.GetPlayerChildren(_currentNode);
-                if (nodes.Any()) {
-                    _isChoosing = true;
-                    OnExitAction();
-                    OnUpdate?.Invoke();
-                    return;
-                }
-                var aiNodes = _dialog.GetAIChildren(_currentNode).ToArray();
+            var nodes = _dialog.GetPlayerChildren(_currentNode);
+            if (nodes.Any()) {
+                _isChoosing = true;
                 OnExitAction();
-                _currentNode = aiNodes[0];
-                OnEnterAction();
                 OnUpdate?.Invoke();
                 return;
-            } 
-            _conversant.Next();
+            }
+            var aiNodes = _dialog.GetAIChildren(_currentNode).ToArray();
+            OnExitAction();
+            _currentNode = aiNodes[0];
+            OnEnterAction();
+            OnUpdate?.Invoke();
         }
         
         private void OnEnterAction() {
@@ -67,6 +66,7 @@ namespace RPG.Dialogs {
             if (_dialog == null) return;
             TriggerAction(_currentNode.OnExitPredicate);
         }
+        // BUG: Need to pass component ID; Use Predicate as Component ID Receiver
         private void TriggerAction(string actionPredicate) {
             if (actionPredicate == "") return;
             PredicateWorker.ParsePredicate(actionPredicate, ComponentID);
@@ -74,6 +74,16 @@ namespace RPG.Dialogs {
         
         public override void Predicate(string command, object[] arguments, out object result) {
             result = "";
+        }
+        public void SelectChoice(DialogNode choice) {
+            TriggerAction(_currentNode.OnExitPredicate);
+            _currentNode = choice;
+            TriggerAction(_currentNode.OnEnterPredicate);
+            _isChoosing = !_isChoosing;
+            Next();
+        }
+        public bool HasNext() {
+            return _dialog.GetAllChildren(_currentNode).Any();
         }
     }
 }
