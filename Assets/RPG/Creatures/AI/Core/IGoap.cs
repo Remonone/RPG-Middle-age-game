@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace RPG.Creatures.AI.Core {
     public interface IGoap {
-        List<GoapAction.KeyPair> GetCurrentState();
+        List<StateObject> GetCurrentState();
 
-        List<GoapAction.KeyPair> CreateGoal();
+        List<StateObject> CreateGoal();
 
-        void OnPlanFailed(List<GoapAction.KeyPair> failedGoal);
+        void OnPlanFailed(List<StateObject> failedGoal);
 
-        void OnPlanFound(List<GoapAction.KeyPair> goal, Queue<GoapAction> actions);
+        void OnPlanFound(List<StateObject> goal, Queue<GoapAction> actions);
 
         void OnActionsFinished();
 

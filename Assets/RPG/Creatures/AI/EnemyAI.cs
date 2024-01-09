@@ -1,7 +1,9 @@
 ﻿using System;
+using RPG.Creatures.AI.Core;
 using UnityEngine;
 
 namespace RPG.Creatures.AI {
+    
     public class EnemyAI : MonoBehaviour {
         [SerializeField] private string[] _enemyTag;
         

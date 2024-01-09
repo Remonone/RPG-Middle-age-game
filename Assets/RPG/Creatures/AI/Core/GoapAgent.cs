@@ -8,12 +8,13 @@ namespace RPG.Creatures.AI.Core {
         [SerializeField] private List<GoapAction> _availableActions = new();
         
         private Queue<GoapAction> _currentActions = new();
-        private FSM _stateMachine = new();
+        private readonly FSM _stateMachine = new();
+        private readonly GoapPlanner _planner = new();
+        
         private FSM.FSMState _idleState;
         private FSM.FSMState _moveToState;
         private FSM.FSMState _performActionState;
         private IGoap _provider;
-        private GoapPlanner _planner = new();
 
         private void Start() {
             _provider = GetComponent<IGoap>();
@@ -31,8 +32,8 @@ namespace RPG.Creatures.AI.Core {
 
         private void CreateIdleState() {
             _idleState = (fsm, go) => {
-                List<GoapAction.KeyPair> currentState = _provider.GetCurrentState();
-                List<GoapAction.KeyPair> goal = _provider.CreateGoal();
+                List<StateObject> currentState = _provider.GetCurrentState();
+                List<StateObject> goal = _provider.CreateGoal();
 
                 Queue<GoapAction> plan = _planner.BuildPlan(go, _availableActions, currentState, goal);
 
@@ -51,7 +52,7 @@ namespace RPG.Creatures.AI.Core {
         }
 
         private void CreateMoveToState() {
-            _moveToState = (fsm, go) => {
+            _moveToState = (fsm, _) => {
                 GoapAction action = _currentActions.Peek();
 
                 if (action.RequiresInRange() && action.Target == null) {

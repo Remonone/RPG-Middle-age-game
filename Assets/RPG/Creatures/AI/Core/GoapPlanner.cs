@@ -4,8 +4,8 @@ using UnityEngine;
 namespace RPG.Creatures.AI.Core {
     public class GoapPlanner {
         
-        public Queue<GoapAction> BuildPlan(GameObject agent, List<GoapAction> actions, List<GoapAction.KeyPair> prerequisites,
-            List<GoapAction.KeyPair> goals) {
+        public Queue<GoapAction> BuildPlan(GameObject agent, List<GoapAction> actions, List<StateObject> prerequisites,
+            List<StateObject> goals) {
             foreach(var action in actions) action.DoReset();
 
             List<GoapAction> usableActions = new();
@@ -45,12 +45,12 @@ namespace RPG.Creatures.AI.Core {
             
             return null;
         }
-        private bool BuildGraph(Node parent, List<Node> nodes, List<GoapAction> usableActions, List<GoapAction.KeyPair> goals) {
+        private bool BuildGraph(Node parent, List<Node> nodes, List<GoapAction> usableActions, List<StateObject> goals) {
             bool isFound = false;
 
             foreach (var action in usableActions) {
                 if (!IsInRequisite(parent.States, action.Prerequisites)) continue;
-                List<GoapAction.KeyPair> newStates = PopulateState(parent.States, action.Effects);
+                List<StateObject> newStates = PopulateState(parent.States, action.Effects);
                 var node = new Node(parent, parent.Cost + action.Cost, newStates, action);
 
                 if (IsInRequisite(newStates, goals)) {
@@ -66,7 +66,7 @@ namespace RPG.Creatures.AI.Core {
             return isFound;
         }
 
-        private bool IsInRequisite(List<GoapAction.KeyPair> current, List<GoapAction.KeyPair> requisites) {
+        private bool IsInRequisite(List<StateObject> current, List<StateObject> requisites) {
             foreach (var requisite in requisites) {
                 if (!current.Contains(requisite))
                     return false;
@@ -75,8 +75,8 @@ namespace RPG.Creatures.AI.Core {
             return true;
         }
         
-        private List<GoapAction.KeyPair> PopulateState(List<GoapAction.KeyPair> parentStates, List<GoapAction.KeyPair> actionEffects) {
-            List<GoapAction.KeyPair> newState = new();
+        private List<StateObject> PopulateState(List<StateObject> parentStates, List<StateObject> actionEffects) {
+            List<StateObject> newState = new();
             foreach(var state in parentStates) newState.Add(state);
 
             foreach (var effect in actionEffects) {
@@ -107,10 +107,10 @@ namespace RPG.Creatures.AI.Core {
         private class Node {
             public Node Parent;
             public float Cost;
-            public List<GoapAction.KeyPair> States;
+            public List<StateObject> States;
             public GoapAction Action;
 
-            public Node(Node parent, float runningCost, List<GoapAction.KeyPair> prerequisites, GoapAction action) {
+            public Node(Node parent, float runningCost, List<StateObject> prerequisites, GoapAction action) {
                 Parent = parent;
                 Cost = runningCost;
                 States = prerequisites;

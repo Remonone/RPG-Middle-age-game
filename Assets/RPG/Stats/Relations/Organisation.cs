@@ -13,8 +13,11 @@ namespace RPG.Stats.Relations {
         [SerializeField] private Color _color;
         [SerializeField] private Image _flag;
         [SerializeField] private Image _emblem;
+        [SerializeField] private float _agroThreshold;
         
         private readonly Dictionary<Organisation, float> _relations = new();
+
+        public float AgroThreshold => _agroThreshold;
 
         public float GetRelationWithOrganisation(Organisation org) {
             if (!_relations.ContainsKey(org)) {

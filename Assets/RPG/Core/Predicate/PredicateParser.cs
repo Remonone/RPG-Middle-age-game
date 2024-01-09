@@ -52,6 +52,11 @@ namespace RPG.Core.Predicate {
                 return new DeleteNode{ToDelete = deletingNode};
             }
 
+            if (Match(PredicateLexicon.TokenTypes["GET"]) != null) {
+                CheckOnStep();
+                var variable = Require(PredicateLexicon.TokenTypes["VALUE"]);
+                return new GetNode{Variable = variable};
+            }
             if (Match(PredicateLexicon.TokenTypes["VARIABLE"]) == null)
                 throw new Exception("Expected operating with component or variable operator");
             CheckOnStep();
