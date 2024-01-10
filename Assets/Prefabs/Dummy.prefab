@@ -16,7 +16,7 @@ PrefabInstance:
     - target: {fileID: 5360683131785772904, guid: 0331b169005eb1d469455efaa6b9024a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 5360683131785772904, guid: 0331b169005eb1d469455efaa6b9024a,
         type: 3}
@@ -118,6 +118,7 @@ MonoBehaviour:
   _componentID: 
   _currentHealth: 0
   _maxHealth: 0
+  _animator: {fileID: 6386393948329803976}
 --- !u!114 &1305972739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,6 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f837253a7447f6ae813de479c8df2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentID: 
 --- !u!114 &1305972742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,7 +163,6 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: 9d4c8af17276f0848af86d99eee229c2, type: 2}
   _level: 1
   _experience: 0
-  Buffs: {fileID: 1305972743}
 --- !u!136 &6596992947692900767
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -199,3 +200,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isTargetable: 1
   _isAggresive: 0
+--- !u!95 &6386393948329803976 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5615497917579445399, guid: 0331b169005eb1d469455efaa6b9024a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1535523990463038559}
+  m_PrefabAsset: {fileID: 0}

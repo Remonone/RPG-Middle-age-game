@@ -3,18 +3,18 @@ using UnityEngine;
 
 namespace RPG.Utils.FSM {
     public class FSM {
-        private Stack<FSMState> stateStack = new();
+        private readonly Stack<FSMState> _stateStack = new();
 
         public delegate void FSMState(FSM fsm, GameObject go);
 
         public void Update(GameObject go) {
-            if (stateStack.Peek() != null) {
-                stateStack.Peek().Invoke(this, go);
+            if (_stateStack.Peek() != null) {
+                _stateStack.Peek().Invoke(this, go);
             }
         }
         
-        public void PushState(FSMState state) => stateStack.Push(state);
+        public void PushState(FSMState state) => _stateStack.Push(state);
     
-        public void PopState() => stateStack.Pop();
+        public void PopState() => _stateStack.Pop();
     }
 }

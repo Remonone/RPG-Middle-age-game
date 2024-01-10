@@ -25,9 +25,11 @@ namespace RPG.Combat {
         private BaseStats _stats;
         [ReadOnly] [SerializeField] private float _currentHealth;
         [ReadOnly] [SerializeField] private float _maxHealth;
+        [SerializeField] private Animator _animator;
 
         public Action<DamageReport> OnHit;
         public Action OnDie;
+        private static readonly int Hit = Animator.StringToHash("OnHit");
         public bool IsAlive => _currentHealth > 0;
         
         protected override void OnAwake() {
@@ -62,6 +64,7 @@ namespace RPG.Combat {
             var resistanceScale = 1 / (1 + Math.Pow(2, -_stats.GetStatValue((Stat)(int)report.Type))); 
             _currentHealth = (float)Math.Max(_currentHealth - report.Damage * resistanceScale, 0);
             OnHit?.Invoke(report);
+            _animator.SetTrigger(Hit);
             if (_currentHealth <= 0) Die();
         }
         private void Die() {

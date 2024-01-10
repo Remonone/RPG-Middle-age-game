@@ -17,13 +17,15 @@ MonoBehaviour:
   _itemDescription: 
   _itemIcon: {fileID: 21300000, guid: 8626b3213071afa439ed1e4a73f62276, type: 3}
   _stackable: 0
+  _slot: 0
+  _type: 0
+  _onEquipPredicate:
+    CodePredicate: '#{0}:AmplifyStat:BASE_REGEN:0,5,1;'
+    ComponentName: BaseStats
+  _onUnequipPredicate:
+    CodePredicate: '#{0}:AmplifyStat:BASE_REGEN:0,5,1;'
+    ComponentName: BaseStats
   _modifications:
   - {fileID: 11400000, guid: bff9974091ffba14eb8032cd43accacd, type: 2}
-  _slot: 0
-  _buffs: []
-  _onEquipPredicate:
-    CodePredicate: 
-    ComponentName: []
-  _onUnequipPredicate:
-    CodePredicate: 
-    ComponentName: []
+  _test: {fileID: 0}
+  _itemModel: {fileID: 0}

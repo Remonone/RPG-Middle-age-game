@@ -21,6 +21,8 @@ namespace RPG.Creatures.AI.Roles {
             _health = GetComponent<Health>();
         }
 
+        
+        // TODO: Change the target to GameObject(can be as target, and as destination point
         public override List<StateObject> GetCurrentState() {
             List<StateObject> states = new List<StateObject>();
             var isEnemyExisting = ReferenceEquals(_target, null);

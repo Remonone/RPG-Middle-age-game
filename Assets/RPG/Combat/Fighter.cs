@@ -8,7 +8,6 @@ using RPG.Movement;
 using RPG.Stats;
 using RPG.Utils;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 // TODO: REDUCE DEPENDENCY LIST
 
@@ -27,10 +26,7 @@ namespace RPG.Combat {
 
         public event Action<DamageReport> OnAttack;
 
-        private readonly int _hAttack = Animator.StringToHash("Action"); 
-        private readonly int _hMoving = Animator.StringToHash("Moving");
-        private readonly int _hTriggerAction = Animator.StringToHash("TriggerNumber");
-        private readonly int _hTrigger = Animator.StringToHash("Trigger");
+        private readonly int _isAttacking = Animator.StringToHash("IsAttacking");
         // PUBLIC
 
         public bool CanAttack(Health target) => target is { IsAlive: true };
@@ -68,7 +64,6 @@ namespace RPG.Combat {
             if (objToHit is not Health target) return null;
             var report =
                 DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), gameObject);
-            Debug.Log(report.Attacker + (report.Damage + "") + report.Type);
             target.HitEntity(report);
             return true;
         }
@@ -85,11 +80,7 @@ namespace RPG.Combat {
             _mover.MoveToPoint(_target.transform.position);
         }
         private void AttackTarget() {
-            _animator.SetBool(_hMoving, false);
-            _animator.SetInteger(_hTriggerAction, 4);
-            var randAttack = Random.Range(1, 4);
-            _animator.SetInteger(_hAttack, randAttack);
-            _animator.SetTrigger(_hTrigger);
+            _animator.SetTrigger(_isAttacking);
         }
 
         void Hit() {

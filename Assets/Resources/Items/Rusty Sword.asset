@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55378257e81d47cf80ec4e491dc7e6ab, type: 3}
+  m_Name: Rusty Sword
+  m_EditorClassIdentifier: 
+  _itemID: 77973f65-3fd7-4404-a03c-fa46a7c72360
+  _itemName: Rusty Sword
+  _itemDescription: Simply rusty and dull sword
+  _itemIcon: {fileID: 21300000, guid: a332f9cc2040f6042a04c65fa9e4a000, type: 3}
+  _stackable: 0
+  _slot: 6
+  _type: 1000
+  _onEquipPredicate:
+    CodePredicate: '#{0}:AmplifyStat:BASE_ATTACK,3,0,1;'
+    ComponentName: BaseStats
+  _onUnequipPredicate:
+    CodePredicate: '#{0}:ClearStat:BASE_ATTACK,1;'
+    ComponentName: BaseStats
+  _modifications: []
+  _test: {fileID: 0}
+  _itemModel: {fileID: -3812489790007506296, guid: 3277d28ad9ab68c4db7c604dfcfc111f,
+    type: 3}

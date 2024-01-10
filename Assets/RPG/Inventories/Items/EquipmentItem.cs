@@ -15,13 +15,13 @@ namespace RPG.Inventories.Items {
         [SerializeField] private Predicate _onUnequipPredicate;
         [SerializeField] private List<Modification> _modifications;
         [SerializeField] private TextMeshProUGUI _test;
-        [SerializeField] private GameObject _itemModel;
+        [SerializeField] private EquipmentModel _itemModel;
 
         public EquipmentSlot Slot => _slot;
         public DamageType Type => _type;
         public Predicate OnEquipPredicate => _onEquipPredicate;
         public Predicate OnUnequipPredicate => _onUnequipPredicate;
-        public GameObject ItemModel => _itemModel;
+        public EquipmentModel ItemModel => _itemModel;
         
         public bool CanEquip(EquipmentSlot location) {
             return _slot == location;
@@ -32,6 +32,7 @@ namespace RPG.Inventories.Items {
                 mod.RegisterModification(invoker);
             }
 
+            if (ReferenceEquals(_test, null))return;
             var text = Instantiate(_test, FindObjectOfType<Canvas>().transform);
             text.text = GetDescription();
         }
@@ -55,7 +56,7 @@ namespace RPG.Inventories.Items {
         [Serializable]
         public sealed class Predicate {
             public string CodePredicate;
-            public string[] ComponentName;
+            public string ComponentName;
         }
     }
 }

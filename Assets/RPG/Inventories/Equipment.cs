@@ -27,23 +27,26 @@ namespace RPG.Inventories {
         public void PlaceEquipment(EquipmentItem item, EquipmentSlot equipmentSlot) {
             if (item.Slot != equipmentSlot) return;
             _items[equipmentSlot] = item;
-            var predicate = string.Format(item.OnEquipPredicate.CodePredicate, 
-                item.OnEquipPredicate.ComponentName.Select(component => ((PredicateMonoBehaviour)GetComponent(component)).ComponentID));
-            PredicateWorker.ParsePredicate(predicate, ComponentID);
+            ApplyPredicate(_items[equipmentSlot].OnEquipPredicate);
             item.RegisterModifications(gameObject);
-            DisplayItem(item);
+            DisplayItem(equipmentSlot, item);
             OnEquipmentChange?.Invoke();
         }
 
         public void RemoveEquipment(EquipmentSlot equipmentSlot) {
-            var predicate = 
-                string.Format(_items[equipmentSlot].OnUnequipPredicate.CodePredicate, 
-                    _items[equipmentSlot].OnUnequipPredicate.ComponentName.Select(component => ((PredicateMonoBehaviour)GetComponent(component)).ComponentID));
-            PredicateWorker.ParsePredicate(predicate, ComponentID);
+            ApplyPredicate(_items[equipmentSlot].OnUnequipPredicate);
             _items[equipmentSlot].UnregisterModifications();
             _items[equipmentSlot] = null;
-            DisplayItem(null);
+            DisplayItem(equipmentSlot, null);
             OnEquipmentChange?.Invoke();
+        }
+
+        private void ApplyPredicate(EquipmentItem.Predicate predicate) {
+            if (predicate.CodePredicate == "" || predicate.ComponentName == "") return;
+            var formatted = 
+                string.Format(predicate.CodePredicate, 
+                    ((PredicateMonoBehaviour)GetComponent(predicate.ComponentName)).ComponentID);
+            PredicateWorker.ParsePredicate(formatted, ComponentID);
         }
         
         public JToken CaptureAsJToken() {
@@ -69,12 +72,14 @@ namespace RPG.Inventories {
             };
         }
         
-        private void DisplayItem(EquipmentItem item) {
-            if (item == null) {
-                foreach(Transform children in _positions[item.Slot].transform) Destroy(children);
+        private void DisplayItem(EquipmentSlot slot, EquipmentItem item) {
+            if (item == null || item.ItemModel == null) {
+                foreach (Transform children in _positions[slot].transform) {
+                    if(children.gameObject.TryGetComponent<EquipmentModel>(out _)) Destroy(children.gameObject);
+                }
                 return;
             }
-            Instantiate(item.ItemModel, _positions[item.Slot].transform);
+            Instantiate(item.ItemModel, _positions[slot].transform);
         }
     }
 }

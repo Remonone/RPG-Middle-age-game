@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using RPG.Inventories.Items;
 using RPG.Inventories.Pickups;
 using RPG.Saving;
-using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Inventories {
@@ -35,7 +34,7 @@ namespace RPG.Inventories {
                 Count = 1
             };
             _inventorySlots[1] = new InventorySlot {
-                Item = InventoryItem.GetItemByGuid("19a20eb4-eccb-4298-b58b-97d7e7fb66b4"),
+                Item = InventoryItem.GetItemByGuid("77973f65-3fd7-4404-a03c-fa46a7c72360"),
                 Count = 1
             };
             OnInventoryUpdate?.Invoke();
