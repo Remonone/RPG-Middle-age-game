@@ -2,84 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0da05b2-f4eb-454b-91b8-f5bb85811c3f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Asset Samples/UIComponents.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Asset Samples/UIComponents/NewUXMLTemplate.uxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Asset Samples/UIComponents/NewUXMLTemplate.uxml.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/GlobalNamespace.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UIElements.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/Unity.Profiling.Editor.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/Unity.UI.Builder.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.Experimental.GraphView.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.Overlays.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.PackageManager.UI.Internal.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.Rendering.HighDefinition.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.Rendering.LookDev.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.Search.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.Sequences.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.ShaderGraph.Drawing.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.ShortcutManagement.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.UIElements.Debugger.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.UIElements.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEditor.VFX.UI.xsd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UIElementsSchema/UnityEngine.UIElements.xsd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_10_cursor_!_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_10_cursor_!_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_11_cursor_star_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_11_cursor_star_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_12_cursor_arrow_up_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_12_cursor_arrow_up_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_13_cursor_arrow_down_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_13_cursor_arrow_down_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_1_cursor_al.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_1_cursor_al.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_2_cursor_+_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_2_cursor_+_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_3_cursor_-_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_3_cursor_-_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_4_cursor_=_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_4_cursor_=_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_5_cursor_x_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_5_cursor_x_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_6_cursor_devide_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_6_cursor_devide_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_7_cursor_question_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_7_cursor_question_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_8_cursor_heart_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_8_cursor_heart_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_9_cursor_eye_al_.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Asset Samples/UI/Vector/Clean Vector Icons/T_9_cursor_eye_al_.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Control/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Control/PlayerController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Core/Predicate/PredicateLexicon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Core/Predicate/PredicateLexicon.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Core/Predicate/PredicateParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Core/Predicate/PredicateParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sandbox.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sandbox.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/DefaultLookDevProfile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/DefaultLookDevProfile.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Default.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Default.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/OutdoorsScene.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/OutdoorsScene.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Scripts.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Scripts/Quad.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Scripts/Quad.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRP Balanced.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRP Balanced.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRP High Fidelity.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRP High Fidelity.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRP Performant.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRP Performant.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRPDefaultResources.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRPDefaultResources/DefaultLookDevProfile.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRPDefaultResources/DefaultLookDevProfile.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRPDefaultResources/DefaultSettingsVolumeProfile.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRPDefaultResources/DefaultSettingsVolumeProfile.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRPDefaultResources/HDRenderPipelineAsset.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRPDefaultResources/HDRenderPipelineAsset.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRPDefaultResources/HDRenderPipelineGlobalSettings.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/HDRPDefaultResources/HDRenderPipelineGlobalSettings.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/SkyandFogSettingsProfile.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/Settings/SkyandFogSettingsProfile.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Icons.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Icons/HDRP.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Icons/HDRP.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Icons/Help_Icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Icons/Help_Icon.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Layout.wlt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Layout.wlt.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Scripts.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Scripts/Editor.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Scripts/Editor/ReadmeEditor.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Scripts/Editor/ReadmeEditor.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Scripts/Readme.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TSG/Assets/TutorialInfo/Scripts/Readme.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Dialogs/Custom Dialog.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Dialogs/Custom Dialog.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Creatures/AI/Core/GoapAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Creatures/AI/Core/GoapAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Creatures/Controls/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Creatures/Controls/PlayerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Dialogs/AIConversant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Dialogs/AIConversant.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/UI/Dialog/DialogUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/UI/Dialog/DialogUI.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Training Polygon.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Training Polygon.unity" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,15 +26,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -116,6 +44,7 @@
       <option name="presentableId" value="Default" />
       <updated>1700158400190</updated>
       <workItem from="1700158405261" duration="414000" />
+      <workItem from="1704927451042" duration="81000" />
     </task>
     <servers />
   </component>

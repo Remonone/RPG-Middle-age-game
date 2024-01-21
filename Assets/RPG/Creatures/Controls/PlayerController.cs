@@ -14,7 +14,6 @@ namespace RPG.Creatures.Controls {
         [SerializeField] private CursorPreview[] _cursors;
         
         private Mover _mover;
-        private Fighter _fighter;
         
         // PUBLIC
         public InputActionMap Map => _map;        
@@ -24,7 +23,6 @@ namespace RPG.Creatures.Controls {
 
         private void Awake() {
             _mover = GetComponent<Mover>();
-            _fighter = GetComponent<Fighter>();
         }
 
         private void OnEnable() {
@@ -51,12 +49,12 @@ namespace RPG.Creatures.Controls {
         private bool InteractWithComponent() {
             if (!_map["Action"].WasPressedThisFrame()) return false;
             var hits = SortedRaycast();
-            if (hits.Length < 1) return false;
             foreach (var hit in hits) {
-                var selectable = hit.collider.GetComponent<SelectableEnemy>();
-                if (selectable == null) continue;
-                _fighter.Attack(selectable);
-                return true;
+                var raycastables = hit.transform.GetComponents<ITrajectory>();
+                foreach (var raycastable in raycastables) {
+                    SetCursor(raycastable.GetCursorType());
+                    if (raycastable.HandleRaycast(this)) return true;
+                }
             }
             return false;
         }

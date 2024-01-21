@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Core {
@@ -11,7 +12,7 @@ namespace RPG.Creatures.AI.Core {
         public bool InRange = false;
         
         public float Cost = 1f;
-        public GameObject Target;
+        [ReadOnly] public GameObject Target;
         
         public GoapAction() {
             _prerequisites = new List<StateObject>();
