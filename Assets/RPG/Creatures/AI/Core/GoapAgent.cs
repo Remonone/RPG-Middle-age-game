@@ -18,9 +18,11 @@ namespace RPG.Creatures.AI.Core {
 
         private void Start() {
             _provider = GetComponent<IGoap>();
+            print(_provider + " " + GetComponent<IGoap>());
             CreateIdleState();
             CreateMoveToState();
             CreatePerformActionState();
+            print("States are created");
             _stateMachine.PushState(_idleState);
         }
 
@@ -36,7 +38,7 @@ namespace RPG.Creatures.AI.Core {
                 List<StateObject> goal = _provider.CreateGoal();
 
                 Queue<GoapAction> plan = _planner.BuildPlan(go, _availableActions, currentState, goal);
-
+                print(plan);
                 if (plan != null) {
                     _currentActions = plan;
                     _provider.OnPlanFound(goal, plan);
@@ -68,7 +70,7 @@ namespace RPG.Creatures.AI.Core {
         }
 
         private void CreatePerformActionState() {
-            _performActionState = (fsm, go) => {
+            _performActionState = (fsm, agent) => {
                 if (_currentActions.Count == 0) {
                     fsm.PopState();
                     fsm.PushState(_idleState);
@@ -81,9 +83,8 @@ namespace RPG.Creatures.AI.Core {
 
                 if (_currentActions.Count > 0) {
                     action = _currentActions.Peek();
-                    
                     if (!action.RequiresInRange() || action.InRange) {
-                        if (!action.PerformAction(go)) {
+                        if (!action.PerformAction(agent)) {
                             fsm.PopState();
                             fsm.PushState(_idleState);
                             _provider.OnPlanAborted(action);

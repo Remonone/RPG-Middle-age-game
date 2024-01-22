@@ -43,7 +43,7 @@ namespace RPG.Creatures.AI.Core {
             foreach(var action in result) 
                 queue.Enqueue(action);
             
-            return null;
+            return queue;
         }
         private bool BuildGraph(Node parent, List<Node> nodes, List<GoapAction> usableActions, List<StateObject> goals) {
             bool isFound = false;

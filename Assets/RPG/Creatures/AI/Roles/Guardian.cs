@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using RPG.Combat;
 using RPG.Creatures.AI.Core;
@@ -34,7 +34,6 @@ namespace RPG.Creatures.AI.Roles {
                         enemies.AddRange(targetBundle.Value);
                     }
                 }
-
                 if (enemies.Count > 0) {
                     isEnemyExisting = true;
                     _agroTime = Time.time + _agroDuration;
@@ -42,16 +41,16 @@ namespace RPG.Creatures.AI.Roles {
                 }
                 
             }
-            
-            states.Add(new StateObject { Name = "isEnemyInVision", Value = isEnemyExisting});
-            states.Add(new StateObject { Name = "IsSuspicious", Value = _agroTime > Time.time });
-            states.Add(new StateObject { Name = "Target", Value = _target });
+            print("Checking states...");
+            states.Add(new StateObject { Name = "is_suspicious", Value = _agroTime > Time.time });
+            states.Add(new StateObject { Name = "is_enemy_visible", Value = isEnemyExisting});
+            states.Add(new StateObject { Name = "target_position", Value = _target ? _target.transform.position : null });
             return states;
         }
         public override List<StateObject> CreateGoal() {
             List<StateObject> goal = new();
             
-            goal.Add(new StateObject {Name = "CheckArea", Value = true});
+            goal.Add(new StateObject {Name = "investigate", Value = true});
             return goal;
         }
     }
