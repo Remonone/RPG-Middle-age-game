@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 1642229169961346029}
   - component: {fileID: 59265798070784182}
   - component: {fileID: 3255395169396648235}
+  - component: {fileID: 8886586193631549958}
   m_Layer: 0
   m_Name: Guardian
   m_TagString: Untagged
@@ -110,7 +111,7 @@ MonoBehaviour:
     _fieldOfView: 0
     _visionRange: 0
     _collider: {fileID: 0}
-  _organisation: {fileID: 0}
+  _organisation: {fileID: 11400000, guid: 7ff063565a59b5740aa1fae9fbf2db7b, type: 2}
   _agroDuration: 3
 --- !u!114 &6374397075787476267
 MonoBehaviour:
@@ -139,9 +140,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prerequisites:
-  - Name: IsSuspicious
+  - Name: is_suspicious
+  - Name: is_enemy_visible
   _effects:
-  - Name: reachDestination
+  - Name: investigate
   InRange: 0
   Cost: 2
   Target: {fileID: 0}
@@ -149,8 +151,14 @@ MonoBehaviour:
     _fieldOfView: 0
     _visionRange: 0
     _collider: {fileID: 0}
-  _organisation: {fileID: 0}
-  _patrolPoints: []
+  _organisation: {fileID: 11400000, guid: 7ff063565a59b5740aa1fae9fbf2db7b, type: 2}
+  _patrolPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!195 &6674042712874727537
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -225,6 +233,18 @@ CapsuleCollider:
   m_Height: 1.8216978
   m_Direction: 1
   m_Center: {x: 0, y: 0.93807286, z: 0}
+--- !u!114 &8886586193631549958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090550908769538078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b534fbfa1e184f45abdb29ad86714c35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &9020892488167584664
 PrefabInstance:
   m_ObjectHideFlags: 0

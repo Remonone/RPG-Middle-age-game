@@ -32,7 +32,6 @@ namespace RPG.Creatures.AI.Actions {
                     return false;
                 }
             }
-            Target = _points.Peek();
             return true;
         }
         public override void DoReset() {
@@ -43,8 +42,9 @@ namespace RPG.Creatures.AI.Actions {
             return Target == null || (transform.position - Target.transform.position).magnitude < .3f;
         }
         public override bool CheckProceduralPrerequisites(GameObject agent) {
-            
-            return true;
+            Target = _points.Dequeue();
+            _points.Enqueue(Target);
+            return Target != null;
         }
         public override bool RequiresInRange() {
             return true;

@@ -42,5 +42,9 @@ namespace RPG.Creatures.AI.Core {
         public StateObject Clone() {
             return new StateObject { Name = this.Name, Value = this.Value };
         }
+
+        public bool IsEqual(StateObject dif) {
+            return this.Name == dif.Name && Equals(Value, dif.Value);
+        } 
     }
 }

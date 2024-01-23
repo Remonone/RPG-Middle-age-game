@@ -25,32 +25,30 @@ namespace RPG.Creatures.AI.Roles {
         // TODO: Change the target to GameObject(can be as target, and as destination point
         public override List<StateObject> GetCurrentState() {
             List<StateObject> states = new List<StateObject>();
-            var isEnemyExisting = ReferenceEquals(_target, null);
-            if (!isEnemyExisting) {
-                var targets = _vision.GetTargetsInVision();
-                var enemies = new List<GameObject>();
-                foreach (var targetBundle in targets) {
-                    if (_organisation.GetRelationWithOrganisation(targetBundle.Key) < _organisation.AgroThreshold) {
-                        enemies.AddRange(targetBundle.Value);
-                    }
+            var isEnemyExisting = false;
+            
+            var targets = _vision.GetTargetsInVision();
+            var enemies = new List<GameObject>();
+            foreach (var targetBundle in targets) {
+                if (_organisation.GetRelationWithOrganisation(targetBundle.Key) < _organisation.AgroThreshold) {
+                    enemies.AddRange(targetBundle.Value);
                 }
-                if (enemies.Count > 0) {
-                    isEnemyExisting = true;
-                    _agroTime = Time.time + _agroDuration;
-                    _target = enemies[0].GetComponent<Health>();
-                }
-                
             }
-            print("Checking states...");
+            if (enemies.Count > 0) {
+                isEnemyExisting = true;
+                _agroTime = Time.time + _agroDuration;
+                _target = enemies[0].GetComponent<Health>();
+            }
+                
+            
             states.Add(new StateObject { Name = "is_suspicious", Value = _agroTime > Time.time });
             states.Add(new StateObject { Name = "is_enemy_visible", Value = isEnemyExisting});
             states.Add(new StateObject { Name = "target_position", Value = _target ? _target.transform.position : null });
             return states;
         }
         public override List<StateObject> CreateGoal() {
-            List<StateObject> goal = new();
-            
-            goal.Add(new StateObject {Name = "investigate", Value = true});
+            List<StateObject> goal = new() { new StateObject {Name = "investigate", Value = true} };
+
             return goal;
         }
     }

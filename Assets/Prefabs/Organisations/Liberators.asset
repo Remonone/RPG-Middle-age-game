@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 284e4b19b1fd471dbcfde19e80cab2da, type: 3}
   m_Name: Liberators
   m_EditorClassIdentifier: 
-  _name: 
-  _description: 
-  _localDescription: 
-  _defaultRelation: 0
-  _color: {r: 0, g: 0, b: 0, a: 0}
+  _name: Liberators
+  _description: Rebellions from the West
+  _localDescription: Build our freedom, other no matter!
+  _defaultRelation: 5
+  _color: {r: 0.40774027, g: 0.7264151, b: 0.33236918, a: 0}
   _flag: {fileID: 0}
   _emblem: {fileID: 0}
-  _agroThreshold: 0
+  _agroThreshold: 1

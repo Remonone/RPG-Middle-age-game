@@ -15,7 +15,7 @@ namespace RPG.Creatures.AI {
         }
 
         public Dictionary<Organisation, GameObject[]> GetTargetsInVision() {
-            return null;
+            return new Dictionary<Organisation, GameObject[]>();
         }
     }
 }

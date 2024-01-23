@@ -52,7 +52,6 @@ namespace RPG.Creatures.AI.Core {
                 if (!IsInRequisite(parent.States, action.Prerequisites)) continue;
                 List<StateObject> newStates = PopulateState(parent.States, action.Effects);
                 var node = new Node(parent, parent.Cost + action.Cost, newStates, action);
-
                 if (IsInRequisite(newStates, goals)) {
                     nodes.Add(node);
                     isFound = true;
@@ -68,8 +67,13 @@ namespace RPG.Creatures.AI.Core {
 
         private bool IsInRequisite(List<StateObject> current, List<StateObject> requisites) {
             foreach (var requisite in requisites) {
-                if (!current.Contains(requisite))
-                    return false;
+                bool match = false;
+                foreach (var state in current) {
+                    if (!requisite.IsEqual(state)) continue;
+                    match = true;
+                    break;
+                }
+                if (!match) return false;
             }
 
             return true;
@@ -77,7 +81,7 @@ namespace RPG.Creatures.AI.Core {
         
         private List<StateObject> PopulateState(List<StateObject> parentStates, List<StateObject> actionEffects) {
             List<StateObject> newState = new();
-            foreach(var state in parentStates) newState.Add(state);
+            newState.AddRange(parentStates);
 
             foreach (var effect in actionEffects) {
                 bool isExisting = newState.Contains(effect);

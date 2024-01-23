@@ -22,7 +22,6 @@ namespace RPG.Creatures.AI.Core {
             CreateIdleState();
             CreateMoveToState();
             CreatePerformActionState();
-            print("States are created");
             _stateMachine.PushState(_idleState);
         }
 
@@ -38,7 +37,6 @@ namespace RPG.Creatures.AI.Core {
                 List<StateObject> goal = _provider.CreateGoal();
 
                 Queue<GoapAction> plan = _planner.BuildPlan(go, _availableActions, currentState, goal);
-                print(plan);
                 if (plan != null) {
                     _currentActions = plan;
                     _provider.OnPlanFound(goal, plan);
@@ -65,6 +63,7 @@ namespace RPG.Creatures.AI.Core {
 
                 if (_provider.MoveAgent(action)) {
                     fsm.PopState();
+                    fsm.PushState(_idleState);
                 }
             };
         }
