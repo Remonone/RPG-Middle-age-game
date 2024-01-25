@@ -5,10 +5,15 @@ using UnityEngine;
 
 namespace RPG.Creatures.AI.Roles {
     public abstract class BaseAgentBehaviour : MonoBehaviour, IGoap {
-
+        
+        [SerializeField] protected AiVision _vision;
         [SerializeField] private Mover _mover;
         [SerializeField] private float _rangeThreshold;
-        
+
+        protected GameObject Target;
+
+        public GameObject CompletionTarget => Target;
+
         public abstract List<StateObject> GetCurrentState();
         public abstract List<StateObject> CreateGoal();
         public virtual void OnPlanFailed(List<StateObject> failedGoal) { }

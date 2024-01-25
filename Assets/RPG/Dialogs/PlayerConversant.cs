@@ -7,8 +7,7 @@ using UnityEngine;
 namespace RPG.Dialogs {
     public class PlayerConversant : PredicateMonoBehaviour {
         [SerializeField] private string _entityName;
-        [SerializeField] private bool _isPlayer;
-        
+
         private Dialog _dialog;
         private DialogNode _currentNode;
         private bool _isChoosing;

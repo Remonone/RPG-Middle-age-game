@@ -1,21 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RPG.Stats.Relations;
 using UnityEngine;
 
 namespace RPG.Creatures.AI {
-    [Serializable]
-    public class AiVision {
-        [SerializeField] private int _fieldOfView;
-        [SerializeField] private float _visionRange;
-        [SerializeField] private MeshCollider _collider;
+    [RequireComponent(typeof(Collider))]
+    public class AiVision : MonoBehaviour {
 
-        public void OnAwake() {
-            
+
+        private List<GameObject> _objectsInVision = new();
+        
+        public void OnTriggerEnter(Collider other) {
+            _objectsInVision.Add(other.gameObject);
+        }
+
+        private void OnTriggerExit(Collider other) {
+            _objectsInVision.Remove(other.gameObject);
         }
 
         public Dictionary<Organisation, GameObject[]> GetTargetsInVision() {
-            return new Dictionary<Organisation, GameObject[]>();
+            var dict = new Dictionary<Organisation, List<GameObject>>();
+            foreach (var obj in _objectsInVision) {
+                if (!obj.TryGetComponent<Organisation>(out var organisation)) continue;
+                if(!dict.ContainsKey(organisation)) dict.Add(organisation, new List<GameObject>());
+                dict[organisation].Add(gameObject);
+            }
+            var result = new Dictionary<Organisation, GameObject[]>();
+            foreach (var pair in dict) {
+                result[pair.Key] = pair.Value.ToArray();
+            }
+            return result;
         }
     }
 }

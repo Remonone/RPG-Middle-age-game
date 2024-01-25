@@ -1,7 +1,0 @@
-.gp-foldout__content{
-    overflow: hidden;
-    max-height: 0;
-}
-.gp-foldout__content_visible{
-    max-height: none;
-}

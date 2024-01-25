@@ -39,7 +39,7 @@ namespace RPG.Creatures.AI.Actions {
             Target = null;
         }
         public override bool IsDone() {
-            return Target == null || (transform.position - Target.transform.position).magnitude < .3f;
+            return (transform.position - Target.transform.position).magnitude < .3f;
         }
         public override bool CheckProceduralPrerequisites(GameObject agent) {
             Target = _points.Dequeue();

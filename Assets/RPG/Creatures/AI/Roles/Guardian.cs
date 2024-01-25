@@ -2,27 +2,33 @@
 using System.Collections.Generic;
 using RPG.Combat;
 using RPG.Creatures.AI.Core;
+using RPG.Inventories;
+using RPG.Stats;
 using RPG.Stats.Relations;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Roles {
     [RequireComponent(typeof(Health))]
     public class Guardian : BaseAgentBehaviour {
-
-        [SerializeField] private AiVision _vision;
+        
         [SerializeField] private Organisation _organisation;
         [SerializeField] private float _agroDuration;
 
         private float _agroTime = -1;
         private Health _target;
+        
+        // Cached info
         private Health _health;
+        private Equipment _equipment;
+        private BaseStats _stats;
+
+        public GameObject Target => _target.gameObject;
 
         private void Awake() {
             _health = GetComponent<Health>();
+            _equipment = GetComponent<Equipment>();
+            _stats = GetComponent<BaseStats>();
         }
-
-        
-        // TODO: Change the target to GameObject(can be as target, and as destination point
         public override List<StateObject> GetCurrentState() {
             List<StateObject> states = new List<StateObject>();
             var isEnemyExisting = false;
@@ -44,12 +50,21 @@ namespace RPG.Creatures.AI.Roles {
             states.Add(new StateObject { Name = "is_suspicious", Value = _agroTime > Time.time });
             states.Add(new StateObject { Name = "is_enemy_visible", Value = isEnemyExisting});
             states.Add(new StateObject { Name = "target_position", Value = _target ? _target.transform.position : null });
+            states.Add(new StateObject {Name = "is_alive", Value = _health.IsAlive});
+            states.Add(new StateObject {Name = "is_armed", Value = _equipment.GetEquipmentItem(EquipmentSlot.WEAPON) != null});
+            states.Add(new StateObject {Name = "attack_range", Value = _stats.GetStatValue(Stat.ATTACK_RANGE)});
             return states;
         }
         public override List<StateObject> CreateGoal() {
-            List<StateObject> goal = new() { new StateObject {Name = "investigate", Value = true} };
-
+            List<StateObject> goal = new();
+            if (_target != null) {
+                goal.Add(new StateObject {Name = "liquidate_target", Value = true});
+            } else {
+                goal.Add(new StateObject {Name = "investigate", Value = true});
+            }
+            
             return goal;
         }
+        
     }
 }
