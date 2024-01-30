@@ -43,6 +43,13 @@ namespace RPG.Combat {
             _target = health;
         }
         
+        public void Attack(Health target) {
+            if (!target.TryGetComponent<SelectableEnemy>(out var targetMark) || !targetMark._isTargetable) return;
+            if (target == null || !target.IsAlive) return;
+            _scheduler.SwitchAction(this);
+            _target = target;
+        }
+        
         // PRIVATE
 
         protected override void OnAwake() {

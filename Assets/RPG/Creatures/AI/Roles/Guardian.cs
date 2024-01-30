@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using System.Collections.Generic;
 using RPG.Combat;
 using RPG.Creatures.AI.Core;
@@ -9,11 +9,12 @@ using UnityEngine;
 
 namespace RPG.Creatures.AI.Roles {
     [RequireComponent(typeof(Health))]
-    public class Guardian : BaseAgentBehaviour {
+    public class Guardian : BaseAgentBehaviour, IOrganisationWrapper {
         
         [SerializeField] private Organisation _organisation;
         [SerializeField] private float _agroDuration;
 
+        private Guid _id;
         private float _agroTime = -1;
         private Health _target;
         
@@ -28,6 +29,7 @@ namespace RPG.Creatures.AI.Roles {
             _health = GetComponent<Health>();
             _equipment = GetComponent<Equipment>();
             _stats = GetComponent<BaseStats>();
+            _id = Guid.NewGuid(); // TODO: Change to save state
         }
         public override List<StateObject> GetCurrentState() {
             List<StateObject> states = new List<StateObject>();
@@ -65,6 +67,12 @@ namespace RPG.Creatures.AI.Roles {
             
             return goal;
         }
-        
+
+        public Organisation GetOrganisation() {
+            return _organisation;
+        }
+        public Guid GetGuid() {
+            return _id;
+        }
     }
 }

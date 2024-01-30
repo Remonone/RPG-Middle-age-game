@@ -1,12 +1,19 @@
-﻿using RPG.Combat;
+﻿using System;
+using RPG.Combat;
 using RPG.Creatures.AI.Core;
 using RPG.Creatures.AI.Roles;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Actions {
+    
+    [RequireComponent(typeof(Fighter))]
     public class AttackPlayerWithBareHands : GoapAction {
 
+        // TODO: Replace threshold to stats range fetch;
+        [SerializeField] private float _threshold;
+
         private Health _targetToAttack;
+        private Fighter _fighter;
         
         public AttackPlayerWithBareHands() {
             _prerequisites.Add(new StateObject {Name = "is_enemy_visible", Value = true});
@@ -15,8 +22,15 @@ namespace RPG.Creatures.AI.Actions {
             _effects.Add(new StateObject {Name = "liquidate_target", Value = true});
         }
 
+        private void Awake() {
+            _fighter = GetComponent<Fighter>();
+        }
+
         public override bool PerformAction(GameObject agent) {
-            return !_targetToAttack.IsAlive;
+            var enemyTransform = _targetToAttack.gameObject.transform;
+            if (!((enemyTransform.position - agent.transform.position).magnitude < _threshold)) return false;
+            _fighter.Attack(_targetToAttack);
+            return true;
         }
         
         public override void DoReset() {
@@ -31,7 +45,7 @@ namespace RPG.Creatures.AI.Actions {
             Target = agent.GetComponent<BaseAgentBehaviour>().CompletionTarget;
             if (!Target) return false;
             _targetToAttack = Target.GetComponent<Health>();
-            return true;
+            return _targetToAttack;
         }
         
         public override bool RequiresInRange() {

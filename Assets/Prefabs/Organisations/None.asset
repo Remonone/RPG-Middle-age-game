@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 284e4b19b1fd471dbcfde19e80cab2da, type: 3}
-  m_Name: Liberators
+  m_Name: None
   m_EditorClassIdentifier: 
-  _name: Liberators
-  _description: Rebellions from the West
-  _localDescription: Build our freedom, other no matter!
-  _defaultRelation: 0
-  _color: {r: 0.40774027, g: 0.7264151, b: 0.33236918, a: 0}
+  _name: None
+  _description: Independent stranger
+  _localDescription: 
+  _defaultRelation: 1
+  _color: {r: 0, g: 0, b: 0, a: 0}
   _flag: {fileID: 0}
   _emblem: {fileID: 0}
-  _agroThreshold: 1
+  _agroThreshold: -1000

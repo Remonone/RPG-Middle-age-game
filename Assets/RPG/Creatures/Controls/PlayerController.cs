@@ -1,18 +1,21 @@
 using System;
 using System.Linq;
-using RPG.Combat;
 using RPG.Movement;
+using RPG.Stats.Relations;
 using RPG.UI.Cursors;
+using RPG.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace RPG.Creatures.Controls {
-    public class PlayerController : MonoBehaviour {
+    public class PlayerController : MonoBehaviour, IOrganisationWrapper {
         [SerializeField] private Camera _camera;
         [SerializeField] private InputActionMap _map;
         [SerializeField] private CursorPreview[] _cursors;
-        
+        [SerializeField] private Organisation _organisation;
+
+        private Guid _id;
         private Mover _mover;
         
         // PUBLIC
@@ -23,6 +26,7 @@ namespace RPG.Creatures.Controls {
 
         private void Awake() {
             _mover = GetComponent<Mover>();
+            _id = Guid.NewGuid();
         }
 
         private void OnEnable() {
@@ -86,6 +90,12 @@ namespace RPG.Creatures.Controls {
         private void SetCursor(CursorType type) {
             var cursor = _cursors.Single(cursor => cursor.Type == type);
             Cursor.SetCursor(cursor.Image, cursor.Hotspot, CursorMode.Auto);
+        }
+        public Organisation GetOrganisation() {
+            return _organisation;
+        }
+        public Guid GetGuid() {
+            return _id;
         }
     }
 

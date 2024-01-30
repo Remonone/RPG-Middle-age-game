@@ -20,7 +20,8 @@ namespace RPG.Creatures.AI {
         public Dictionary<Organisation, GameObject[]> GetTargetsInVision() {
             var dict = new Dictionary<Organisation, List<GameObject>>();
             foreach (var obj in _objectsInVision) {
-                if (!obj.TryGetComponent<Organisation>(out var organisation)) continue;
+                if (!obj.TryGetComponent<IOrganisationWrapper>(out var agent)) continue;
+                var organisation = agent.GetOrganisation();
                 if(!dict.ContainsKey(organisation)) dict.Add(organisation, new List<GameObject>());
                 dict[organisation].Add(gameObject);
             }
