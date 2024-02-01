@@ -5,9 +5,9 @@ using UnityEngine;
 namespace RPG.Creatures.AI.Actions {
     public class ClearAreaAction : GoapAction {
         [SerializeField] private List<GameObject> _patrolPoints;
+        [SerializeField] private AiVision _vision;
         
         private Queue<GameObject> _points = new ();
-        private AiVision _vision;
 
         public ClearAreaAction() {
             _prerequisites.Add(new StateObject {Name = "is_suspicious", Value = false});
@@ -17,15 +17,13 @@ namespace RPG.Creatures.AI.Actions {
         }
 
         private void Start() {
-            _vision = GetComponent<AiVision>();
             foreach (var point in _patrolPoints) {
                 _points.Enqueue(point);
             }
         }
 
         public override bool PerformAction(GameObject agent) {
-            
-            return true;
+            return _vision.IsEnemiesInVision;
         }
         public override void DoReset() {
             InRange = false;

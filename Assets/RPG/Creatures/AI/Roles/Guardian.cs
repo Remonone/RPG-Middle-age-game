@@ -56,7 +56,8 @@ namespace RPG.Creatures.AI.Roles {
 
         public override bool MoveAgent(GoapAction action) {
             // If targets on vision or point is reached;
-            return _vision.IsEnemiesInVision || base.MoveAgent(action);
+            action.InRange = _vision.IsEnemiesInVision || base.MoveAgent(action);
+            return action.InRange;
         }
     }
 }

@@ -4,7 +4,7 @@ using RPG.Stats.Relations;
 using UnityEngine;
 
 namespace RPG.Creatures.AI {
-    [RequireComponent(typeof(Collider), typeof(BaseAgentBehaviour))]
+    [RequireComponent(typeof(Collider))]
     public class AiVision : MonoBehaviour {
 
         private IOrganisationWrapper _agent;
@@ -28,6 +28,7 @@ namespace RPG.Creatures.AI {
             var obj = other.gameObject;
             var state = IsHostileCreature(obj);
             if (state == null) return;
+            print("Enemy in vision");
             if(state.Value) _enemiesInVision.Add(obj);
                 else _creaturesInVision.Add(other.gameObject);
         }

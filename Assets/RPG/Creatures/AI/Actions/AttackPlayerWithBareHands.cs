@@ -1,5 +1,4 @@
-﻿using System;
-using RPG.Combat;
+﻿using RPG.Combat;
 using RPG.Creatures.AI.Core;
 using RPG.Creatures.AI.Roles;
 using UnityEngine;
