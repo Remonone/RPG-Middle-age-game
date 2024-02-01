@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RPG.Utils.FSM;
 using UnityEngine;
 
@@ -18,7 +17,6 @@ namespace RPG.Creatures.AI.Core {
 
         private void Start() {
             _provider = GetComponent<IGoap>();
-            print(_provider + " " + GetComponent<IGoap>());
             CreateIdleState();
             CreateMoveToState();
             CreatePerformActionState();
@@ -29,8 +27,6 @@ namespace RPG.Creatures.AI.Core {
             _stateMachine.Update(gameObject);
         }
 
-        public void GetActionByType(Type actionType) => _availableActions.Find(action => action.GetType() == actionType);
-
         private void CreateIdleState() {
             _idleState = (fsm, go) => {
                 List<StateObject> currentState = _provider.GetCurrentState();
@@ -40,7 +36,6 @@ namespace RPG.Creatures.AI.Core {
                 if (plan != null) {
                     _currentActions = plan;
                     _provider.OnPlanFound(goal, plan);
-                    
                     fsm.PopState();
                     fsm.PushState(_performActionState);
                 } else {
@@ -63,7 +58,6 @@ namespace RPG.Creatures.AI.Core {
 
                 if (_provider.MoveAgent(action)) {
                     fsm.PopState();
-                    fsm.PushState(_idleState);
                 }
             };
         }

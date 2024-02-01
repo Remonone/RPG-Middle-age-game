@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RPG.Creatures.AI.Core;
 using RPG.Movement;
+using RPG.Stats.Relations;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Roles {
-    public abstract class BaseAgentBehaviour : MonoBehaviour, IGoap {
-        
+    public abstract class BaseAgentBehaviour : MonoBehaviour, IGoap, IOrganisationWrapper {
+        [SerializeField] protected Organisation _organisation;
         [SerializeField] protected AiVision _vision;
         [SerializeField] private Mover _mover;
         [SerializeField] private float _rangeThreshold;
 
         protected GameObject Target;
-
+        protected Guid _id;
         public GameObject CompletionTarget => Target;
 
         public abstract List<StateObject> GetCurrentState();
@@ -25,7 +27,14 @@ namespace RPG.Creatures.AI.Roles {
             if (!((transform.position - action.Target.transform.position).magnitude < _rangeThreshold)) return false;
             action.InRange = true;
             return true;
+        }
 
+        public Organisation GetOrganisation() {
+            return _organisation;
+        }
+
+        public Guid GetGuid() {
+            return _id;
         }
     }
 }

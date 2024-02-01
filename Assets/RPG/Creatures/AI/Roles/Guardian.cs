@@ -4,17 +4,13 @@ using RPG.Combat;
 using RPG.Creatures.AI.Core;
 using RPG.Inventories;
 using RPG.Stats;
-using RPG.Stats.Relations;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Roles {
     [RequireComponent(typeof(Health))]
-    public class Guardian : BaseAgentBehaviour, IOrganisationWrapper {
-        
-        [SerializeField] private Organisation _organisation;
+    public class Guardian : BaseAgentBehaviour {
         [SerializeField] private float _agroDuration;
-
-        private Guid _id;
+        
         private float _agroTime = -1;
         private Health _target;
         
@@ -22,8 +18,6 @@ namespace RPG.Creatures.AI.Roles {
         private Health _health;
         private Equipment _equipment;
         private BaseStats _stats;
-
-        public GameObject Target => _target.gameObject;
 
         private void Awake() {
             _health = GetComponent<Health>();
@@ -33,24 +27,16 @@ namespace RPG.Creatures.AI.Roles {
         }
         public override List<StateObject> GetCurrentState() {
             List<StateObject> states = new List<StateObject>();
-            var isEnemyExisting = false;
             
-            var targets = _vision.GetTargetsInVision();
-            var enemies = new List<GameObject>();
-            foreach (var targetBundle in targets) {
-                if (_organisation.GetRelationWithOrganisation(targetBundle.Key) < _organisation.AgroThreshold) {
-                    enemies.AddRange(targetBundle.Value);
-                }
-            }
-            if (enemies.Count > 0) {
-                isEnemyExisting = true;
+            if (_vision.IsEnemiesInVision) {
                 _agroTime = Time.time + _agroDuration;
-                _target = enemies[0].GetComponent<Health>();
+                var current = _vision.EnemiesInVision.GetEnumerator().Current;
+                if (current != null)
+                    _target = current.GetComponent<Health>();
             }
-                
             
             states.Add(new StateObject { Name = "is_suspicious", Value = _agroTime > Time.time });
-            states.Add(new StateObject { Name = "is_enemy_visible", Value = isEnemyExisting});
+            states.Add(new StateObject { Name = "is_enemy_visible", Value = _vision.IsEnemiesInVision});
             states.Add(new StateObject { Name = "target_position", Value = _target ? _target.transform.position : null });
             states.Add(new StateObject {Name = "is_alive", Value = _health.IsAlive});
             states.Add(new StateObject {Name = "is_armed", Value = _equipment.GetEquipmentItem(EquipmentSlot.WEAPON) != null});
@@ -68,11 +54,9 @@ namespace RPG.Creatures.AI.Roles {
             return goal;
         }
 
-        public Organisation GetOrganisation() {
-            return _organisation;
-        }
-        public Guid GetGuid() {
-            return _id;
+        public override bool MoveAgent(GoapAction action) {
+            // If targets on vision or point is reached;
+            return _vision.IsEnemiesInVision || base.MoveAgent(action);
         }
     }
 }

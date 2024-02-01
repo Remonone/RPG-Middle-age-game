@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 using RPG.Creatures.AI.Core;
-using RPG.Stats.Relations;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Actions {
     public class ClearAreaAction : GoapAction {
-        
-        [SerializeField] private AiVision _vision;
-        [SerializeField] private Organisation _organisation;
         [SerializeField] private List<GameObject> _patrolPoints;
         
         private Queue<GameObject> _points = new ();
+        private AiVision _vision;
 
         public ClearAreaAction() {
             _prerequisites.Add(new StateObject {Name = "is_suspicious", Value = false});
@@ -20,18 +17,14 @@ namespace RPG.Creatures.AI.Actions {
         }
 
         private void Start() {
+            _vision = GetComponent<AiVision>();
             foreach (var point in _patrolPoints) {
                 _points.Enqueue(point);
             }
         }
 
         public override bool PerformAction(GameObject agent) {
-            var targets = _vision.GetTargetsInVision();
-            foreach (var targetBundle in targets) {
-                if (_organisation.GetRelationWithOrganisation(targetBundle.Key) < _organisation.AgroThreshold) {
-                    return false;
-                }
-            }
+            
             return true;
         }
         public override void DoReset() {

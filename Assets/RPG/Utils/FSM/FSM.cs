@@ -8,8 +8,8 @@ namespace RPG.Utils.FSM {
         public delegate void FSMState(FSM fsm, GameObject go);
 
         public void Update(GameObject go) {
-            if (_stateStack.Peek() != null) {
-                _stateStack.Peek().Invoke(this, go);
+            if (_stateStack.TryPeek(out var state)) {
+                state.Invoke(this, go);
             }
         }
         

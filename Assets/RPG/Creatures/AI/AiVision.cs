@@ -1,35 +1,46 @@
 ﻿using System.Collections.Generic;
+using RPG.Creatures.AI.Roles;
 using RPG.Stats.Relations;
 using UnityEngine;
 
 namespace RPG.Creatures.AI {
-    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(Collider), typeof(BaseAgentBehaviour))]
     public class AiVision : MonoBehaviour {
 
+        private IOrganisationWrapper _agent;
+        private Organisation _organisation;
 
-        private List<GameObject> _objectsInVision = new();
-        
+        private readonly List<GameObject> _enemiesInVision = new();
+        private readonly List<GameObject> _creaturesInVision = new();
+
+        public IEnumerable<GameObject> EnemiesInVision => _enemiesInVision;
+        public IEnumerable<GameObject> CreaturesInVision => _creaturesInVision;
+
+        public bool IsEnemiesInVision => _enemiesInVision.Count > 0;
+        public bool IsCreaturesInVision => _creaturesInVision.Count > 0;
+
+        private void Awake() {
+            _agent = GetComponentInParent<IOrganisationWrapper>();
+            _organisation = _agent.GetOrganisation();
+        }
+
         public void OnTriggerEnter(Collider other) {
-            _objectsInVision.Add(other.gameObject);
+            var obj = other.gameObject;
+            var state = IsHostileCreature(obj);
+            if (state == null) return;
+            if(state.Value) _enemiesInVision.Add(obj);
+                else _creaturesInVision.Add(other.gameObject);
         }
 
         private void OnTriggerExit(Collider other) {
-            _objectsInVision.Remove(other.gameObject);
+            _enemiesInVision.Remove(other.gameObject);
+            _creaturesInVision.Remove(other.gameObject);
         }
 
-        public Dictionary<Organisation, GameObject[]> GetTargetsInVision() {
-            var dict = new Dictionary<Organisation, List<GameObject>>();
-            foreach (var obj in _objectsInVision) {
-                if (!obj.TryGetComponent<IOrganisationWrapper>(out var agent)) continue;
-                var organisation = agent.GetOrganisation();
-                if(!dict.ContainsKey(organisation)) dict.Add(organisation, new List<GameObject>());
-                dict[organisation].Add(gameObject);
-            }
-            var result = new Dictionary<Organisation, GameObject[]>();
-            foreach (var pair in dict) {
-                result[pair.Key] = pair.Value.ToArray();
-            }
-            return result;
+        private bool? IsHostileCreature(GameObject obj) {
+            if (!obj.TryGetComponent<IOrganisationWrapper>(out var agent)) return null;
+            var organisation = agent.GetOrganisation();
+            return _organisation.GetRelationWithOrganisation(organisation) < _organisation.AgroThreshold;
         }
     }
 }

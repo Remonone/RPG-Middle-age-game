@@ -680,6 +680,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentID: 
+--- !u!114 &225474571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225474546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3413c84a8ba4bb9835b49f888483856, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prerequisites:
+  - Name: is_enemy_visible
+  - Name: is_armed
+  _effects:
+  - Name: liquidate_target
+  InRange: 0
+  Cost: 1
+  Target: {fileID: 0}
+  _threshold: 0
+--- !u!114 &225474572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225474546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83aec79db9c64e1b985b483b347a295e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentID: 
+  _cooldown:
+    _timeToReset: 1
 --- !u!114 &229117326 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2303128706757703686, guid: 21b4c4b05ec21d04b8dbf2f78dda21bf,
@@ -5794,6 +5830,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3131184015449607250, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
+      propertyPath: _vision
+      value: 
+      objectReference: {fileID: 2111256835}
+    - target: {fileID: 3131184015449607250, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
       propertyPath: _patrolPoints.Array.data[0]
       value: 
       objectReference: {fileID: 1830864607}
@@ -5877,6 +5918,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4223870967063102429, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      propertyPath: _availableActions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4223870967063102429, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      propertyPath: _availableActions.Array.data[1]
+      value: 
+      objectReference: {fileID: 225474571}
     - target: {fileID: 5673777465415467946, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
       propertyPath: _vision
@@ -5904,6 +5955,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 225474559}
+    - targetCorrespondingSourceObject: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 225474572}
+    - targetCorrespondingSourceObject: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 225474571}
   m_SourcePrefab: {fileID: 100100000, guid: 4973c434493d6df4ab7255d5fa23064b, type: 3}
 --- !u!1001 &1535523991449785438
 PrefabInstance:
