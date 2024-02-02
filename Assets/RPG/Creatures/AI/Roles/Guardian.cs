@@ -31,13 +31,12 @@ namespace RPG.Creatures.AI.Roles {
             if (_vision.IsEnemiesInVision) {
                 _agroTime = Time.time + _agroDuration;
                 var current = _vision.EnemiesInVision.GetEnumerator().Current;
-                if (current != null)
+                if (current != null && _target == null)
                     _target = current.GetComponent<Health>();
             }
             
             states.Add(new StateObject { Name = "is_suspicious", Value = _agroTime > Time.time });
             states.Add(new StateObject { Name = "is_enemy_visible", Value = _vision.IsEnemiesInVision});
-            states.Add(new StateObject { Name = "target_position", Value = _target ? _target.transform.position : null });
             states.Add(new StateObject {Name = "is_alive", Value = _health.IsAlive});
             states.Add(new StateObject {Name = "is_armed", Value = _equipment.GetEquipmentItem(EquipmentSlot.WEAPON) != null});
             states.Add(new StateObject {Name = "attack_range", Value = _stats.GetStatValue(Stat.ATTACK_RANGE)});
@@ -47,6 +46,8 @@ namespace RPG.Creatures.AI.Roles {
             List<StateObject> goal = new();
             if (_target != null) {
                 goal.Add(new StateObject {Name = "liquidate_target", Value = true});
+            } else if (_agroTime > Time.time) {
+                goal.Add(new StateObject {Name = "check_area", Value = true});
             } else {
                 goal.Add(new StateObject {Name = "investigate", Value = true});
             }

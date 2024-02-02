@@ -16,7 +16,16 @@ namespace RPG.Inventories.Pickups {
             Destroy(this, .1f);
             return _pickable;
         }
-        
+
+        public bool TryCheckEquipmentSlot(EquipmentSlot slot) {
+            var item = _pickable.StoredItem as EquipmentItem;
+            if (item != null) {
+                return item.Slot == slot;
+            }
+
+            return false;
+        }
+
     }
 
     [Serializable]
