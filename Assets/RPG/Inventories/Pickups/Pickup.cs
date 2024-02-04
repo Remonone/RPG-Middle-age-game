@@ -7,6 +7,11 @@ namespace RPG.Inventories.Pickups {
 
         private readonly Pickable _pickable = new();
 
+        private void Awake() {
+            _pickable.StoredItem = InventoryItem.GetItemByGuid("77973f65-3fd7-4404-a03c-fa46a7c72360");
+            _pickable.Count = 1;
+        }
+
         public void Setup(InventoryItem item, int count) {
             _pickable.StoredItem = item;
             _pickable.Count = count;

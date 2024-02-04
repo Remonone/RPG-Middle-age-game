@@ -7,7 +7,7 @@ namespace RPG.Creatures.AI.Actions {
         [SerializeField] private List<GameObject> _patrolPoints;
         [SerializeField] private AiVision _vision;
         
-        private Queue<GameObject> _points = new ();
+        private readonly Queue<GameObject> _points = new ();
 
         public ClearAreaAction() {
             _prerequisites.Add(new StateObject {Name = "is_suspicious", Value = false});
@@ -16,27 +16,34 @@ namespace RPG.Creatures.AI.Actions {
             _effects.Add(new StateObject {Name = "investigate", Value = true});
         }
 
-        private void Start() {
-            foreach (var point in _patrolPoints) {
-                _points.Enqueue(point);
-            }
-        }
-
         public override bool PerformAction(GameObject agent) {
-            return _vision.IsEnemiesInVision;
+            _points.TryDequeue(out var point);
+            if (point == null) return false;
+            if (_vision.IsEnemiesInVision) return false;
+            Target = point;
+            InRange = false;
+            return true;
         }
+        
         public override void DoReset() {
             InRange = false;
             Target = null;
+            _points.Clear();
         }
+        
         public override bool IsDone() {
-            return (transform.position - Target.transform.position).magnitude < .3f;
+            return _points.Count < 1;
         }
+        
         public override bool CheckProceduralPrerequisites(GameObject agent) {
-            Target = _points.Dequeue();
-            _points.Enqueue(Target);
+            foreach (var point in _patrolPoints) {
+                _points.Enqueue(point);
+            }
+            _points.TryDequeue(out var patrolPoint);
+            Target = patrolPoint;
             return Target != null;
         }
+        
         public override bool RequiresInRange() {
             return true;
         }

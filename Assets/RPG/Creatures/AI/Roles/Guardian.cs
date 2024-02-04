@@ -10,8 +10,10 @@ namespace RPG.Creatures.AI.Roles {
     [RequireComponent(typeof(Health))]
     public class Guardian : BaseAgentBehaviour {
         [SerializeField] private float _agroDuration;
+        [SerializeField] private float _suspiciousDuration;
         
         private float _agroTime = -1;
+        private float _suspiciousTime = -1;
         private Health _target;
         
         // Cached info
@@ -30,12 +32,16 @@ namespace RPG.Creatures.AI.Roles {
             
             if (_vision.IsEnemiesInVision) {
                 _agroTime = Time.time + _agroDuration;
-                var current = _vision.EnemiesInVision.GetEnumerator().Current;
+                var current = _vision.EnemiesInVision.Current;
                 if (current != null && _target == null)
                     _target = current.GetComponent<Health>();
             }
+
+            if (_agroTime > Time.time) {
+                _suspiciousTime = Time.time + _suspiciousDuration;
+            }
             
-            states.Add(new StateObject { Name = "is_suspicious", Value = _agroTime > Time.time });
+            states.Add(new StateObject { Name = "is_agro", Value = _agroTime > Time.time });
             states.Add(new StateObject { Name = "is_enemy_visible", Value = _vision.IsEnemiesInVision});
             states.Add(new StateObject {Name = "is_alive", Value = _health.IsAlive});
             states.Add(new StateObject {Name = "is_armed", Value = _equipment.GetEquipmentItem(EquipmentSlot.WEAPON) != null});

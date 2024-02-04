@@ -2,34 +2,44 @@
 using RPG.Inventories;
 using RPG.Inventories.Items;
 using RPG.Inventories.Pickups;
-using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Actions {
     public class GetWeapon : GoapAction {
 
         [SerializeField] private float _searchRadius;
-        [SerializeField] private BaseStats _stats;
         [SerializeField] private Equipment _equipment;
 
-        private readonly LayerMask _pickupLayer = LayerMask.NameToLayer("Pickup");
+        private LayerMask _pickupLayer;
+        
+        public GetWeapon() {
+            _prerequisites.Add(new StateObject {Name = "is_armed", Value = false});
+            
+            _effects.Add(new StateObject {Name = "is_armed", Value = true});
+        }
 
+        private void Awake() {
+            _pickupLayer = LayerMask.NameToLayer("Pickup");
+        }
 
         public override bool PerformAction(GameObject agent) {
             var pickup = Target.GetComponent<Pickup>();
-            if (pickup == null) return true;
+            if (pickup == null) return false;
             var item = pickup.PickUp();
             var equipment = item.StoredItem as EquipmentItem;
-            if (equipment == null) return true;
+            if (equipment == null) return false;
             _equipment.PlaceEquipment(equipment, EquipmentSlot.WEAPON);
             return true;
         }
+        
         public override void DoReset() {
             Target = null;
         }
+        
         public override bool IsDone() {
-            return (Target.transform.position - transform.position).magnitude < _stats.GetStatValue(Stat.ATTACK_RANGE);
+            return _equipment.GetEquipmentItem(EquipmentSlot.WEAPON) != null;
         }
+        
         public override bool CheckProceduralPrerequisites(GameObject agent) {
             var agentPosition = agent.transform.position;
             var pickups = Physics.OverlapSphere(agentPosition, _searchRadius, _pickupLayer);
@@ -43,8 +53,9 @@ namespace RPG.Creatures.AI.Actions {
                 Target = pickup.gameObject;
                 distance = localDistance;
             }
-            return true;
+            return Target != null;
         }
+        
         public override bool RequiresInRange() {
             return true;
         }

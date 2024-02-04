@@ -13,7 +13,7 @@ namespace RPG.Creatures.AI {
         private readonly List<GameObject> _enemiesInVision = new();
         private readonly List<GameObject> _creaturesInVision = new();
 
-        public IEnumerable<GameObject> EnemiesInVision => _enemiesInVision;
+        public IEnumerator<GameObject> EnemiesInVision => _enemiesInVision.GetEnumerator();
         public IEnumerable<GameObject> CreaturesInVision => _creaturesInVision;
 
         public bool IsEnemiesInVision => _enemiesInVision.Count > 0;
