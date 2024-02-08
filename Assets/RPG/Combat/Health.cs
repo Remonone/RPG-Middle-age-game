@@ -30,6 +30,7 @@ namespace RPG.Combat {
         public Action<DamageReport> OnHit;
         public Action OnDie;
         private static readonly int Hit = Animator.StringToHash("OnHit");
+        private static readonly int Dead = Animator.StringToHash("IsDead");
         public bool IsAlive => _currentHealth > 0;
         
         protected override void OnAwake() {
@@ -52,9 +53,11 @@ namespace RPG.Combat {
 
         private void Start() {
             _maxHealth = _stats.GetStatValue(Stat.BASE_HEALTH);
+            _currentHealth = _maxHealth;
         }
 
         private void Update() {
+            if (!IsAlive) return;
             if(_currentHealth < _maxHealth)
                 _currentHealth += _stats.GetStatValue(Stat.HEALTH_REGEN) / 5 * Time.deltaTime;
         }
@@ -68,6 +71,7 @@ namespace RPG.Combat {
             if (_currentHealth <= 0) Die();
         }
         private void Die() {
+            _animator.SetBool(Dead, true);
             OnDie?.Invoke();
         }
 

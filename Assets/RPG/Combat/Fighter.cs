@@ -15,6 +15,7 @@ namespace RPG.Combat {
     public class Fighter : PredicateMonoBehaviour, IAction{
 
         [SerializeField] private Cooldown _cooldown;
+        [SerializeField] private bool _shouldResetOnAttack;
 
         private BaseStats _stats;
         private Mover _mover;
@@ -44,7 +45,7 @@ namespace RPG.Combat {
         }
         
         public void Attack(Health target) {
-            if (!target.TryGetComponent<SelectableEnemy>(out var targetMark) || !targetMark._isTargetable) return;
+            // if (!target.TryGetComponent<SelectableEnemy>(out var targetMark) || !targetMark._isTargetable) return;
             if (target == null || !target.IsAlive) return;
             _scheduler.SwitchAction(this);
             _target = target;
@@ -78,25 +79,34 @@ namespace RPG.Combat {
         private void Update() {
             if (_target == null || !_target.IsAlive) return;
             
-            var distanceToTarget = Vector3.Distance(transform.position, _target.transform.position);
-            if (distanceToTarget <= _stats.GetStatValue(Stat.ATTACK_RANGE) && _cooldown.IsAvailable) {
+            if (IsTargetInRange() && _cooldown.IsAvailable) {
                 AttackTarget();
                 _cooldown.Reset();
                 return;
             }
             _mover.MoveToPoint(_target.transform.position);
         }
-        private void AttackTarget() {
+        public void AttackTarget() {
             _animator.SetTrigger(_isAttacking);
         }
 
         void Hit() {
             if (_target == null) return;
+            if (!IsTargetInRange()) return;
             EquipmentItem weapon = _equipment.GetEquipmentItem(EquipmentSlot.WEAPON);
             DamageType type = weapon != null ? weapon.Type : DamageType.PHYSICAL;
             var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), type, gameObject); 
             OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
             _target.HitEntity(report);
+            if (_shouldResetOnAttack) {
+                _scheduler.SwitchAction(null);
+                _target = null;
+            }
+        }
+
+        private bool IsTargetInRange() {
+            var distanceToTarget = Vector3.Distance(transform.position, _target.transform.position);
+            return distanceToTarget <= _stats.GetStatValue(Stat.ATTACK_RANGE);
         }
 
     }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec95ce7ba114eca81299610eaa058c4, type: 3}
   m_Name: Enemy
   m_EditorClassIdentifier: 
-  _raceName: Enemy
+  _class: 0
   _baseStats:
   - stat: 0
     value: 100
@@ -31,7 +31,7 @@ MonoBehaviour:
   - stat: 7
     value: 1
   - stat: 8
-    value: 1
+    value: 3
   - stat: 9
     value: 1
   - stat: 1000

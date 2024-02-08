@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using RPG.Creatures.AI.Core;
+using RPG.Creatures.AI.Core.AgentBases;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Actions {
     public class ClearAreaAction : GoapAction {
         [SerializeField] private List<GameObject> _patrolPoints;
-        [SerializeField] private AiVision _vision;
         
         private readonly Queue<GameObject> _points = new ();
+
+        private IFighterAgentBase _fighterAgent;
 
         public ClearAreaAction() {
             _prerequisites.Add(new StateObject {Name = "is_suspicious", Value = false});
@@ -19,7 +21,7 @@ namespace RPG.Creatures.AI.Actions {
         public override bool PerformAction(GameObject agent) {
             _points.TryDequeue(out var point);
             if (point == null) return false;
-            if (_vision.IsEnemiesInVision) return false;
+            if (!ReferenceEquals(_fighterAgent.GetEnemy(), null)) return false;
             Target = point;
             InRange = false;
             return true;
@@ -28,6 +30,7 @@ namespace RPG.Creatures.AI.Actions {
         public override void DoReset() {
             InRange = false;
             Target = null;
+            _fighterAgent = null;
             _points.Clear();
         }
         
@@ -36,6 +39,8 @@ namespace RPG.Creatures.AI.Actions {
         }
         
         public override bool CheckProceduralPrerequisites(GameObject agent) {
+            _fighterAgent = agent.GetComponent<IFighterAgentBase>();
+            if (_fighterAgent == null) return false;
             foreach (var point in _patrolPoints) {
                 _points.Enqueue(point);
             }

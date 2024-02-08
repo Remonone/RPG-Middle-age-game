@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec95ce7ba114eca81299610eaa058c4, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  _raceName: Human
+  _class: 0
   _baseStats:
   - stat: 0
-    value: 100
+    value: 3
   - stat: 1
     value: 0.5
   - stat: 2

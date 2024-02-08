@@ -7,11 +7,12 @@ namespace RPG.Creatures.AI.Core {
         public Queue<GoapAction> BuildPlan(GameObject agent, List<GoapAction> actions, List<StateObject> prerequisites,
             List<StateObject> goals) {
             foreach(var action in actions) action.DoReset();
+            Debug.Log(agent.name + " " + goals[0].Name);
 
             List<GoapAction> usableActions = new();
-            foreach (var action in actions) {
-                if (action.CheckProceduralPrerequisites(agent)) usableActions.Add(action);
-            }
+            foreach (var action in actions) 
+                if (action.CheckProceduralPrerequisites(agent)) 
+                    usableActions.Add(action);
 
             List<Node> nodes = new();
 

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using RPG.Creatures.AI.Roles;
+﻿using System;
+using System.Collections.Generic;
 using RPG.Stats.Relations;
 using UnityEngine;
 
@@ -13,6 +13,11 @@ namespace RPG.Creatures.AI {
         private readonly List<GameObject> _enemiesInVision = new();
         private readonly List<GameObject> _creaturesInVision = new();
 
+        public Action<GameObject> EnemySpotted;
+        public Action<GameObject> CreatureSpotted;
+        public Action<GameObject> EnemyMissing;
+        public Action<GameObject> CreatureMissing;
+        
         public IEnumerator<GameObject> EnemiesInVision => _enemiesInVision.GetEnumerator();
         public IEnumerable<GameObject> CreaturesInVision => _creaturesInVision;
 
@@ -28,14 +33,35 @@ namespace RPG.Creatures.AI {
             var obj = other.gameObject;
             var state = IsHostileCreature(obj);
             if (state == null) return;
-            print("Enemy in vision");
-            if(state.Value) _enemiesInVision.Add(obj);
-                else _creaturesInVision.Add(other.gameObject);
+            if (state.Value) OnEnemySpotted(obj);
+            else OnCreatureSpotted(obj);
+        }
+        
+        private void OnEnemySpotted(GameObject go) {
+            _enemiesInVision.Add(go);
+            EnemySpotted?.Invoke(go);
+        }
+
+        private void OnCreatureSpotted(GameObject go) {
+            _creaturesInVision.Add(go);
+            CreatureSpotted?.Invoke(go);
         }
 
         private void OnTriggerExit(Collider other) {
-            _enemiesInVision.Remove(other.gameObject);
-            _creaturesInVision.Remove(other.gameObject);
+            var obj = other.gameObject;
+            var state = IsHostileCreature(obj);
+            if (state == null) return;
+            if (state.Value)
+                OnEnemyLeave(obj);
+            else OnCreatureLeave(obj);
+        }
+        private void OnEnemyLeave(GameObject go) {
+            _enemiesInVision.Remove(go);
+            EnemyMissing?.Invoke(go);
+        }
+        private void OnCreatureLeave(GameObject go) {
+            _creaturesInVision.Remove(go);
+            CreatureMissing?.Invoke(go);
         }
 
         private bool? IsHostileCreature(GameObject obj) {
