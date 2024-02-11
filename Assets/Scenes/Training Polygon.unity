@@ -1668,48 +1668,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9921b18577d843c4bf89955b1b7151dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &619423617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 619423601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5531392a466f4251a036d432b19db940, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prerequisites:
-  - Name: is_enemy_visible
-  - Name: is_armed
-  _effects:
-  - Name: liquidate_target
-  InRange: 0
-  Cost: 1
-  Target: {fileID: 0}
-  _stats: {fileID: 619423607}
---- !u!114 &619423618
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 619423601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f41c8204292c41848e5c04108d4b07b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prerequisites:
-  - Name: is_armed
-  _effects:
-  - Name: is_armed
-  InRange: 0
-  Cost: 1
-  Target: {fileID: 0}
-  _searchRadius: 15
-  _equipment: {fileID: 619423604}
 --- !u!95 &619423630 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8951930689630413553, guid: 4973c434493d6df4ab7255d5fa23064b,
@@ -1734,10 +1692,96 @@ MonoBehaviour:
   - Name: is_agro
   _effects:
   - Name: liquidate_target
+  _title: Bare Hands
   InRange: 0
-  Cost: 4
+  Cost: 10
   Target: {fileID: 0}
   _stats: {fileID: 619423607}
+--- !u!114 &619423655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619423601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97451c99fa1548f09307a1269c7ee7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prerequisites:
+  - Name: is_suspicious
+  - Name: is_agro
+  - Name: is_enemy_visible
+  _effects:
+  - Name: check_area
+  _title: Search
+  InRange: 0
+  Cost: 1
+  Target: {fileID: 0}
+  _searchAreaRadius: 20
+  _pointProp: {fileID: 477709035806400378, guid: e995bc73491b02040b2275fc7cf9f5dc,
+    type: 3}
+--- !u!114 &619423661 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3131184015449607250, guid: 4973c434493d6df4ab7255d5fa23064b,
+    type: 3}
+  m_PrefabInstance: {fileID: 438375757760841348}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619423601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d70882ca204d1ea68991341461c7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &619423667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619423601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5531392a466f4251a036d432b19db940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prerequisites:
+  - Name: is_enemy_visible
+  - Name: is_armed
+  - Name: is_agro
+  _effects:
+  - Name: liquidate_target
+  _title: Attack With Weapon
+  InRange: 0
+  Cost: 2
+  Target: {fileID: 0}
+  _stats: {fileID: 619423607}
+--- !u!114 &619423668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619423601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f41c8204292c41848e5c04108d4b07b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prerequisites:
+  - Name: is_armed
+  _effects:
+  - Name: is_armed
+  _title: Get Weapon
+  InRange: 0
+  Cost: 1
+  Target: {fileID: 0}
+  _searchRadius: 15
+  _equipment: {fileID: 619423604}
+  _pickupLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1001 &664452886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2036,7 +2080,7 @@ GameObject:
   - component: {fileID: 730533276}
   - component: {fileID: 730533278}
   - component: {fileID: 730533277}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WeaponPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3259,6 +3303,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 730533276}
     m_Modifications:
+    - target: {fileID: 3792087614963713002, guid: b35a91f07dab4474ca76b2c2ee3fccbe,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4784556549358035337, guid: b35a91f07dab4474ca76b2c2ee3fccbe,
         type: 3}
       propertyPath: m_RootOrder
@@ -3318,6 +3367,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Falchion
+      objectReference: {fileID: 0}
+    - target: {fileID: 5273143934727584563, guid: b35a91f07dab4474ca76b2c2ee3fccbe,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6253,6 +6307,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3131184015449607250, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
+      propertyPath: _title
+      value: Clear Area
+      objectReference: {fileID: 0}
+    - target: {fileID: 3131184015449607250, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
       propertyPath: _vision
       value: 
       objectReference: {fileID: 2111256835}
@@ -6374,23 +6433,33 @@ PrefabInstance:
     - target: {fileID: 4223870967063102429, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
       propertyPath: _availableActions.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4223870967063102429, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      propertyPath: _availableActions.Array.data[0]
+      value: 
+      objectReference: {fileID: 619423668}
     - target: {fileID: 4223870967063102429, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
       propertyPath: _availableActions.Array.data[1]
       value: 
-      objectReference: {fileID: 619423643}
+      objectReference: {fileID: 619423661}
     - target: {fileID: 4223870967063102429, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
       propertyPath: _availableActions.Array.data[2]
       value: 
-      objectReference: {fileID: 619423618}
+      objectReference: {fileID: 619423667}
     - target: {fileID: 4223870967063102429, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
       propertyPath: _availableActions.Array.data[3]
       value: 
-      objectReference: {fileID: 619423617}
+      objectReference: {fileID: 619423643}
+    - target: {fileID: 4223870967063102429, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      propertyPath: _availableActions.Array.data[4]
+      value: 
+      objectReference: {fileID: 619423655}
     - target: {fileID: 5673777465415467946, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
       propertyPath: _stats
@@ -6409,15 +6478,19 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 619423618}
-    - targetCorrespondingSourceObject: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 619423617}
-    - targetCorrespondingSourceObject: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 619423643}
+    - targetCorrespondingSourceObject: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 619423655}
+    - targetCorrespondingSourceObject: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 619423667}
+    - targetCorrespondingSourceObject: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 619423668}
   m_SourcePrefab: {fileID: 100100000, guid: 4973c434493d6df4ab7255d5fa23064b, type: 3}
 --- !u!1001 &1535523991449785438
 PrefabInstance:

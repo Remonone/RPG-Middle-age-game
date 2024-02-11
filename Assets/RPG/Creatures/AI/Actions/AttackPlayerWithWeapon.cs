@@ -17,7 +17,7 @@ namespace RPG.Creatures.AI.Actions {
         
         public AttackPlayerWithWeapon() {
             _prerequisites.Add(new StateObject { Name = "is_enemy_visible", Value = true });
-            _prerequisites.Add(new StateObject { Name = "is_armed", Value = false });
+            _prerequisites.Add(new StateObject { Name = "is_armed", Value = true });
             _prerequisites.Add(new StateObject { Name = "is_agro", Value = true });
             
             _effects.Add(new StateObject { Name = "liquidate_target", Value = true });
@@ -30,13 +30,12 @@ namespace RPG.Creatures.AI.Actions {
         public override bool PerformAction(GameObject agent) {
             var enemy = _fighterAgent.GetEnemy();
             if (enemy == null) return false;
-            if (!((enemy.transform.position - agent.transform.position).magnitude >
-                  _stats.GetStatValue(Stat.ATTACK_RANGE))) {
+            if ((enemy.transform.position - agent.transform.position).magnitude >
+                  _stats.GetStatValue(Stat.ATTACK_RANGE)) {
                 InRange = false;
                 return true;
             }
             _fighter.Attack(_targetToAttack);
-            _fighter.AttackTarget();
             return true;
         }
         

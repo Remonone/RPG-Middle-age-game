@@ -18,7 +18,7 @@ namespace RPG.Inventories.Pickups {
         }
         // TODO: Make able to pickup it through PlayerController class
         public Pickable PickUp() {
-            Destroy(this, .1f);
+            Destroy(gameObject, .2f);
             return _pickable;
         }
 

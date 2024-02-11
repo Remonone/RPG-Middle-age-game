@@ -51,17 +51,14 @@ namespace RPG.Creatures.AI.Roles {
             _vision.EnemyMissing -= OnEnemyMissing;
         }
 
-        private void OnEnemySpotted(GameObject go) {
+        private void OnEnemySpotted(Health health) {
             if (_target != null) return;
-            if (go.TryGetComponent<Health>(out var health)) {
-                _target = health;
-            }
+            _target = health;
         }
 
         public override void OnPlanAborted(GoapAction aborter) { }
 
-        private void OnEnemyMissing(GameObject go) {
-            if (!go.TryGetComponent<Health>(out var health)) return;
+        private void OnEnemyMissing(Health health) {
             if (_target != health) return;
             var targetTransform = _target.transform;
             _targetLastPosition = targetTransform.position;
@@ -77,7 +74,13 @@ namespace RPG.Creatures.AI.Roles {
                 if (_agroTime < Time.time) {
                     shouldAlert = true;
                 }
-                _agroTime = Time.time + _agroDuration;
+
+                if (_target.IsAlive) {
+                    _agroTime = Time.time + _agroDuration;
+                }
+                else {
+                    _agroTime = Time.time;
+                }
             }
             if (_agroTime > Time.time) 
                 _suspiciousTime = Time.time + _suspiciousDuration;
@@ -107,7 +110,6 @@ namespace RPG.Creatures.AI.Roles {
 
         public override bool MoveAgent(GoapAction action) {
             action.InRange = base.MoveAgent(action) || (_vision.IsEnemiesInVision && _agroTime < Time.time);
-            print(action.InRange);
             return action.InRange;
         }
 

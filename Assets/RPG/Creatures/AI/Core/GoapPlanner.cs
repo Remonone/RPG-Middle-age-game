@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Core {
@@ -7,7 +8,7 @@ namespace RPG.Creatures.AI.Core {
         public Queue<GoapAction> BuildPlan(GameObject agent, List<GoapAction> actions, List<StateObject> prerequisites,
             List<StateObject> goals) {
             foreach(var action in actions) action.DoReset();
-            Debug.Log(agent.name + " " + goals[0].Name);
+            // Debug.Log(agent.name + " " + goals[0].Name);
 
             List<GoapAction> usableActions = new();
             foreach (var action in actions) 
@@ -15,11 +16,10 @@ namespace RPG.Creatures.AI.Core {
                     usableActions.Add(action);
 
             List<Node> nodes = new();
-
             Node start = new Node(null, 0, prerequisites, null);
 
             if (!BuildGraph(start, nodes, usableActions, goals)) return null;
-
+            
             Node cheapest = null;
             foreach (var node in nodes) {
                 if (cheapest == null) {
@@ -36,7 +36,6 @@ namespace RPG.Creatures.AI.Core {
                 if (n.Action != null) {
                     result.Insert(0, n.Action);
                 }
-
                 n = n.Parent;
             }
 
@@ -51,6 +50,7 @@ namespace RPG.Creatures.AI.Core {
 
             foreach (var action in usableActions) {
                 if (!IsInRequisite(parent.States, action.Prerequisites)) continue;
+                // Debug.Log("Title of action:" + action.Title);
                 List<StateObject> newStates = PopulateState(parent.States, action.Effects);
                 var node = new Node(parent, parent.Cost + action.Cost, newStates, action);
                 if (IsInRequisite(newStates, goals)) {
@@ -68,12 +68,7 @@ namespace RPG.Creatures.AI.Core {
 
         private bool IsInRequisite(List<StateObject> current, List<StateObject> requisites) {
             foreach (var requisite in requisites) {
-                bool match = false;
-                foreach (var state in current) {
-                    if (!requisite.IsEqual(state)) continue;
-                    match = true;
-                    break;
-                }
+                bool match = current.Any(state => requisite.IsEqual(state));
                 if (!match) return false;
             }
 
@@ -85,10 +80,9 @@ namespace RPG.Creatures.AI.Core {
             newState.AddRange(parentStates);
 
             foreach (var effect in actionEffects) {
-                bool isExisting = newState.Contains(effect);
-
+                bool isExisting = newState.Any(state => state.IsEqualState(effect));
                 if (isExisting) {
-                    newState.RemoveAll(pair => pair.Name == effect.Name);
+                    newState.RemoveAll(pair => pair.IsEqualState(effect));
                     var updatedEffect = effect.Clone();
                     newState.Add(updatedEffect);
                 } else {

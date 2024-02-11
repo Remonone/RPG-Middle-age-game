@@ -34,6 +34,7 @@ namespace RPG.Combat {
         
         public void Cancel() {
             _target = null;
+            _mover.Cancel();
         }
 
         public void Attack(SelectableEnemy target) {
@@ -98,10 +99,7 @@ namespace RPG.Combat {
             var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), type, gameObject); 
             OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
             _target.HitEntity(report);
-            if (_shouldResetOnAttack) {
-                _scheduler.SwitchAction(null);
-                _target = null;
-            }
+            if (_shouldResetOnAttack) _scheduler.SwitchAction(null);
         }
 
         private bool IsTargetInRange() {

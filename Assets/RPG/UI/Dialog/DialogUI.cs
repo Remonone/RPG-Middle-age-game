@@ -44,7 +44,6 @@ namespace RPG.UI.Dialog {
             }
             else {
                 _dialogText.text = _playerConversant.GetCurrentText();
-                print(_playerConversant.GetCurrentText() + " " + _dialogText.text);
                 if (!_playerConversant.HasNext()) return;
                 var button = new Button(() => _playerConversant.Next()) {
                     text = "Next"

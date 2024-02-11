@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RPG.Creatures.AI.Core;
+using RPG.Creatures.AI.Core.AgentBases;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,6 +9,8 @@ namespace RPG.Creatures.AI.Actions {
 
         [SerializeField] private float _searchAreaRadius = 5F;
         [SerializeField] private GameObject _pointProp;
+
+        private IFighterAgentBase _agentBase;
 
         private Queue<GameObject> _researchPositions = new();
         
@@ -20,30 +23,48 @@ namespace RPG.Creatures.AI.Actions {
         }
 
         public override bool PerformAction(GameObject agent) {
-            return false;
+            _researchPositions.TryDequeue(out var point);
+            if (point == null) {
+                foreach (var pos in GetDiscoverPositions(4)) {
+                    _researchPositions.Enqueue(pos);
+                }
+                point = _researchPositions.Dequeue();
+            }
+            Destroy(Target);
+            if (!ReferenceEquals(_agentBase.GetEnemy(), null)) return true;
+            Target = point;
+            InRange = false;
+            return true;
         }
         public override void DoReset() {
-            _researchPositions = null;
+            foreach (var pos in _researchPositions) {
+                Destroy(pos);
+            }
+            Destroy(Target);
+            _researchPositions.Clear();
             Target = null;
             InRange = false;
         }
         
         public override bool IsDone() {
-            return false; // TODO: If player was found;
+            var isDone = _agentBase.GetEnemy() != null || _agentBase.GetSuspiciousTime() < Time.time;
+            if (isDone) {
+                foreach (var pos in _researchPositions) Destroy(pos);
+                _researchPositions.Clear();
+            }
+            
+            return isDone;
         }
         
         public override bool CheckProceduralPrerequisites(GameObject agent) {
-            foreach (var pos in GetDiscoverPositions()) {
-                _researchPositions.Enqueue(pos);
-            }
-
-            Target = _researchPositions.Dequeue();
+            _agentBase = agent.GetComponent<IFighterAgentBase>();
+            Target = Instantiate(_pointProp, transform.position, Quaternion.identity);
             return true;
         }
 
-        public GameObject[] GetDiscoverPositions() {
-            GameObject[] positions = new GameObject[4];
-            for (int i = 0; i < 4; i++) {
+        public GameObject[] GetDiscoverPositions(int count) {
+            GameObject[] positions = new GameObject[count];
+            for (int i = 0; i < count; i++) {
                 Vector3 randomDirection = Random.insideUnitSphere * _searchAreaRadius + transform.position;
                 NavMesh.SamplePosition(randomDirection, out var hit, _searchAreaRadius, 1);
                 positions[i] = Instantiate(_pointProp, hit.position, Quaternion.identity);

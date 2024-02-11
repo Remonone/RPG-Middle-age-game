@@ -9,17 +9,12 @@ namespace RPG.Creatures.AI.Actions {
 
         [SerializeField] private float _searchRadius;
         [SerializeField] private Equipment _equipment;
-
-        private LayerMask _pickupLayer;
+        [SerializeField] private LayerMask _pickupLayer;
         
         public GetWeapon() {
             _prerequisites.Add(new StateObject {Name = "is_armed", Value = false});
             
             _effects.Add(new StateObject {Name = "is_armed", Value = true});
-        }
-
-        private void Awake() {
-            _pickupLayer = LayerMask.NameToLayer("Pickup");
         }
 
         public override bool PerformAction(GameObject agent) {
@@ -49,13 +44,19 @@ namespace RPG.Creatures.AI.Actions {
                 if(!obj.TryGetComponent<Pickup>(out var pickup)) continue;
                 if(!pickup.TryCheckEquipmentSlot(EquipmentSlot.WEAPON)) continue;
                 var localDistance = (pickup.transform.position - transform.position).magnitude;
-                if (!(localDistance < distance)) continue;
+                if (localDistance > distance) continue;
                 Target = pickup.gameObject;
                 distance = localDistance;
             }
+            print(Target);
             return Target != null;
         }
-        
+
+        private void OnDrawGizmos() {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(transform.position, _searchRadius);
+        }
+
         public override bool RequiresInRange() {
             return true;
         }

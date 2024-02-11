@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RPG.Combat;
 using RPG.Stats.Relations;
 using UnityEngine;
 
@@ -10,16 +11,16 @@ namespace RPG.Creatures.AI {
         private IOrganisationWrapper _agent;
         private Organisation _organisation;
 
-        private readonly List<GameObject> _enemiesInVision = new();
-        private readonly List<GameObject> _creaturesInVision = new();
+        private readonly List<Health> _enemiesInVision = new();
+        private readonly List<Health> _creaturesInVision = new();
 
-        public Action<GameObject> EnemySpotted;
-        public Action<GameObject> CreatureSpotted;
-        public Action<GameObject> EnemyMissing;
-        public Action<GameObject> CreatureMissing;
+        public Action<Health> EnemySpotted;
+        public Action<Health> CreatureSpotted;
+        public Action<Health> EnemyMissing;
+        public Action<Health> CreatureMissing;
         
-        public IEnumerator<GameObject> EnemiesInVision => _enemiesInVision.GetEnumerator();
-        public IEnumerable<GameObject> CreaturesInVision => _creaturesInVision;
+        public IEnumerator<Health> EnemiesInVision => _enemiesInVision.GetEnumerator();
+        public IEnumerable<Health> CreaturesInVision => _creaturesInVision;
 
         public bool IsEnemiesInVision => _enemiesInVision.Count > 0;
         public bool IsCreaturesInVision => _creaturesInVision.Count > 0;
@@ -33,35 +34,51 @@ namespace RPG.Creatures.AI {
             var obj = other.gameObject;
             var state = IsHostileCreature(obj);
             if (state == null) return;
-            if (state.Value) OnEnemySpotted(obj);
-            else OnCreatureSpotted(obj);
+            var health = obj.GetComponent<Health>();
+            if (!health.IsAlive) return;
+            if (state.Value) OnEnemySpotted(health);
+            else OnCreatureSpotted(health);
         }
         
-        private void OnEnemySpotted(GameObject go) {
-            _enemiesInVision.Add(go);
-            EnemySpotted?.Invoke(go);
+        private void OnEnemySpotted(Health health) {
+            health.OnDie += OnEnemyDead;
+            _enemiesInVision.Add(health);
+            EnemySpotted?.Invoke(health);
         }
 
-        private void OnCreatureSpotted(GameObject go) {
-            _creaturesInVision.Add(go);
-            CreatureSpotted?.Invoke(go);
+        private void OnCreatureSpotted(Health health) {
+            _creaturesInVision.Add(health);
+            CreatureSpotted?.Invoke(health);
         }
 
         private void OnTriggerExit(Collider other) {
             var obj = other.gameObject;
             var state = IsHostileCreature(obj);
             if (state == null) return;
+            var health = obj.GetComponent<Health>();
             if (state.Value)
-                OnEnemyLeave(obj);
-            else OnCreatureLeave(obj);
+                OnEnemyLeave(health);
+            else OnCreatureLeave(health);
         }
-        private void OnEnemyLeave(GameObject go) {
-            _enemiesInVision.Remove(go);
-            EnemyMissing?.Invoke(go);
+        private void OnEnemyLeave(Health health) {
+            _enemiesInVision.Remove(health);
+            EnemyMissing?.Invoke(health);
+            health.GetComponent<Health>().OnDie -= OnEnemyDead;
         }
-        private void OnCreatureLeave(GameObject go) {
-            _creaturesInVision.Remove(go);
-            CreatureMissing?.Invoke(go);
+        private void OnCreatureLeave(Health health) {
+            _creaturesInVision.Remove(health);
+            CreatureMissing?.Invoke(health);
+        }
+
+        private void OnEnemyDead() {
+            foreach (var obj in _enemiesInVision) {
+                var health = obj.GetComponent<Health>();
+                if(health.IsAlive) continue;
+                health.OnDie -= OnEnemyDead;
+                EnemyMissing?.Invoke(obj);
+                _enemiesInVision.Remove(obj);
+                break;
+            }
         }
 
         private bool? IsHostileCreature(GameObject obj) {

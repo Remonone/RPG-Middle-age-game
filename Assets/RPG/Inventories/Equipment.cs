@@ -12,7 +12,7 @@ namespace RPG.Inventories {
     public class Equipment : PredicateMonoBehaviour, ISaveable {
 
         private readonly Dictionary<EquipmentSlot, EquipmentItem> _items = new();
-        private static readonly Dictionary<EquipmentSlot, GameObject> _positions = new();
+        private readonly Dictionary<EquipmentSlot, GameObject> _positions = new();
         public event Action OnEquipmentChange;
 
         private void Start() {

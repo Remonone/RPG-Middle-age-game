@@ -8,11 +8,14 @@ namespace RPG.Creatures.AI.Core {
 
         [SerializeField] protected List<StateObject> _prerequisites;
         [SerializeField] protected List<StateObject> _effects;
+        [SerializeField] private string _title;
 
         public bool InRange = false;
         
         public float Cost = 1f;
         [ReadOnly] public GameObject Target;
+
+        public string Title => _title;
         
         public GoapAction() {
             _prerequisites = new List<StateObject>();
@@ -45,6 +48,9 @@ namespace RPG.Creatures.AI.Core {
 
         public bool IsEqual(StateObject dif) {
             return this.Name == dif.Name && Equals(Value, dif.Value);
-        } 
+        }
+        public bool IsEqualState(StateObject dif) {
+            return Name == dif.Name;
+        }
     }
 }
