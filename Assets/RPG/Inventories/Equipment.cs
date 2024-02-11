@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace RPG.Inventories {
     public class Equipment : PredicateMonoBehaviour, ISaveable {
+        [SerializeField] private Animator _animator;
 
         private readonly Dictionary<EquipmentSlot, EquipmentItem> _items = new();
         private readonly Dictionary<EquipmentSlot, GameObject> _positions = new();
@@ -29,6 +30,8 @@ namespace RPG.Inventories {
             _items[equipmentSlot] = item;
             ApplyPredicate(_items[equipmentSlot].OnEquipPredicate);
             item.RegisterModifications(gameObject);
+            if(!ReferenceEquals(item.Controller, null))
+                _animator.runtimeAnimatorController = item.Controller;
             DisplayItem(equipmentSlot, item);
             OnEquipmentChange?.Invoke();
         }
@@ -37,6 +40,8 @@ namespace RPG.Inventories {
             ApplyPredicate(_items[equipmentSlot].OnUnequipPredicate);
             _items[equipmentSlot].UnregisterModifications();
             _items[equipmentSlot] = null;
+            var controller = _animator.runtimeAnimatorController as AnimatorOverrideController;
+            if (controller != null) _animator.runtimeAnimatorController = controller.runtimeAnimatorController;
             DisplayItem(equipmentSlot, null);
             OnEquipmentChange?.Invoke();
         }

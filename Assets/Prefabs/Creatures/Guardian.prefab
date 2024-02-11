@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2111256837}
   - component: {fileID: 2111256836}
   - component: {fileID: 2111256835}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Vision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2111256834}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.27, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -52,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.1951542, y: 1.3347373, z: 8.82325}
-  m_Center: {x: -0.054062843, y: 1.125041, z: 8.47093}
+  m_Size: {x: 8.453667, y: 2.4626799, z: 17.352776}
+  m_Center: {x: -0.020303726, y: 0.5610697, z: 9.38187}
 --- !u!114 &2111256835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,7 +88,10 @@ GameObject:
   - component: {fileID: 8886586193631549958}
   - component: {fileID: 225474559}
   - component: {fileID: 225474572}
-  - component: {fileID: 225474571}
+  - component: {fileID: 619423643}
+  - component: {fileID: 619423655}
+  - component: {fileID: 619423667}
+  - component: {fileID: 619423668}
   m_Layer: 0
   m_Name: Guardian
   m_TagString: Untagged
@@ -111,7 +114,7 @@ Transform:
   - {fileID: 2111256837}
   - {fileID: 3228092682281971162}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &8951930689630413553
 Animator:
@@ -146,8 +149,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _availableActions:
+  - {fileID: 619423668}
   - {fileID: 3131184015449607250}
-  - {fileID: 225474571}
+  - {fileID: 619423667}
+  - {fileID: 619423643}
+  - {fileID: 619423655}
 --- !u!114 &6473694305726389837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,7 +169,7 @@ MonoBehaviour:
   _componentID: 
   _currentHealth: 0
   _maxHealth: 0
-  _animator: {fileID: 0}
+  _animator: {fileID: 8951930689630413553}
 --- !u!114 &5673777465415467946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,8 +185,10 @@ MonoBehaviour:
   _organisation: {fileID: 11400000, guid: 7ff063565a59b5740aa1fae9fbf2db7b, type: 2}
   _vision: {fileID: 2111256835}
   _mover: {fileID: 6374397075787476267}
-  _rangeThreshold: 1
+  _stats: {fileID: 59265798070784182}
   _agroDuration: 3
+  _suspiciousDuration: 15
+  _detectionRadius: 10
 --- !u!114 &6374397075787476267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,6 +220,7 @@ MonoBehaviour:
   - Name: is_enemy_visible
   _effects:
   - Name: investigate
+  _title: Clear Area
   InRange: 0
   Cost: 2
   Target: {fileID: 0}
@@ -321,6 +330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentID: 
+  _animator: {fileID: 8951930689630413553}
 --- !u!114 &225474572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,7 +346,8 @@ MonoBehaviour:
   _componentID: 
   _cooldown:
     _timeToReset: 1
---- !u!114 &225474571
+  _shouldResetOnAttack: 1
+--- !u!114 &619423643
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -351,12 +362,87 @@ MonoBehaviour:
   _prerequisites:
   - Name: is_enemy_visible
   - Name: is_armed
+  - Name: is_agro
   _effects:
   - Name: liquidate_target
+  _title: Bare Hands
+  InRange: 0
+  Cost: 10
+  Target: {fileID: 0}
+  _stats: {fileID: 59265798070784182}
+--- !u!114 &619423655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090550908769538078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97451c99fa1548f09307a1269c7ee7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prerequisites:
+  - Name: is_suspicious
+  - Name: is_agro
+  - Name: is_enemy_visible
+  _effects:
+  - Name: check_area
+  _title: Search
   InRange: 0
   Cost: 1
   Target: {fileID: 0}
-  _threshold: 0
+  _searchAreaRadius: 20
+  _pointProp: {fileID: 477709035806400378, guid: e995bc73491b02040b2275fc7cf9f5dc,
+    type: 3}
+--- !u!114 &619423667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090550908769538078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5531392a466f4251a036d432b19db940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prerequisites:
+  - Name: is_enemy_visible
+  - Name: is_armed
+  - Name: is_agro
+  _effects:
+  - Name: liquidate_target
+  _title: Attack With Weapon
+  InRange: 0
+  Cost: 2
+  Target: {fileID: 0}
+  _stats: {fileID: 59265798070784182}
+--- !u!114 &619423668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090550908769538078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f41c8204292c41848e5c04108d4b07b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prerequisites:
+  - Name: is_armed
+  _effects:
+  - Name: is_armed
+  _title: Get Weapon
+  InRange: 0
+  Cost: 1
+  Target: {fileID: 0}
+  _searchRadius: 15
+  _equipment: {fileID: 225474559}
+  _pickupLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1001 &3228092682281824930
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -413,6 +499,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 425558, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.63248575
+      objectReference: {fileID: 0}
+    - target: {fileID: 425558, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.37547126
+      objectReference: {fileID: 0}
+    - target: {fileID: 444164, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.3754713
+      objectReference: {fileID: 0}
+    - target: {fileID: 444164, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.5785476
+      objectReference: {fileID: 0}
+    - target: {fileID: 444164, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.63248575
+      objectReference: {fileID: 0}
+    - target: {fileID: 444164, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.35251346
+      objectReference: {fileID: 0}
     - target: {fileID: 9572094, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 1
@@ -420,8 +530,31 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 173820, guid: 30cf93deff988e74e88a144bd2127c18,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2040432668}
   m_SourcePrefab: {fileID: 100100000, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+--- !u!1 &3228092682281718878 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 173820, guid: 30cf93deff988e74e88a144bd2127c18,
+    type: 3}
+  m_PrefabInstance: {fileID: 3228092682281824930}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2040432668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228092682281718878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 539433ad2c01401cb64b76ce824744b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _slot: 6
 --- !u!4 &3228092682281971162 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 417656, guid: 30cf93deff988e74e88a144bd2127c18,

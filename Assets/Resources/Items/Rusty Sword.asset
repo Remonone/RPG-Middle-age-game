@@ -29,3 +29,4 @@ MonoBehaviour:
   _test: {fileID: 0}
   _itemModel: {fileID: -3812489790007506296, guid: 3277d28ad9ab68c4db7c604dfcfc111f,
     type: 3}
+  _controller: {fileID: 22100000, guid: e8df97934d4871443b28fa3e63375654, type: 2}

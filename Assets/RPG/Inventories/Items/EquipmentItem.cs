@@ -16,12 +16,14 @@ namespace RPG.Inventories.Items {
         [SerializeField] private List<Modification> _modifications;
         [SerializeField] private TextMeshProUGUI _test;
         [SerializeField] private EquipmentModel _itemModel;
-
+        [SerializeField] private AnimatorOverrideController _controller;
+        
         public EquipmentSlot Slot => _slot;
         public DamageType Type => _type;
         public Predicate OnEquipPredicate => _onEquipPredicate;
         public Predicate OnUnequipPredicate => _onUnequipPredicate;
         public EquipmentModel ItemModel => _itemModel;
+        public AnimatorOverrideController Controller => _controller;
         
         public bool CanEquip(EquipmentSlot location) {
             return _slot == location;
