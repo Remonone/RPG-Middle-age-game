@@ -33,9 +33,6 @@ namespace RPG.Creatures.AI.Core {
                 List<StateObject> goal = _provider.CreateGoal();
 
                 Queue<GoapAction> plan = _planner.BuildPlan(go, _availableActions, currentState, goal);
-                foreach (var action in plan) {
-                    print("Plan action: " + action.Title);
-                }
                 if (plan != null) {
                     _currentActions = plan;
                     _provider.OnPlanFound(goal, plan);

@@ -50,7 +50,6 @@ namespace RPG.Creatures.AI.Core {
 
             foreach (var action in usableActions) {
                 if (!IsInRequisite(parent.States, action.Prerequisites)) continue;
-                // Debug.Log("Title of action:" + action.Title);
                 List<StateObject> newStates = PopulateState(parent.States, action.Effects);
                 var node = new Node(parent, parent.Cost + action.Cost, newStates, action);
                 if (IsInRequisite(newStates, goals)) {

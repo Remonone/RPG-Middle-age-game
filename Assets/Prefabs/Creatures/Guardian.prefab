@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 619423655}
   - component: {fileID: 619423667}
   - component: {fileID: 619423668}
+  - component: {fileID: 438375757760841350}
   m_Layer: 0
   m_Name: Guardian
   m_TagString: Untagged
@@ -220,7 +221,6 @@ MonoBehaviour:
   - Name: is_enemy_visible
   _effects:
   - Name: investigate
-  _title: Clear Area
   InRange: 0
   Cost: 2
   Target: {fileID: 0}
@@ -365,7 +365,6 @@ MonoBehaviour:
   - Name: is_agro
   _effects:
   - Name: liquidate_target
-  _title: Bare Hands
   InRange: 0
   Cost: 10
   Target: {fileID: 0}
@@ -388,7 +387,6 @@ MonoBehaviour:
   - Name: is_enemy_visible
   _effects:
   - Name: check_area
-  _title: Search
   InRange: 0
   Cost: 1
   Target: {fileID: 0}
@@ -413,7 +411,6 @@ MonoBehaviour:
   - Name: is_agro
   _effects:
   - Name: liquidate_target
-  _title: Attack With Weapon
   InRange: 0
   Cost: 2
   Target: {fileID: 0}
@@ -434,7 +431,6 @@ MonoBehaviour:
   - Name: is_armed
   _effects:
   - Name: is_armed
-  _title: Get Weapon
   InRange: 0
   Cost: 1
   Target: {fileID: 0}
@@ -443,6 +439,22 @@ MonoBehaviour:
   _pickupLayer:
     serializedVersion: 2
     m_Bits: 256
+--- !u!114 &438375757760841350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090550908769538078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &3228092682281824930
 PrefabInstance:
   m_ObjectHideFlags: 0

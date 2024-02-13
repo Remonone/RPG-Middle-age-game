@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Inventories.Items {
@@ -41,7 +42,7 @@ namespace RPG.Inventories.Items {
         }
 
         private static void LoadStore() {
-            var itemList = Resources.LoadAll<InventoryItem>("Items");
+            var itemList = Resources.LoadAll<InventoryItem>(PropertyConstants.ITEMS_PATH);
             foreach (var item in itemList) {
                 if (_itemStore.ContainsKey(item._itemID)) {
                     Debug.LogError($"There's a duplicate for objects: {_itemStore[item._itemID]} and {item}");

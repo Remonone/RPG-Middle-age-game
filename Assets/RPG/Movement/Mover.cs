@@ -13,15 +13,13 @@ namespace RPG.Movement {
         [SerializeField] private Animator _animator;
         [SerializeField] private float _threshold = 2F;
         
-        private readonly int _Speed = Animator.StringToHash("Movespeed");
+        private readonly int _speed = Animator.StringToHash("Movespeed");
 
         private BaseStats _baseStats;
         private TaskScheduler _scheduler;
         private NavMeshAgent _agent;
         private Health _health;
-        
-        public Vector3 CurrentDestinationPoint => _agent.destination;
-        
+
         private void Awake() {
             _agent = GetComponent<NavMeshAgent>();
             _baseStats = GetComponent<BaseStats>();
@@ -51,13 +49,13 @@ namespace RPG.Movement {
             if (!_health.IsAlive) return;
             _agent.isStopped = false;
             _agent.destination = point;
-            _animator.SetFloat(_Speed, 1);
+            _animator.SetFloat(_speed, 1);
         }
 
 
         public void Cancel() {
             _agent.isStopped = true;
-            _animator.SetFloat(_Speed, 0);
+            _animator.SetFloat(_speed, 0);
         }
         public JToken CaptureAsJToken() {
             return JToken.FromObject(transform.position.ToToken());

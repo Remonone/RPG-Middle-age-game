@@ -48,7 +48,6 @@ namespace RPG.Creatures.AI.Actions {
                 Target = pickup.gameObject;
                 distance = localDistance;
             }
-            print(Target);
             return Target != null;
         }
 
