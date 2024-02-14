@@ -3,7 +3,6 @@ using System.Linq;
 using RPG.Movement;
 using RPG.Stats.Relations;
 using RPG.UI.Cursors;
-using RPG.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -14,6 +13,7 @@ namespace RPG.Creatures.Controls {
         [SerializeField] private InputActionMap _map;
         [SerializeField] private CursorPreview[] _cursors;
         [SerializeField] private Organisation _organisation;
+        [SerializeField] private GameObject _followCamera;
 
         private Guid _id;
         private Mover _mover;
@@ -38,10 +38,18 @@ namespace RPG.Creatures.Controls {
         }
 
         private void Update() {
+            if (InteractWithCamera()) return;
             if (InteractWithUI()) return;
             if (InteractWithComponent()) return;
             if (MoveTowardPoint()) return;
             SetCursor(CursorType.EMPTY);
+        }
+        private bool InteractWithCamera() {
+            if (!_map["Camera Rotation"].IsPressed()) return false;
+            var mouseDelta = _map["Mouse Delta"].ReadValue<Vector2>();
+            var yMouseDelta = mouseDelta.x;
+            _followCamera.transform.Rotate(Vector3.up, yMouseDelta, Space.World);
+            return true;
         }
         private bool InteractWithUI() {
             var isOverUI = EventSystem.current.IsPointerOverGameObject();

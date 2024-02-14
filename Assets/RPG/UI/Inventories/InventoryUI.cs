@@ -18,7 +18,7 @@ namespace RPG.UI.Inventories {
             RedrawUI();
         }
 
-        private void OnDisable() {
+        private void OnDestroy() {
             _inventory.OnInventoryUpdate -= RedrawUI;
         }
         private void RedrawUI() {

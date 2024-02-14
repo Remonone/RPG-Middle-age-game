@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RPG.Inventories.Pickups;
 using RPG.Utils;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace RPG.Inventories.Items {
         [SerializeField] [TextArea] private string _itemDescription;
         [SerializeField] private Sprite _itemIcon;
         [SerializeField] private bool _stackable;
+        [SerializeField] private Pickup _pickup;
 
         private static Dictionary<string, InventoryItem> _itemStore;
 
@@ -30,6 +32,14 @@ namespace RPG.Inventories.Items {
 
         public virtual string GetDescription() {
             return _itemDescription;
+        }
+
+        public Pickup SpawnPickup(Vector3 location, int count, Vector3 velocity) {
+            var pickup = Instantiate(_pickup, location, Quaternion.identity);
+            pickup.Setup(this, count);
+            var rigidBody = pickup.GetComponent<Rigidbody>();
+            rigidBody.velocity = velocity;
+            return pickup;
         }
 
         public static InventoryItem GetItemByGuid(string itemID) {

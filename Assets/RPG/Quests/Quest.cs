@@ -46,7 +46,7 @@ namespace RPG.Quests {
     [Serializable]
     public class Reward {
         public InventoryItem Item;
-        public int count;
+        public int Count;
     }
     
     [Serializable]

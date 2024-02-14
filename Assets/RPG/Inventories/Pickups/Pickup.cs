@@ -1,11 +1,18 @@
 ﻿using System;
+using RPG.Creatures.Controls;
 using RPG.Inventories.Items;
+using RPG.UI.Cursors;
 using UnityEngine;
 
 namespace RPG.Inventories.Pickups {
-    public class Pickup : MonoBehaviour {
+    public class Pickup : MonoBehaviour, ITrajectory {
 
         private readonly Pickable _pickable = new();
+        private bool _shouldBeDestroyed;
+
+        public bool ShouldBeDestroyed => _shouldBeDestroyed;
+        
+        public event Action OnPickup;
 
         private void Awake() {
             _pickable.StoredItem = InventoryItem.GetItemByGuid("77973f65-3fd7-4404-a03c-fa46a7c72360");
@@ -16,9 +23,11 @@ namespace RPG.Inventories.Pickups {
             _pickable.StoredItem = item;
             _pickable.Count = count;
         }
-        // TODO: Make able to pickup it through PlayerController class
+        
         public Pickable PickUp() {
             Destroy(gameObject, .2f);
+            _shouldBeDestroyed = true;
+            OnPickup?.Invoke();
             return _pickable;
         }
 
@@ -31,6 +40,22 @@ namespace RPG.Inventories.Pickups {
             return false;
         }
 
+        public CursorType GetCursorType() {
+            return CursorType.UI;
+        }
+        
+        private void OnTriggerEnter(Collider other) {
+            if (!other.CompareTag("Player")) return;
+            if (!other.TryGetComponent<Inventory>(out var inventory)) return;
+            inventory.AddToFirstEmptySlot(_pickable.StoredItem, _pickable.Count);
+            _shouldBeDestroyed = true;
+            OnPickup?.Invoke();
+            Destroy(gameObject);
+        }
+        
+        public bool HandleRaycast(PlayerController invoker) {
+            return !invoker.Map["Action"].WasPressedThisFrame();
+        }
     }
 
     [Serializable]
