@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using RPG.Creatures.AI.Core;
 using RPG.Movement;
 using RPG.Stats.Relations;
 using RPG.UI.Cursors;
@@ -14,6 +15,7 @@ namespace RPG.Creatures.Controls {
         [SerializeField] private CursorPreview[] _cursors;
         [SerializeField] private Organisation _organisation;
         [SerializeField] private GameObject _followCamera;
+        [SerializeField] private float _cameraRotationModifier = .5f;
 
         private Guid _id;
         private Mover _mover;
@@ -47,7 +49,7 @@ namespace RPG.Creatures.Controls {
         private bool InteractWithCamera() {
             if (!_map["Camera Rotation"].IsPressed()) return false;
             var mouseDelta = _map["Mouse Delta"].ReadValue<Vector2>();
-            var yMouseDelta = mouseDelta.x;
+            var yMouseDelta = mouseDelta.x * _cameraRotationModifier;
             _followCamera.transform.Rotate(Vector3.up, yMouseDelta, Space.World);
             return true;
         }
@@ -59,7 +61,6 @@ namespace RPG.Creatures.Controls {
         }
 
         private bool InteractWithComponent() {
-            if (!_map["Action"].WasPressedThisFrame()) return false;
             var hits = SortedRaycast();
             foreach (var hit in hits) {
                 var raycastables = hit.transform.GetComponents<ITrajectory>();
@@ -84,15 +85,15 @@ namespace RPG.Creatures.Controls {
         private Ray GetMouseRay() => _camera.ScreenPointToRay(_map["Position"].ReadValue<Vector2>());
         
         private bool MoveTowardPoint() {
-            if (!_map["Action"].WasPressedThisFrame()) return false;
             Ray direction = GetMouseRay();
             Physics.Raycast(direction, out var hit, 100F);
-            if (hit.collider != null) {
-                _mover.StartMovingToPoint(hit.point);
-                SetCursor(CursorType.MOVEMENT);
-                return true;
+            if (hit.collider == null) {
+                SetCursor(CursorType.EMPTY);
+                return false;
             }
-            return false;
+            SetCursor(CursorType.MOVEMENT);
+            if (_map["Action"].WasPressedThisFrame()) _mover.StartMovingToPoint(hit.point);;
+            return true;
         }
         
         private void SetCursor(CursorType type) {
