@@ -68,12 +68,13 @@ namespace RPG.Dialogs {
         // BUG: Need to pass component ID; Use Predicate as Component ID Receiver
         private void TriggerAction(string actionPredicate) {
             if (actionPredicate == "") return;
-            PredicateWorker.ParsePredicate(actionPredicate, ComponentID);
+            PredicateWorker.ExecutePredicate(actionPredicate, ComponentID, out _);
         }
         
-        public override void Predicate(string command, object[] arguments, out object result) {
-            result = "";
+        public override object Predicate(string command, object[] arguments) {
+            return null;
         }
+        
         public void SelectChoice(DialogNode choice) {
             TriggerAction(_currentNode.OnExitPredicate);
             _currentNode = choice;

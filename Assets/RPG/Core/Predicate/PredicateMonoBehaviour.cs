@@ -43,6 +43,6 @@ namespace RPG.Core.Predicate {
         protected virtual void OnAwake() {}
         protected virtual void OnEnableEvent() {}
         protected virtual void OnDestroyEvent() {}
-        public abstract void Predicate(string command, object[] arguments, out object result);
+        public abstract object Predicate(string command, object[] arguments);
     }
 }

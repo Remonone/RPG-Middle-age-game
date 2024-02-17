@@ -96,8 +96,8 @@ namespace RPG.Combat.Buffs {
             public int Strength; // i.e. Count
         }
 
-        public override void Predicate(string command, object[] arguments, out object result) {
-            result = command switch {
+        public override object Predicate(string command, object[] arguments) {
+            return command switch {
                 "AddBuff" => AddBuffToCreature(arguments),
                 "ReduceBuff" => ReduceBuffOfCreature(arguments),
                 "HasBuff" => IsBuffInList(arguments),

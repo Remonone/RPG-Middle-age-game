@@ -42,13 +42,14 @@ namespace RPG.Stats {
             return (_stats.GetBaseStat(stat) + _stats.GetLevelStat(stat, _level) + CalculateFlatStatChangers(stat)) * CalculatePercentStatChangers(stat);
         }
         
-        public override void Predicate(string command, object[] arguments, out object result) {
-            result = command switch {
+        public override object Predicate(string command, object[] arguments) {
+            object result = command switch {
                 "AmplifyStat" => AmplifyStat(arguments),
                 "CancelStat" => CancelStat(arguments),
                 _ => null
             };
             if (result != null) OnStatUpdated?.Invoke();
+            return result;
         }
         
         private bool AmplifyStat(object[] args) {

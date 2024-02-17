@@ -40,8 +40,8 @@ namespace RPG.Combat {
         protected override void OnEnableEvent() {
             _stats.OnStatUpdated += OnStatUpdated;
         }
-        public override void Predicate(string command, object[] arguments, out object result) {
-            result = command switch {
+        public override object Predicate(string command, object[] arguments) {
+            return command switch {
                 "GetCurrentHealth" => _currentHealth,
                 "GetTotalHealth" => _maxHealth,
                 _ => "" 

@@ -19,7 +19,7 @@ namespace RPG.Core.Predicate {
             {"NEXT", new TokenType("NEXT", @"\,")},
             {"LPAR", new TokenType("LPAR", @"\(")},
             {"RPAR", new TokenType("RPAR", @"\)")},
-            {"GET", new TokenType("GET", @"GET")}
+            {"RETURN", new TokenType("RETURN", @"RETURN")},
         };
         
     }

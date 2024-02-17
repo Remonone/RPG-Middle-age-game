@@ -61,12 +61,13 @@ namespace RPG.Combat {
             _equipment = GetComponent<Equipment>();
         }
         
-        public override void Predicate(string command, object[] arguments, out object result) {
-            result = command switch {
+        public override object Predicate(string command, object[] arguments) {
+            return command switch {
                 "AttackTarget" => PerformHit(arguments),
                 _ => null
             };
         }
+        
         private object PerformHit(object[] arguments) {
             var objToHit = PredicateWorker.GetPredicateMonoBehaviour((string)arguments[0]);
             if (objToHit is not Health target) return null;

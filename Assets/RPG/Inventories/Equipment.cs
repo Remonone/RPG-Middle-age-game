@@ -51,7 +51,7 @@ namespace RPG.Inventories {
             var formatted = 
                 string.Format(predicate.CodePredicate, 
                     ((PredicateMonoBehaviour)GetComponent(predicate.ComponentName)).ComponentID);
-            PredicateWorker.ParsePredicate(formatted, ComponentID);
+            PredicateWorker.ExecutePredicate(formatted, ComponentID, out _);
         }
         
         public JToken CaptureAsJToken() {
@@ -71,8 +71,8 @@ namespace RPG.Inventories {
                 _items[slot] = (EquipmentItem) item;
             }
         }
-        public override void Predicate(string command, object[] arguments, out object result) {
-            result = command switch {
+        public override object Predicate(string command, object[] arguments) {
+            return command switch {
                 _ => null
             };
         }

@@ -41,9 +41,8 @@ namespace RPG.Quests {
 
         private QuestState GetQuestState(Quest quest) => _states.Find(element => element.Quest.Equals(quest));
 
-        public override void Predicate(string command, object[] arguments, out object result) {
-            result = null;
-            return;
+        public override object Predicate(string command, object[] arguments) {
+            return null;
         }
     }
 }

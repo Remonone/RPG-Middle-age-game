@@ -20,7 +20,7 @@ namespace RPG.Combat.Modifiers {
             var targetID = ((PredicateMonoBehaviour)report.Target.GetComponent(_performToComponent)).ComponentID;
             var preparedString = string.Format(_actionPredicate, attackerID, report.Damage, report.Type,
                 targetID, Strength);
-            PredicateWorker.ParsePredicate(preparedString, Performer.ComponentID);
+            PredicateWorker.ExecutePredicate(preparedString, Performer.ComponentID, out _);
         }
         public override void UnregisterModification() {
             Performer.OnHit -= OnHit;
