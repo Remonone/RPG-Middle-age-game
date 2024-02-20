@@ -9,12 +9,18 @@ using RPG.Visuals.Display;
 using UnityEngine;
 
 namespace RPG.Inventories {
-    public class Equipment : PredicateMonoBehaviour, ISaveable {
+    public class Equipment : MonoBehaviour, ISaveable {
         [SerializeField] private Animator _animator;
+
+        private PredicateMonoBehaviour _predicate;
 
         private readonly Dictionary<EquipmentSlot, EquipmentItem> _items = new();
         private readonly Dictionary<EquipmentSlot, GameObject> _positions = new();
         public event Action OnEquipmentChange;
+
+        private void Awake() {
+            _predicate = GetComponent<PredicateMonoBehaviour>();
+        }
 
         private void Start() {
             var positions = gameObject.GetComponentsInChildren<EquipmentVisualFlag>();
@@ -50,8 +56,8 @@ namespace RPG.Inventories {
             if (predicate.CodePredicate == "" || predicate.ComponentName == "") return;
             var formatted = 
                 string.Format(predicate.CodePredicate, 
-                    ((PredicateMonoBehaviour)GetComponent(predicate.ComponentName)).ComponentID);
-            PredicateWorker.ExecutePredicate(formatted, ComponentID, out _);
+                    ((PredicateMonoBehaviour)GetComponent(predicate.ComponentName)).EntityID);
+            PredicateWorker.ExecutePredicate(formatted, _predicate.EntityID, out _);
         }
         
         public JToken CaptureAsJToken() {
@@ -71,12 +77,7 @@ namespace RPG.Inventories {
                 _items[slot] = (EquipmentItem) item;
             }
         }
-        public override object Predicate(string command, object[] arguments) {
-            return command switch {
-                _ => null
-            };
-        }
-        
+
         private void DisplayItem(EquipmentSlot slot, EquipmentItem item) {
             if (item == null || item.ItemModel == null) {
                 foreach (Transform children in _positions[slot].transform) {

@@ -53,5 +53,6 @@ namespace RPG.Quests {
     public class Objective {
         public string Id;
         public string Description;
+        public string Condition;
     }
 }

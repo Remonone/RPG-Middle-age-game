@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using RPG.Core.Predicate;
+using RPG.Core.Predicate.Interfaces;
 using RPG.Saving;
 using UnityEngine;
 
 namespace RPG.Combat.Buffs {
-    public class BuffContainer : PredicateMonoBehaviour, ISaveable {
+    public class BuffContainer : MonoBehaviour, ISaveable, IPredicateHandler {
         
         private List<BuffProperties> _buffList = new();
         
@@ -96,7 +96,7 @@ namespace RPG.Combat.Buffs {
             public int Strength; // i.e. Count
         }
 
-        public override object Predicate(string command, object[] arguments) {
+        public object Predicate(string command, object[] arguments) {
             return command switch {
                 "AddBuff" => AddBuffToCreature(arguments),
                 "ReduceBuff" => ReduceBuffOfCreature(arguments),

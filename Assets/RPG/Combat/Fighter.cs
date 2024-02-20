@@ -2,6 +2,7 @@
 using RPG.Combat.DamageDefinition;
 using RPG.Core;
 using RPG.Core.Predicate;
+using RPG.Core.Predicate.Interfaces;
 using RPG.Inventories;
 using RPG.Inventories.Items;
 using RPG.Movement;
@@ -12,7 +13,7 @@ using UnityEngine;
 // TODO: REDUCE DEPENDENCY LIST
 
 namespace RPG.Combat {
-    public class Fighter : PredicateMonoBehaviour, IAction{
+    public class Fighter : MonoBehaviour, IAction, IPredicateHandler{
 
         [SerializeField] private Cooldown _cooldown;
         [SerializeField] private bool _shouldResetOnAttack;
@@ -53,7 +54,7 @@ namespace RPG.Combat {
         
         // PRIVATE
 
-        protected override void OnAwake() {
+        private void Awake() {
             _mover = GetComponent<Mover>();
             _stats = GetComponent<BaseStats>();
             _scheduler = GetComponent<TaskScheduler>();
@@ -61,7 +62,7 @@ namespace RPG.Combat {
             _equipment = GetComponent<Equipment>();
         }
         
-        public override object Predicate(string command, object[] arguments) {
+        public object Predicate(string command, object[] arguments) {
             return command switch {
                 "AttackTarget" => PerformHit(arguments),
                 _ => null
@@ -70,7 +71,7 @@ namespace RPG.Combat {
         
         private object PerformHit(object[] arguments) {
             var objToHit = PredicateWorker.GetPredicateMonoBehaviour((string)arguments[0]);
-            if (objToHit is not Health target) return null;
+            if (objToHit.GetComponent<Health>() is not Health target) return null;
             var report =
                 DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), gameObject);
             target.HitEntity(report);

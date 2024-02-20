@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using RPG.Combat.DamageDefinition;
 using RPG.Core.Predicate;
+using RPG.Core.Predicate.Interfaces;
 using RPG.Saving;
 using RPG.Stats;
 using RPG.Utils;
@@ -21,7 +22,7 @@ namespace RPG.Combat {
     ///     </item>
     /// </list> 
     /// </summary>
-    public class Health : PredicateMonoBehaviour, ISaveable {
+    public class Health : MonoBehaviour, ISaveable, IPredicateHandler {
         private BaseStats _stats;
         [ReadOnly] [SerializeField] private float _currentHealth;
         [ReadOnly] [SerializeField] private float _maxHealth;
@@ -33,14 +34,15 @@ namespace RPG.Combat {
         private static readonly int Dead = Animator.StringToHash("IsDead");
         public bool IsAlive => _currentHealth > 0;
         
-        protected override void OnAwake() {
+        private void Awake() {
             _stats = GetComponent<BaseStats>();
         }
 
-        protected override void OnEnableEvent() {
+        private void OnEnable() {
             _stats.OnStatUpdated += OnStatUpdated;
         }
-        public override object Predicate(string command, object[] arguments) {
+        
+        public object Predicate(string command, object[] arguments) {
             return command switch {
                 "GetCurrentHealth" => _currentHealth,
                 "GetTotalHealth" => _maxHealth,

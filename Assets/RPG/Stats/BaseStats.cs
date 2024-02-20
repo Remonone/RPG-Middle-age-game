@@ -4,13 +4,13 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using RPG.Combat;
 using RPG.Combat.Buffs;
-using RPG.Core.Predicate;
+using RPG.Core.Predicate.Interfaces;
 using RPG.Saving;
 using UnityEngine;
 
 namespace RPG.Stats {
     [RequireComponent(typeof(BuffContainer))]
-    public class BaseStats : PredicateMonoBehaviour, ISaveable {
+    public class BaseStats : MonoBehaviour, ISaveable, IPredicateHandler {
         [SerializeField] private StatsContainer _stats;
 
         [SerializeField] private int _level;
@@ -42,7 +42,7 @@ namespace RPG.Stats {
             return (_stats.GetBaseStat(stat) + _stats.GetLevelStat(stat, _level) + CalculateFlatStatChangers(stat)) * CalculatePercentStatChangers(stat);
         }
         
-        public override object Predicate(string command, object[] arguments) {
+        public object Predicate(string command, object[] arguments) {
             object result = command switch {
                 "AmplifyStat" => AmplifyStat(arguments),
                 "CancelStat" => CancelStat(arguments),
@@ -53,7 +53,6 @@ namespace RPG.Stats {
         }
         
         private bool AmplifyStat(object[] args) {
-            if(!ValidateArgs(args, typeof(string), typeof(float), typeof(float), typeof(bool))) return false;
             for (int i = 0; i < args.Length; i++) args[i] = Convert.ToString(args[i]);
             var stats = new PredicatedStats {
                 Stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0])),
@@ -68,7 +67,6 @@ namespace RPG.Stats {
         }
 
         private bool CancelStat(object[] args) {
-            if(!ValidateArgs(args, typeof(string), typeof(bool))) return false;
             var stat = (Stat)Enum.Parse(typeof(Stat), Convert.ToString(args[0]));
             if (Convert.ToInt32(args[1]) == 0) {
                 _temporaryStats.RemoveAll(predicate => predicate.Stat == stat);

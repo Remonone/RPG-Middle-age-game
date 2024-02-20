@@ -1,48 +1,33 @@
 ﻿using System;
+using RPG.Core.Predicate.Interfaces;
 using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Core.Predicate {
-    public abstract class PredicateMonoBehaviour : MonoBehaviour {
+    public class PredicateMonoBehaviour : MonoBehaviour {
 
-        [ReadOnly] [SerializeField] private string _componentID;
+        [ReadOnly] [SerializeField] private string _entityID;
 
-        public string ComponentID => _componentID;
+        public string EntityID => _entityID;
 
         private void Awake() {
-            if (string.IsNullOrWhiteSpace(_componentID)) {
-                _componentID = "C_" + Guid.NewGuid().ToString().Replace('-', '_');
+            if (string.IsNullOrWhiteSpace(_entityID)) {
+                _entityID = "E_" + Guid.NewGuid().ToString().Replace('-', '_');
             }
-            OnAwake();
         }
 
         private void OnEnable() {
-            PredicateWorker.RegisterPredicate(_componentID, this);
-            OnEnableEvent();
+            PredicateWorker.RegisterPredicate(_entityID, this);
         }
 
         private void OnDestroy() {
-            PredicateWorker.DestroyPredicate(_componentID);
-            OnDestroyEvent();
+            PredicateWorker.DestroyPredicate(_entityID);
         }
 
-        protected bool ValidateArgs(object[] args, params Type[] expected) {
-            if (args.Length != expected.Length) return false;
-            // var counter = 0;
-            // foreach (var arg in args) {
-            //     Debug.Log(arg + " " + expected[counter]);
-            //     var stringValue = Convert.ToString(arg);
-            //     counter++;
-            //     if(stringValue.GetTypeCode().ToString() != expected.ToString()) 
-            //         Debug.LogError($"Argument {arg} of type {stringValue.GetTypeCode().ToString()} type mismatch. Expected: {expected[counter - 1]}.");
-            // } NOT WORKING
-
-            return true;
+        public bool TryGetHandler(string handlerName, out IPredicateHandler handler) {
+            handler = GetComponent(handlerName) as IPredicateHandler;
+            return !ReferenceEquals(handler, null);
         }
         
-        protected virtual void OnAwake() {}
-        protected virtual void OnEnableEvent() {}
-        protected virtual void OnDestroyEvent() {}
-        public abstract object Predicate(string command, object[] arguments);
     }
 }

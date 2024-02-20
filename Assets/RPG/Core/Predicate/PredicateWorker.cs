@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using RPG.Core.Predicate.Interfaces;
 using RPG.Core.Predicate.Nodes;
 using RPG.Utils;
 using UnityEngine;
@@ -67,12 +68,12 @@ namespace RPG.Core.Predicate {
                 var sender = (SenderNode)node;
                 var receiver = sender.Receiver.ID;
                 var id = Convert.ToString(RunNodes(receiver, sessionID));
-                var component = PredicateBehavioursStore[id];
-                if (component != null) {
+                string[] content = id.Split('.');
+                var entity = PredicateBehavioursStore[content[0]];
+                if (!ReferenceEquals(entity, null) && entity.TryGetHandler(content[1], out IPredicateHandler handler)) {
                     var args = sender.Action.Args;
                     var argsToSend = args != null ? args.Select(arg => RunNodes(arg, sessionID)) : Array.Empty<object>();
-                    
-                    var result = component.Predicate(sender.Action.Name.text, argsToSend.ToArray());
+                    var result = handler.Predicate(sender.Action.Name.text, argsToSend.ToArray());
                     return result;
                 }
             }
