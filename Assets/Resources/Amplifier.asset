@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba4f91e387944dbb8bddeeba0eafc86, type: 3}
   m_Name: Amplifier
   m_EditorClassIdentifier: 
-  _actionPredicate: '#{0}:AttackTarget:{3},{1},PALE;'
-  _modifierDescription: Attack Amplifier
+  _actionPredicate: '#{0}.Fighter:AttackTarget:{3},{1},PALE;'
+  _modificationName: 
+  _modificationDescription: 
   _performerComponent: Fighter
   _performToComponent: Health
   returnArguments: '(0): attacker, (1): damage, (2): type, (3): target'

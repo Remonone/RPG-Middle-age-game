@@ -4,7 +4,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using RPG.Core.Predicate.Interfaces;
 using RPG.Core.Predicate.Nodes;
-using RPG.Utils;
 using UnityEngine;
 
 namespace RPG.Core.Predicate {

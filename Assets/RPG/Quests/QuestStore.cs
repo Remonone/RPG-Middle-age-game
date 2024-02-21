@@ -5,27 +5,25 @@ using RPG.Inventories;
 using UnityEngine;
 
 namespace RPG.Quests {
-    public class QuestStore : PredicateMonoBehaviour {
+    public class QuestStore : MonoBehaviour {
         private List<QuestState> _states = new();
+        private PredicateMonoBehaviour _predicate;
 
         public IEnumerable<QuestState> States => _states;
 
         public event Action OnStateUpdated;
 
+        private void Awake() {
+            _predicate = GetComponent<PredicateMonoBehaviour>();
+        }
+
         public void AddQuest(Quest quest) {
             if (HasQuest(quest)) return;
-            var state = new QuestState(quest);
+            var state = new QuestState(this, quest);
             _states.Add(state);
             OnStateUpdated?.Invoke();
         }
-
-        public void CompleteObjective(Quest quest, string objectiveId) {
-            var state = GetQuestState(quest);
-            state.CompleteObjective(objectiveId);
-            if (state.IsCompleted) {
-                GiveAward(quest);
-            }
-        }
+        
         private void GiveAward(Quest quest) {
             var inventory = GetComponent<Inventory>();
             var dropper = GetComponent<ItemDropper>();
@@ -41,8 +39,5 @@ namespace RPG.Quests {
 
         private QuestState GetQuestState(Quest quest) => _states.Find(element => element.Quest.Equals(quest));
 
-        public override object Predicate(string command, object[] arguments) {
-            return null;
-        }
     }
 }

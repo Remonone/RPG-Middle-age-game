@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60f3866ff88a4a02bea26b05ea0667d4, type: 3}
   m_Name: Timer Area Modifier
   m_EditorClassIdentifier: 
-  _actionPredicate: VAR:target_health:#{1}:GetTotalHealth:@;#{0}:AttackTarget:{1},&target_health/100.0*2,MAGICAL;DEL:target_health;
+  _actionPredicate: VAR:target_health:#{1}.Health:GetTotalHealth:@;#{0}.Fighter:AttackTarget:{1},&target_health/100.0*2,MAGICAL;DEL:target_health;
   _modificationName: Incineration
   _modificationDescription: You burn all around you. Your enemies take damage in
     size of <i>2% magical damage</i> of their max health

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RPG.Inventories.Items;
+using RPG.Quests.Objectives;
 using RPG.Utils;
 using UnityEngine;
 
@@ -9,19 +10,15 @@ namespace RPG.Quests {
     [CreateAssetMenu(fileName = "New Quest", menuName = "GumuPeachu/Quest/Create New Quest", order = 0)]
     public class Quest : ScriptableObject {
         [SerializeField] private string _name;
-        [SerializeField] private List<Objective> _objectives;
+        [SerializeField] private List<QuestObjective> _objectives;
         [SerializeField] private List<Reward> _rewards;
         [SerializeField] private float _rewardExperience;
 
         public string Title => _name;
-        public IEnumerable<Objective> Objectives => _objectives;
+        public IEnumerable<QuestObjective> Objectives => _objectives;
         public IEnumerable<Reward> Rewards => _rewards;
 
         private static Dictionary<string, Quest> _questDictionary;
-
-        public bool HasObjective(string id) {
-            return _objectives.Any(objective => objective.Id == id);
-        }
 
         public static Quest GetQuestByName(string questName) {
             _questDictionary ??= GetFilledQuestDictionary();
@@ -49,10 +46,4 @@ namespace RPG.Quests {
         public int Count;
     }
     
-    [Serializable]
-    public class Objective {
-        public string Id;
-        public string Description;
-        public string Condition;
-    }
 }

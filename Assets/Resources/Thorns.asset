@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 396a24025d5c4540b24ed0e0be20cbf3, type: 3}
   m_Name: Thorns
   m_EditorClassIdentifier: 
-  _actionPredicate: '#{3}:AttackTarget:{0},{1}/100.0*2.0,MAGICAL;'
+  _actionPredicate: '#{3}.Fighter:AttackTarget:{0},{1}/100.0*2.0,MAGICAL;'
   _modificationName: Hedgehog
   _modificationDescription: Whenever you got attacked by foe, foe got back partial
     damage(<i>2% of received damage</i>) from you.

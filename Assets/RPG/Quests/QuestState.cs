@@ -1,32 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+using RPG.Quests.Objectives;
+using Object = UnityEngine.Object;
 
 namespace RPG.Quests {
     [Serializable]
     public class QuestState {
-        [SerializeField] private Quest _quest;
-        [SerializeField] private List<Objective> _completedObjectives = new();
-
+        private Quest _quest;
+        private List<QuestObjective> _objectives;
+        private QuestStore _store;
+        
         public Quest Quest => _quest;
-
-        public bool IsCompleted => _quest.Objectives.All(objective => _completedObjectives.Contains(objective));
+        public bool IsCompleted => _objectives.Count < 1;
         
-        public QuestState(Quest quest) {
+        public QuestState(QuestStore store, Quest quest) {
+            _store = store;
             _quest = quest;
+            InitQuest();
+        }
+        
+        private void InitQuest() {
+            foreach(var objective in _quest.Objectives) {
+                var initObjective = Object.Instantiate(objective, _store.transform);
+                _objectives.Add(initObjective);
+            }
         }
 
-        public QuestState(Quest quest, List<Objective> completedObjectives) {
-            _quest = quest;
-            _completedObjectives = completedObjectives;
-        }
-        
-        public bool IsObjectiveCompleted(Objective obj) => _completedObjectives.Contains(obj);
-        
-        public void CompleteObjective(string objectiveId) {
-            if (_quest.HasObjective(objectiveId)) return;
-            _completedObjectives.Add(_quest.Objectives.Single(obj => obj.Id == objectiveId));
-        }
     }
 }
