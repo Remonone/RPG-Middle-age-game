@@ -17,6 +17,7 @@ namespace RPG.Quests {
         public string Title => _name;
         public IEnumerable<QuestObjective> Objectives => _objectives;
         public IEnumerable<Reward> Rewards => _rewards;
+        public float RewardExperience => _rewardExperience;
 
         private static Dictionary<string, Quest> _questDictionary;
 

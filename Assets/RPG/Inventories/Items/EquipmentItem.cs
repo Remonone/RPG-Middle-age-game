@@ -14,7 +14,7 @@ namespace RPG.Inventories.Items {
         [SerializeField] private Predicate _onEquipPredicate;
         [SerializeField] private Predicate _onUnequipPredicate;
         [SerializeField] private List<Modification> _modifications;
-        [SerializeField] private TextMeshProUGUI _test;
+        [SerializeField] private TextMeshProUGUI _descriptionPrefab;
         [SerializeField] private EquipmentModel _itemModel;
         [SerializeField] private AnimatorOverrideController _controller;
         
@@ -34,8 +34,8 @@ namespace RPG.Inventories.Items {
                 mod.RegisterModification(invoker);
             }
 
-            if (ReferenceEquals(_test, null))return;
-            var text = Instantiate(_test, FindObjectOfType<Canvas>().transform);
+            if (ReferenceEquals(_descriptionPrefab, null))return;
+            var text = Instantiate(_descriptionPrefab, FindObjectOfType<Canvas>().transform);
             text.text = GetDescription();
         }
 
