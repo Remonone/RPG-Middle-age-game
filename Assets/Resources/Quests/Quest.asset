@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4b01d1f0eb84142969f5e9553f53b5c, type: 3}
   m_Name: Quest
   m_EditorClassIdentifier: 
-  _name: 
+  _name: Collect Apples
   _objectives: []
-  _rewards: []
-  _rewardExperience: 0
+  _rewards:
+  - Item: {fileID: 11400000, guid: 16c41c658c4468b4d93c68649c0676da, type: 2}
+    Count: 1
+  _rewardExperience: 15
