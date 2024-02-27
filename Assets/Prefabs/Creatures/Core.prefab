@@ -77,6 +77,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8662377854278763550}
+  - component: {fileID: 1379188581}
+  - component: {fileID: 1379188582}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -97,161 +99,68 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 564446472}
-  - {fileID: 8401641091529085715}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1257571441558645095
-PrefabInstance:
+--- !u!114 &1379188581
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 8662377854278763550}
-    m_Modifications:
-    - target: {fileID: -4360961777264410316, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: SyncRotAngleY
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 282757383288890725, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 951099334
-      objectReference: {fileID: 0}
-    - target: {fileID: 1507581823282004164, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.02407837
-      objectReference: {fileID: 0}
-    - target: {fileID: 1507581823282004164, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1507581823282004164, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -5.999939
-      objectReference: {fileID: 0}
-    - target: {fileID: 2878790990052357877, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 275.14526
-      objectReference: {fileID: 0}
-    - target: {fileID: 2878790990052357877, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 28.985577
-      objectReference: {fileID: 0}
-    - target: {fileID: 2878790990052357877, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 510.19275
-      objectReference: {fileID: 0}
-    - target: {fileID: 2878790990052357877, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.9063079
-      objectReference: {fileID: 0}
-    - target: {fileID: 2878790990052357877, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.42261827
-      objectReference: {fileID: 0}
-    - target: {fileID: 2878790990052357877, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4262360883431732841, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.57854766
-      objectReference: {fileID: 0}
-    - target: {fileID: 4262360883431732841, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.3525135
-      objectReference: {fileID: 0}
-    - target: {fileID: 6242995309517829576, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 951099334
-      objectReference: {fileID: 0}
-    - target: {fileID: 7136946672826793823, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_Name
-      value: PlayerContainer
-      objectReference: {fileID: 0}
-    - target: {fileID: 7170882857952131428, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: field of view
-      value: 73
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 367.78528
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -14.562782
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 549.32495
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: eeb98436d09fcec42b55e3c52b43ccd8, type: 3}
---- !u!4 &8401641091529085715 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7344080849482938996, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-    type: 3}
-  m_PrefabInstance: {fileID: 1257571441558645095}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930303000337672565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RunInBackground: 1
+  LogLevel: 1
+  NetworkConfig:
+    ProtocolVersion: 0
+    NetworkTransport: {fileID: 1379188582}
+    PlayerPrefab: {fileID: 7136946672826793823, guid: eeb98436d09fcec42b55e3c52b43ccd8,
+      type: 3}
+    NetworkPrefabs: []
+    TickRate: 30
+    ClientConnectionBufferTimeout: 10
+    ConnectionApproval: 0
+    ConnectionData: 
+    EnableTimeResync: 0
+    TimeResyncInterval: 30
+    EnsureNetworkVariableLengthSafety: 0
+    EnableSceneManagement: 1
+    ForceSamePrefabs: 1
+    RecycleNetworkIds: 1
+    NetworkIdRecycleDelay: 120
+    RpcHashSize: 0
+    LoadSceneTimeOut: 120
+    SpawnTimeout: 1
+    EnableNetworkLogs: 1
+--- !u!114 &1379188582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930303000337672565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ProtocolType: 0
+  m_MaxPacketQueueSize: 128
+  m_MaxPayloadSize: 6144
+  m_HeartbeatTimeoutMS: 500
+  m_ConnectTimeoutMS: 1000
+  m_MaxConnectAttempts: 60
+  m_DisconnectTimeoutMS: 30000
+  ConnectionData:
+    Address: 127.0.0.1
+    Port: 7777
+    ServerListenAddress: 
+  DebugSimulator:
+    PacketDelayMS: 0
+    PacketJitterMS: 0
+    PacketDropRate: 0

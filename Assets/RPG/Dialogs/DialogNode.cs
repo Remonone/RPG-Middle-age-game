@@ -23,9 +23,13 @@ namespace RPG.Dialogs {
             get => _text;
             set {
                 if (_text == value) return;
+                #if UNITY_EDITOR
                 Undo.RecordObject(this, "Update Dialog Node Text");
+                #endif
                 _text = value;
+#if UNITY_EDITOR
                 EditorUtility.SetDirty(this);
+#endif
             }
         }
 
@@ -34,13 +38,16 @@ namespace RPG.Dialogs {
         public bool IsPlayer {
             get => _isPlayer;
             set {
+                #if UNITY_EDITOR
                 Undo.RecordObject(this, "Change Dialog Speaker");
+                #endif
                 _isPlayer = value;
             }
         }
 
         public Rect Rectangle => _rectangle;
         
+        #if UNITY_EDITOR
         public void SetPosition(Vector2 newPosition) {
             Undo.RecordObject(this, "Move Node");
             _rectangle.position = newPosition;
@@ -58,5 +65,6 @@ namespace RPG.Dialogs {
             _children.Remove(childID);
             EditorUtility.SetDirty(this);
         }
+        #endif
     }
 }

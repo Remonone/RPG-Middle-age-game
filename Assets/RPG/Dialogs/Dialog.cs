@@ -33,17 +33,22 @@ namespace RPG.Dialogs {
 
 
         private void Awake() {
+            #if UNITY_EDITOR
             FillNodesDict();
+            #endif
         }
 
         private void OnValidate() {
+            #if UNITY_EDITOR
             if (_nodes.Count == 0) {
                 AddNewNode(null);
             }
             _nodeLookup.Clear();
             FillNodesDict();
+            #endif
         }
         
+        #if UNITY_EDITOR
         public void AddNewNode(DialogNode node) {
             var newNode = CreateNode(node);
             Undo.RegisterCreatedObjectUndo(newNode, "Create Dialog Node");
@@ -82,8 +87,10 @@ namespace RPG.Dialogs {
                 _nodeLookup[node.name] = node;
             }
         }
+#endif
         
         public void OnBeforeSerialize() {
+#if UNITY_EDITOR
             if (_nodes.Count == 0) {
                 DialogNode node = CreateNode(null);
                 _nodes.Add(node);
@@ -96,7 +103,9 @@ namespace RPG.Dialogs {
                     }
                 }
             }
+#endif
         }
+        
         public void OnAfterDeserialize() { }
     }
 }

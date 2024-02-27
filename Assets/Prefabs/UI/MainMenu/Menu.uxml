@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: center;">
+        <ui:VisualElement style="flex-grow: 1; background-color: rgb(190, 190, 190); max-width: 40%; max-height: 60%; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; justify-content: flex-start; align-self: center; align-items: auto; flex-shrink: 0; padding-left: 30px; padding-right: 30px; padding-top: 20px; padding-bottom: 20px;">
+            <ui:Label tabindex="-1" text="GumuPeachu" display-tooltip-when-elided="true" name="Title" />
+            <ui:Button text="Play" display-tooltip-when-elided="true" style="height: auto; width: auto; max-width: 100%; align-self: stretch; align-items: stretch; justify-content: flex-start; flex-shrink: 1;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

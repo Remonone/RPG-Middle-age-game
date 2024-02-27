@@ -4,18 +4,20 @@ using RPG.Creatures.AI.Core;
 using RPG.Movement;
 using RPG.Stats.Relations;
 using RPG.UI.Cursors;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace RPG.Creatures.Controls {
-    public class PlayerController : MonoBehaviour, IOrganisationWrapper {
+    public class PlayerController : NetworkBehaviour, IOrganisationWrapper {
         [SerializeField] private Camera _camera;
         [SerializeField] private InputActionMap _map;
         [SerializeField] private CursorPreview[] _cursors;
         [SerializeField] private Organisation _organisation;
         [SerializeField] private GameObject _followCamera;
         [SerializeField] private float _cameraRotationModifier = .5f;
+        [SerializeField] private GameObject _cameraPrefab;
 
         private Guid _id;
         private Mover _mover;
@@ -23,23 +25,26 @@ namespace RPG.Creatures.Controls {
         // PUBLIC
         public InputActionMap Map => _map;        
         
-        
         // PRIVATE
 
         private void Awake() {
             _mover = GetComponent<Mover>();
             _id = Guid.NewGuid();
+            
         }
 
-        private void OnEnable() {
+        public override void OnNetworkSpawn() {
+            if (!IsOwner) return;
             _map.Enable();
         }
         
-        private void OnDisable() {
+        public override void OnNetworkDespawn() {
+            if (!IsOwner) return;
             _map.Disable();
         }
 
         private void Update() {
+            if (!IsOwner) return;
             if (InteractWithCamera()) return;
             if (InteractWithUI()) return;
             if (InteractWithComponent()) return;
