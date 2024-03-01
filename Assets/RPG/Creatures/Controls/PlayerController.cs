@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using RPG.Creatures.AI.Core;
+using Cinemachine;
 using RPG.Movement;
 using RPG.Stats.Relations;
 using RPG.UI.Cursors;
@@ -17,8 +17,8 @@ namespace RPG.Creatures.Controls {
         [SerializeField] private Organisation _organisation;
         [SerializeField] private GameObject _followCamera;
         [SerializeField] private float _cameraRotationModifier = .5f;
-        [SerializeField] private GameObject _cameraPrefab;
-
+        [SerializeField] private GameObject _cameraHolder;
+        [SerializeField] private GameObject _cameraBehaviour;
         private Guid _id;
         private Mover _mover;
         
@@ -30,11 +30,12 @@ namespace RPG.Creatures.Controls {
         private void Awake() {
             _mover = GetComponent<Mover>();
             _id = Guid.NewGuid();
-            
         }
-
+        
         public override void OnNetworkSpawn() {
             if (!IsOwner) return;
+            _cameraHolder.SetActive(IsOwner);
+            _cameraBehaviour.SetActive(IsOwner);
             _map.Enable();
         }
         
@@ -43,8 +44,8 @@ namespace RPG.Creatures.Controls {
             _map.Disable();
         }
 
+
         private void Update() {
-            if (!IsOwner) return;
             if (InteractWithCamera()) return;
             if (InteractWithUI()) return;
             if (InteractWithComponent()) return;
