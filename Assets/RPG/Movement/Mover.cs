@@ -4,11 +4,12 @@ using RPG.Core;
 using RPG.Saving;
 using RPG.Stats;
 using RPG.Utils;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace RPG.Movement {
-    public class Mover : MonoBehaviour, IAction, ISaveable {
+    public class Mover : NetworkBehaviour, IAction, ISaveable {
         
         [SerializeField] private Animator _animator;
         [SerializeField] private float _threshold = 2F;
@@ -42,21 +43,47 @@ namespace RPG.Movement {
         public void StartMovingToPoint(Vector3 point) {
             if (!_health.IsAlive) return;
             _scheduler.SwitchAction(this);
-            MoveToPoint(point);
+            TranslateToPoint(point);
+        }
+        
+        public void TranslateToPoint(Vector3 point) {
+            if (!_health.IsAlive) return;
+            TranslateObjectServerRpc(point);
         }
 
-        public void MoveToPoint(Vector3 point) {
-            if (!_health.IsAlive) return;
+        [ServerRpc]
+        private void TranslateObjectServerRpc(Vector3 destination) {
             _agent.isStopped = false;
-            _agent.destination = point;
+            _agent.destination = destination;
+            _animator.SetFloat(_speed, 1);
+            TranslateObjectClientRpc(destination);
+        }
+
+        [ClientRpc]
+        private void TranslateObjectClientRpc(Vector3 destination) {
+            _agent.isStopped = false;
+            _agent.destination = destination;
             _animator.SetFloat(_speed, 1);
         }
 
 
         public void Cancel() {
+            CancelServerRpc();
+        }
+
+        [ServerRpc]
+        private void CancelServerRpc() {
+            _agent.isStopped = true;
+            _animator.SetFloat(_speed, 0);
+            CancelClientRpc();
+        }
+
+        [ClientRpc]
+        private void CancelClientRpc() {
             _agent.isStopped = true;
             _animator.SetFloat(_speed, 0);
         }
+        
         public JToken CaptureAsJToken() {
             return JToken.FromObject(transform.position.ToToken());
         }

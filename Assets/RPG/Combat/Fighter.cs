@@ -8,6 +8,7 @@ using RPG.Inventories.Items;
 using RPG.Movement;
 using RPG.Stats;
 using RPG.Utils;
+using Unity.Netcode;
 using UnityEngine;
 
 // TODO: REDUCE DEPENDENCY LIST
@@ -34,11 +35,14 @@ namespace RPG.Combat {
         public bool CanAttack(Health target) => target is { IsAlive: true };
         
         public void Cancel() {
+            // if (!IsOwner) return;
             _target = null;
             _mover.Cancel();
         }
-
+        
+        //[ServerRpc]
         public void Attack(SelectableEnemy target) {
+            // if (!IsOwner) return;
             if (!target._isTargetable) return;
             var health = target.GetComponent<Health>();
             if (health == null || !health.IsAlive) return;
@@ -86,7 +90,7 @@ namespace RPG.Combat {
                 _cooldown.Reset();
                 return;
             }
-            _mover.MoveToPoint(_target.transform.position);
+            _mover.TranslateToPoint(_target.transform.position);
         }
         public void AttackTarget() {
             _animator.SetTrigger(_isAttacking);
