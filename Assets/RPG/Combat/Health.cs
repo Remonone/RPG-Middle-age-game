@@ -32,6 +32,8 @@ namespace RPG.Combat {
         private static readonly int Hit = Animator.StringToHash("OnHit");
         private static readonly int Dead = Animator.StringToHash("IsDead");
         public bool IsAlive => _currentHealth > 0;
+        public float CurrentHealth => _currentHealth;
+        public float MaxHealth => _maxHealth;
         
         private void Awake() {
             _stats = GetComponent<BaseStats>();

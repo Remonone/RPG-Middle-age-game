@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Cinemachine;
 using RPG.Movement;
 using RPG.Stats.Relations;
 using RPG.UI.Cursors;
@@ -9,7 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-namespace RPG.Creatures.Controls {
+namespace RPG.Creatures.Player {
     public class PlayerController : NetworkBehaviour, IOrganisationWrapper {
         [SerializeField] private Camera _camera;
         [SerializeField] private InputActionMap _map;

@@ -17,6 +17,8 @@ namespace RPG.Stats {
         [SerializeField] private float _experience;
 
         public CreatureClass CreatureClass => _stats.CreatureClass;
+        public int Level => _level;
+        public float Experience => _experience;
         
         public event Action OnLevelUp;
         public event Action OnStatUpdated;
