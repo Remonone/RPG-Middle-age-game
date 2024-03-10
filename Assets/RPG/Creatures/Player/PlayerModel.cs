@@ -12,7 +12,9 @@ namespace RPG.Creatures.Player {
         [MapTo("password")]
         public string HashedPassword { get; set; }
 
-        
+        [MapTo("role")] 
+        public string PlayerRole { get; set; }
+
         public Vector3 Position {
             get => PlayerPosition.ToVector3();
             set => PlayerPosition = new Vector3Embedding(value);
