@@ -2,17 +2,64 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0da05b2-f4eb-454b-91b8-f5bb85811c3f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Dialogs/Custom Dialog.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Dialogs/Custom Dialog.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Creatures/AI/Core/GoapAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Creatures/AI/Core/GoapAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Creatures/Controls/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Creatures/Controls/PlayerController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Dialogs/AIConversant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Dialogs/AIConversant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/UI/Dialog/DialogUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/UI/Dialog/DialogUI.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Training Polygon.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Training Polygon.unity" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/app.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/app.js.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/controllers.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/controllers/auth.controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/controllers/auth.controller.js.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/node_modules.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/package-lock.json.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/package.json.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/routers.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/routers/auth.router.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/routers/auth.router.js.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/server.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/server.js.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/utils.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/utils/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/utils/secret.data.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Backend/utils/secret.data.js.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/Network/Client/AuthState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/Network/Client/AuthState.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/Network/Controllers.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/Network/Controllers/AuthenticationController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/Network/Controllers/AuthenticationController.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/UI/LoginPage.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/UI/LoginPage.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/Utils/BackendCalls.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/Utils/BackendCalls.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/RPG/Utils/secret_data.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/Log In/Login.uxml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/Log In/Login.uxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Creatures/Player/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Creatures/Player/PlayerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Creatures/Player/PlayerModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Creatures/Player/PlayerModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/DB/DataBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/DB/DataBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Network/Client/AuthenticationWrapper.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Network/Client/AuthenticationWrapper.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Network/Client/ClientGameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Network/Client/ClientGameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Network/Client/ClientSingleton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Network/Client/ClientSingleton.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Network/Server/ServerGameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Network/Server/ServerGameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/UI/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/UI/MainMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/Utils/PropertyConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Utils/PropertyConstants.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/NetBootstrap.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/NetBootstrap.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/HDRenderPipelineGlobalSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/HDRenderPipelineGlobalSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -26,15 +73,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -45,6 +93,7 @@
       <updated>1700158400190</updated>
       <workItem from="1700158405261" duration="414000" />
       <workItem from="1704927451042" duration="81000" />
+      <workItem from="1710711835262" duration="4528000" />
     </task>
     <servers />
   </component>

@@ -28,5 +28,8 @@ namespace RPG.Creatures.Player {
         
         [MapTo("position")]
         private Vector3Embedding PlayerPosition { get; set; }
+        
+        [MapTo("error_message")]
+        public string ErrorMessage { get; set; }
     }
 }

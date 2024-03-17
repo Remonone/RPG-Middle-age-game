@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using RPG.Movement;
+using RPG.Network.Client;
 using RPG.Stats.Relations;
 using RPG.UI.Cursors;
 using Unity.Netcode;
@@ -27,8 +28,10 @@ namespace RPG.Creatures.Player {
         // PRIVATE
 
         private void Awake() {
+            var model = ClientSingleton.Instance.Manager.Model;
             _mover = GetComponent<Mover>();
-            _id = Guid.NewGuid();
+            _id = Guid.Parse(model.PlayerID);
+            transform.position = model.Position;
         }
         
         public override void OnNetworkSpawn() {

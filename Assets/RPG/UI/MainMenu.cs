@@ -1,5 +1,7 @@
 using System;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -26,7 +28,7 @@ namespace RPG.UI {
         
         private void OnButtonClick() {
             try {
-                NetworkManager.Singleton.StartClient();
+                NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(NetworkEndPoint.AnyIpv4); // change to ip
             }
             catch (Exception e) {
                 Label label = new Label(e.Message);

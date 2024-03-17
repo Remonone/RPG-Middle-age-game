@@ -7,6 +7,8 @@ namespace RPG.Network.Client {
         private static ClientSingleton _instance;
 
         private ClientGameManager _manager;
+
+        public ClientGameManager Manager => _manager;
         
         public static ClientSingleton Instance {
             get {

@@ -1,4 +1,5 @@
-﻿using Realms;
+﻿using System.Threading.Tasks;
+using Realms;
 using RPG.Utils;
 
 namespace RPG.DB {
@@ -13,16 +14,21 @@ namespace RPG.DB {
         
         public Realm Connection => _connection;
 
-        private DataBase(string credentials) {
-            _connection = Realm.GetInstance(credentials);
-        }
+        private DataBase() {}
 
-        public static void CreateConnection() {
+        public static async void CreateConnection() {
             if (_isConnected) return;
             var credentials = (string)SecretDataFetcher.FetchProperty("database");
-            _db = new DataBase(credentials);
+            _db = new DataBase {
+                _connection = await GetRealmInstance(credentials)
+            };
             _isConnected = true;
         }
-        
+
+        private static async Task<Realm> GetRealmInstance(string credentials) {
+            RealmConfigurationBase baseConfig = new RealmConfiguration(credentials);
+            var instance = await Realm.GetInstanceAsync(baseConfig);
+            return instance;
+        }
     }
 }
