@@ -9,6 +9,11 @@ namespace RPG.Saving {
         
         [SerializeField] string uniqueIdentifier = "";
         
+        public string UniqueIdentifier {
+            get { return uniqueIdentifier; }
+            set { uniqueIdentifier = string.IsNullOrEmpty(uniqueIdentifier) ? value : uniqueIdentifier; }
+        }
+        
         // CACHED STATE
         static Dictionary<string, SaveableEntity> globalLookup = new Dictionary<string, SaveableEntity>();
         

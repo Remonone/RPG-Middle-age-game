@@ -28,7 +28,8 @@ namespace RPG.UI {
         
         private void OnButtonClick() {
             try {
-                NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(NetworkEndPoint.AnyIpv4); // change to ip
+                NetworkManager.Singleton.StartClient();
+                
             }
             catch (Exception e) {
                 Label label = new Label(e.Message);

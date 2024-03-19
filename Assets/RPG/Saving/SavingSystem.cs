@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -29,10 +30,12 @@ namespace RPG.Saving {
         /// <summary>
         /// Save the current scene to the provided save file.
         /// </summary>
-        public void Save(string saveFile) {
-            JObject state = LoadJsonFromFile(saveFile);
-            CaptureAsToken(state);
-            SaveFileAsJSon(saveFile, state);
+        public void Save(string uniqueId) {
+            var state = CaptureAsToken(uniqueId);
+            PushStateToDataBase(state);
+        }
+        private void PushStateToDataBase(JToken state) {
+            
         }
 
         /// <summary>
@@ -85,13 +88,11 @@ namespace RPG.Saving {
         }
 
 
-        private void CaptureAsToken(JObject state) {
-            IDictionary<string, JToken> stateDict = state;
-            foreach (SaveableEntity saveable in FindObjectsOfType<SaveableEntity>()) {
-                stateDict[saveable.GetUniqueIdentifier()] = saveable.CaptureAsJtoken();
-            }
-
-            stateDict["lastSceneBuildIndex"] = SceneManager.GetActiveScene().buildIndex;
+        private JToken CaptureAsToken(string idToSave) {
+            SaveableEntity entity = FindObjectsOfType<SaveableEntity>().First(obj => obj.UniqueIdentifier == idToSave);
+            var objectToSave = entity.CaptureAsJtoken();
+            objectToSave["sceneBuildIndex"] = SceneManager.GetActiveScene().buildIndex;
+            return objectToSave;
         }
 
 

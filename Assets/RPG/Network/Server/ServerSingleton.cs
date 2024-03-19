@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using RPG.DB;
 using UnityEngine;
 
 namespace RPG.Network.Server {
@@ -30,7 +29,6 @@ namespace RPG.Network.Server {
 
         public async Task InitServer() {
             _manager = new ServerGameManager();
-            DataBase.CreateConnection();
         }
     }
 }

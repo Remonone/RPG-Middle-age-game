@@ -4,11 +4,12 @@
         public const float BACKGROUND_SIZE = 50f;
         public const string ITEMS_PATH = "Items";
         public const string QUESTS_PATH = "Quests";
-        public const string BACKEND_IP = "localhost";
-        public const string BACKEND_PORT = "8000";
+        
         
         // SERVER
 
-        public const int PORT = 8888;
+        public const string BACKEND_HOST = "localhost";
+        public const string BACKEND_PORT = "8000";
+        
     }
 }

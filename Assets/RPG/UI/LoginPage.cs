@@ -1,8 +1,5 @@
-﻿using RPG.Network.Client;
-using RPG.Utils;
+﻿using RPG.Network.Controllers;
 using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace RPG.UI {
@@ -16,6 +13,8 @@ namespace RPG.UI {
 
         private Button _signInButton;
         private Button _cancelButton;
+        private bool _isFailed;
+        private bool _isConnected;
         
         private void Start() {
             _root = _document.rootVisualElement;
@@ -23,23 +22,21 @@ namespace RPG.UI {
             _passwordField = _root.Q<TextField>("Password");
 
             _signInButton = _root.Q<Button>("SignIn");
-            _signInButton.clicked += OnSignIn;
+            _signInButton.clicked += SendSignInRequest;
             _cancelButton = _root.Q<Button>("Exit");
             _cancelButton.clicked += OnCancel;
         }
-        
-        private async void OnSignIn() {
-            var login = _loginField.value;
-            var password = _passwordField.value;
-            // Create logic to send to fetch from backend side a user
-            // if (result != AuthState.Authenticated) {
-            //     return;
-            // }
 
-            SceneManager.LoadScene("Main Screen");
+        void SendSignInRequest() {
+            if (_isConnected) return;
+            StartCoroutine(AuthenticationController.SignIn(_loginField.value, _passwordField.value));
         }
         private void OnCancel() {
-            
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.ExitPlaymode();
+            #else
+                Application.Quit();
+            #endif
         }
         
         

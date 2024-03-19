@@ -30,8 +30,8 @@ namespace RPG.Creatures.Player {
         private void Awake() {
             var model = ClientSingleton.Instance.Manager.Model;
             _mover = GetComponent<Mover>();
-            _id = Guid.Parse(model.PlayerID);
-            transform.position = model.Position;
+            _id = Guid.Parse((string)model["player_id"] ?? string.Empty);
+            // transform.position = ;
         }
         
         public override void OnNetworkSpawn() {
