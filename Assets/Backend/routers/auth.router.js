@@ -5,6 +5,7 @@ import {
 
 const router = Router();
 
-router.get('get_user', fetchUser);
+router.get('get', fetchUser);
+router.get('register', fetchUser);
 
 export default router;

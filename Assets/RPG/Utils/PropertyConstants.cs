@@ -10,6 +10,7 @@
 
         public const string BACKEND_HOST = "localhost";
         public const string BACKEND_PORT = "8000";
-        
+
+        public static string SERVER_DOMAIN => $"http://{BACKEND_HOST}:{BACKEND_PORT}";
     }
 }
