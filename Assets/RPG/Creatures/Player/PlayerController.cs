@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using RPG.Core;
 using RPG.Movement;
 using RPG.Network.Client;
 using RPG.Stats.Relations;
@@ -8,6 +10,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using static RPG.Utils.Constants.DataConstants;
 
 namespace RPG.Creatures.Player {
     public class PlayerController : NetworkBehaviour, IOrganisationWrapper {
@@ -27,15 +30,14 @@ namespace RPG.Creatures.Player {
         
         // PRIVATE
 
-        private void Awake() {
-            var model = ClientSingleton.Instance.Manager.Model;
-            _mover = GetComponent<Mover>();
-            _id = Guid.Parse((string)model["player_id"] ?? string.Empty);
-            // transform.position = ;
-        }
-        
         public override void OnNetworkSpawn() {
             if (!IsOwner) return;
+            FindObjectOfType<SavingWrapper>().System.Load(this, ClientSingleton.Instance.Manager.Credentials);
+        }
+
+
+        public void Init(JToken data) {
+            _id = Guid.Parse((string)data[PLAYER_ID]);
             _cameraHolder.SetActive(IsOwner);
             _cameraBehaviour.SetActive(IsOwner);
             _map.Enable();
@@ -44,6 +46,7 @@ namespace RPG.Creatures.Player {
         public override void OnNetworkDespawn() {
             if (!IsOwner) return;
             _map.Disable();
+            FindObjectOfType<SavingWrapper>().System.Save(_id.ToString());
         }
 
 

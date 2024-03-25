@@ -1,4 +1,4 @@
-﻿namespace RPG.Utils {
+﻿namespace RPG.Utils.Constants {
     public static class PropertyConstants {
         public const float CANVAS_SIZE = 4000f;
         public const float BACKGROUND_SIZE = 50f;

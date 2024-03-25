@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using RPG.Inventories.Pickups;
 using RPG.Utils;
+using RPG.Utils.Constants;
 using UnityEngine;
 
 namespace RPG.Inventories.Items {

@@ -1,114 +1,47 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
+﻿using System.Linq;
+using static RPG.Utils.Constants.DataConstants;
 using Newtonsoft.Json.Linq;
+using RPG.Creatures.Player;
+using RPG.Network.Controllers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace RPG.Saving {
     public class SavingSystem : MonoBehaviour {
-        private const string extension = ".json";
         
-        /// <summary>
-        /// Will load the last scene that was saved and restore the state. This
-        /// must be run as a coroutine.
-        /// </summary>
-        /// <param name="saveFile">The save file to consult for loading.</param>
-        public IEnumerator LoadLastScene(string saveFile) {
-            JObject state = LoadJsonFromFile(saveFile);
-            IDictionary<string, JToken> stateDict = state; 
-            int buildIndex = SceneManager.GetActiveScene().buildIndex;
-            if (stateDict.ContainsKey("lastSceneBuildIndex")) {
-                buildIndex = (int)stateDict["lastSceneBuildIndex"];
-            }
-            yield return SceneManager.LoadSceneAsync(buildIndex);
-            RestoreFromToken(state);
-        }
-
-        /// <summary>
-        /// Save the current scene to the provided save file.
-        /// </summary>
         public void Save(string uniqueId) {
             var state = CaptureAsToken(uniqueId);
             PushStateToDataBase(state);
         }
         private void PushStateToDataBase(JToken state) {
-            
+            StartCoroutine(AuthenticationController.SaveEntity(state));
         }
 
-        /// <summary>
-        /// Delete the state in the given save file.
-        /// </summary>
-        public void Delete(string saveFile) {
-            File.Delete(GetPathFromSaveFile(saveFile));
-        }
-
-        public void Load(string saveFile) {
-            RestoreFromToken(LoadJsonFromFile(saveFile));
-        }
-
-        public IEnumerable<string> ListSaves() {
-            foreach (string path in Directory.EnumerateFiles(Application.persistentDataPath)) {
-                if (Path.GetExtension(path) == extension)
-                {
-                    yield return Path.GetFileNameWithoutExtension(path);
-                }
-            }
+        public void Load(PlayerController loader, string jwt) {
+            StartCoroutine(AuthenticationController.LoadEntity(jwt, data => {
+                RestoreFromToken(data, loader.gameObject);
+                loader.Init(data);
+            }));
         }
 
         // PRIVATE
 
-        private JObject LoadJsonFromFile(string saveFile) {
-            string path = GetPathFromSaveFile(saveFile);
-            if (!File.Exists(path)) {
-                return new JObject();
-            }
-            
-            using (var textReader = File.OpenText(path)) {
-                using (var reader = new JsonTextReader(textReader)) {
-                    reader.FloatParseHandling = FloatParseHandling.Double;
-
-                    return JObject.Load(reader);
-                }
-            }
-
-        }
-
-        private void SaveFileAsJSon(string saveFile, JObject state) {
-            string path = GetPathFromSaveFile(saveFile);
-            print("Saving to " + path);
-            using (var textWriter = File.CreateText(path)) {
-                using (var writer = new JsonTextWriter(textWriter)) {
-                    writer.Formatting = Formatting.Indented;
-                    state.WriteTo(writer);
-                }
-            }
-        }
-
 
         private JToken CaptureAsToken(string idToSave) {
             SaveableEntity entity = FindObjectsOfType<SaveableEntity>().First(obj => obj.UniqueIdentifier == idToSave);
-            var objectToSave = entity.CaptureAsJtoken();
-            objectToSave["sceneBuildIndex"] = SceneManager.GetActiveScene().buildIndex;
+            var objectToSave = entity.CaptureAsJToken();
+            objectToSave[PLAYER_ID] = idToSave;
+            objectToSave[SCENE_INDEX] = SceneManager.GetActiveScene().buildIndex;
             return objectToSave;
         }
 
 
-        private void RestoreFromToken(JObject state) {
-            IDictionary<string, JToken> stateDict = state;
-            foreach (SaveableEntity saveable in FindObjectsOfType<SaveableEntity>()) {
-                string id = saveable.GetUniqueIdentifier();
-                if (stateDict.ContainsKey(id)) {
-                    saveable.RestoreFromJToken(stateDict[id]);
-                }
-            }
+        private bool RestoreFromToken(JObject state, GameObject loader) {
+            SaveableEntity entity = loader.GetComponent<SaveableEntity>();
+            if (!entity) return false;
+            entity.RestoreFromJToken(state);
+            return true;
         }
-
-
-        private string GetPathFromSaveFile(string saveFile) {
-            return Path.Combine(Application.persistentDataPath, saveFile + extension);
-        }
+        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using RPG.Utils;
+using RPG.Utils.Constants;
 using UnityEditor;
 using UnityEngine;
 

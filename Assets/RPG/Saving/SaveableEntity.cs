@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEngine;
+using static RPG.Utils.Constants.DataConstants;
 
 namespace RPG.Saving {
     [ExecuteAlways]
@@ -15,19 +16,19 @@ namespace RPG.Saving {
         }
         
         // CACHED STATE
-        static Dictionary<string, SaveableEntity> globalLookup = new Dictionary<string, SaveableEntity>();
+        static Dictionary<string, SaveableEntity> globalLookup = new();
         
         public string GetUniqueIdentifier() {
             return uniqueIdentifier;
         }
     
-        public JToken CaptureAsJtoken() {
+        public JToken CaptureAsJToken() {
             JObject state = new JObject();
             IDictionary<string, JToken> stateDict = state;
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {
                 JToken token = jsonSaveable.CaptureAsJToken();
                 string component = jsonSaveable.GetType().ToString();
-                stateDict[jsonSaveable.GetType().ToString()] = token;
+                stateDict[component] = token;
             }
             return state;
         }
@@ -35,10 +36,10 @@ namespace RPG.Saving {
         public void RestoreFromJToken(JToken s) {
             JObject state = s.ToObject<JObject>();
             IDictionary<string, JToken> stateDict = state;
+            uniqueIdentifier = (string)stateDict[PLAYER_ID];
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {
                 string component = jsonSaveable.GetType().ToString();
                 if (stateDict.ContainsKey(component)) {
-                    // Debug.Log($"{name} Restore {component} =>{stateDict[component].ToString()}");
                     jsonSaveable.RestoreFromJToken(stateDict[component]);
                 }
             }

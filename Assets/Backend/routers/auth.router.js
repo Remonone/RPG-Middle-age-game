@@ -1,11 +1,16 @@
 import {Router} from 'express';
 import {
-    fetchUser
-} from "../controllers/auth.controller";
+    fetchUser,
+    registerUser,
+    saveUser,
+    loadUser,
+} from "../controllers/auth.controller.js";
 
 const router = Router();
 
-router.get('get', fetchUser);
-router.get('register', fetchUser);
+router.get('/get', fetchUser);
+router.post('/register', registerUser);
+router.put('/save', saveUser);
+router.get('/load', loadUser);
 
 export default router;

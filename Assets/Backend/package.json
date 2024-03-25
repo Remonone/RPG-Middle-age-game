@@ -1,5 +1,6 @@
 {
   "name": "backend",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,6 +13,7 @@
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "6.5"
   }
 }

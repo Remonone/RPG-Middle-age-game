@@ -1,9 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RPG.Creatures.Player;
 using RPG.Network.Client;
 using RPG.Network.Service;
 using RPG.Utils;
+using RPG.Utils.Constants;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -12,10 +16,9 @@ namespace RPG.Network.Controllers {
         public static IEnumerator SignIn(string login, string password, int attemptCount = 10) {
             bool isFailed = false;
             string result = "";
-            
+            Debug.Log($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.FETCH_USER}?login={login}&password={password}");
             for (int i = 0; i < attemptCount && !isFailed && !string.IsNullOrEmpty(result); i++) {
-                using (UnityWebRequest www = UnityWebRequest.Get(
-                           $"{PropertyConstants.SERVER_DOMAIN}:{PropertyConstants.BACKEND_PORT}/{BackendCalls.FETCH_USER}?login={login}&password={password}")) {
+                using (UnityWebRequest www = UnityWebRequest.Get($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.FETCH_USER}?login={login}&password={password}")) {
                     yield return www.SendWebRequest();
                     switch (www.result) {
                         case UnityWebRequest.Result.Success:
@@ -35,7 +38,7 @@ namespace RPG.Network.Controllers {
                     "Connection Timeout.");
                 yield break;
             }
-            ClientSingleton.Instance.Manager.SetData(JToken.Parse(result));
+            ClientSingleton.Instance.Manager.SetData(result);
             
         }
 
@@ -43,9 +46,9 @@ namespace RPG.Network.Controllers {
             string result = "";
             bool isFailed = false;
             string query = UserService.ConvertUserToForm(login, username, password);
-            
+
             for (int i = 0; i < attemptCount && !isFailed; i++) {
-                using (UnityWebRequest www = UnityWebRequest.PostWwwForm($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.REGISTER_USER}", query)) {
+                using (UnityWebRequest www = UnityWebRequest.Post($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.REGISTER_USER}", query, "application/json")) {
                     yield return www.SendWebRequest();
                     switch (www.result) {
                         case UnityWebRequest.Result.Success:
@@ -72,13 +75,13 @@ namespace RPG.Network.Controllers {
                 yield break;
             }
             
-            ClientSingleton.Instance.Manager.SetData(token);
+            ClientSingleton.Instance.Manager.SetData(result);
         }
 
-        public static IEnumerator SaveEntity(string uniqueID, JToken entityToSave, int attemtCount = 10) {
+        public static IEnumerator SaveEntity(JToken entityToSave, int attemptCount = 10) {
             bool isFailed = false;
-            using (UnityWebRequest www = UnityWebRequest.Put($"{PropertyConstants.BACKEND_HOST}:{PropertyConstants.BACKEND_PORT}/{BackendCalls.SAVE_USER}?uniqueId={uniqueID}", JsonConvert.ToString(entityToSave))) {
-                for (int i = 0; i < attemtCount && !isFailed; i++) {
+            using (UnityWebRequest www = UnityWebRequest.Put($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.SAVE_USER}", JsonConvert.ToString(entityToSave))) {
+                for (int i = 0; i < attemptCount && !isFailed; i++) {
                     yield return www.SendWebRequest();
                     switch (www.result) {
                         case UnityWebRequest.Result.Success:
@@ -92,6 +95,25 @@ namespace RPG.Network.Controllers {
 
                 if (isFailed) {
                     Debug.LogError("Error during saving an entity");
+                }
+            }
+        }
+
+        public static IEnumerator LoadEntity(string jwt, Action<JObject> onData) {
+            using (UnityWebRequest www = UnityWebRequest.Get($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.LOAD_USER}?jwt={jwt}")) {
+                yield return www.SendWebRequest();
+                switch (www.result) {
+                    case UnityWebRequest.Result.Success:
+                        JObject obj = JObject.Parse(www.downloadHandler.text);
+                        onData(obj);
+                        break;
+                    case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError(www.error);
+                        onData(null);
+                        break;
+                    case UnityWebRequest.Result.ConnectionError:
+                        Debug.LogError("Connection timeout...");
+                        break;
                 }
             }
         }

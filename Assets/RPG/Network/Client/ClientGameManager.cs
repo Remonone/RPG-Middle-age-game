@@ -5,16 +5,16 @@ using RPG.Creatures.Player;
 namespace RPG.Network.Client {
     public class ClientGameManager {
 
-        private JToken _playerModel;
+        private string _jwtData;
 
-        public JToken Model => _playerModel;
+        public string Credentials => _jwtData;
         
         public async Task InitClient() {
             
         }
 
-        public void SetData(JToken model) {
-            _playerModel = model;
+        public void SetData(string data) {
+            _jwtData = data;
         }
     }
 }
