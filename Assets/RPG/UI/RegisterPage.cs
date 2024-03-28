@@ -1,6 +1,8 @@
-﻿using RPG.Network.Controllers;
+﻿using RPG.Network.Client;
+using RPG.Network.Controllers;
 using RPG.Utils.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace RPG.UI {
@@ -42,10 +44,13 @@ namespace RPG.UI {
             if (_isConnected) return;
             if (DocumentUtils.CheckOnEmptyValues(_loginField, _usernameField, _passwordField, _confirmPasswordField)) return;
             if (_passwordField.value != _confirmPasswordField.value) return;
-            StartCoroutine(AuthenticationController.SignUp(_loginField.value, _usernameField.value, _passwordField.value));
+            StartCoroutine(AuthenticationController.SignUp(_loginField.value, _usernameField.value, _passwordField.value, OnRegister));
         }
 
-        
+        private void OnRegister(string token) {
+            ClientSingleton.Instance.Manager.SetData(token);
+            SceneManager.LoadScene("Main Screen");
+        }
 
         void Cancel() {
             _loginPage.gameObject.SetActive(true);

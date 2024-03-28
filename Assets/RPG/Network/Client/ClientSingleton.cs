@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace RPG.Network.Client {
@@ -25,8 +26,9 @@ namespace RPG.Network.Client {
             }
         }
 
-        private void Start() {
+        IEnumerator Start() {
             DontDestroyOnLoad(gameObject);
+            yield return CreateClient();
         }
 
         public async Task CreateClient() {

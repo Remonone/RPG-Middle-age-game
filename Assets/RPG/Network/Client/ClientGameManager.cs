@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using RPG.Creatures.Player;
 
 namespace RPG.Network.Client {
     public class ClientGameManager {

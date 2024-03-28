@@ -1,25 +1,21 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RPG.Creatures.Player;
-using RPG.Network.Client;
 using RPG.Network.Service;
-using RPG.Utils;
 using RPG.Utils.Constants;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace RPG.Network.Controllers {
     public static class AuthenticationController {
-        public static IEnumerator SignIn(string login, string password, int attemptCount = 10) {
+        public static IEnumerator SignIn(string login, string password, Action<string> onLogin, int attemptCount = 10) {
             bool isFailed = false;
             string result = "";
-            Debug.Log($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.FETCH_USER}?login={login}&password={password}");
-            for (int i = 0; i < attemptCount && !isFailed && !string.IsNullOrEmpty(result); i++) {
+            for (int i = 0; i < attemptCount && !isFailed && string.IsNullOrEmpty(result); i++) {
                 using (UnityWebRequest www = UnityWebRequest.Get($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.FETCH_USER}?login={login}&password={password}")) {
                     yield return www.SendWebRequest();
+                    Debug.Log(www.responseCode);
                     switch (www.result) {
                         case UnityWebRequest.Result.Success:
                             result = www.downloadHandler.text;
@@ -38,11 +34,12 @@ namespace RPG.Network.Controllers {
                     "Connection Timeout.");
                 yield break;
             }
-            ClientSingleton.Instance.Manager.SetData(result);
+            
+            onLogin(result);
             
         }
 
-        public static IEnumerator SignUp(string login, string username, string password, int attemptCount = 10) {
+        public static IEnumerator SignUp(string login, string username, string password, Action<string> onAuth, int attemptCount = 10) {
             string result = "";
             bool isFailed = false;
             string query = UserService.ConvertUserToForm(login, username, password);
@@ -74,8 +71,8 @@ namespace RPG.Network.Controllers {
                 Debug.LogError((string)token["error_message"]);
                 yield break;
             }
-            
-            ClientSingleton.Instance.Manager.SetData(result);
+
+            onAuth((string)token["content"]);
         }
 
         public static IEnumerator SaveEntity(JToken entityToSave, int attemptCount = 10) {

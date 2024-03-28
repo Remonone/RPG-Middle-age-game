@@ -7,10 +7,10 @@ export const fetchUser = async (req, res) => {
     const login = req.query['login'];
     const password = req.query['password'];
 
-    const user = await database.collection('users').findOne({login});
+    const user = await database.collection('users').findOne({_id: login});
     if(!!user) {
         if(bcrypt.compareSync(password, user.password)){
-            const token = jwt.sign({username: user.player_id, login: user.login}, ENCRYPTION_KEY, { algorithm: 'RS256'});
+            const token = jwt.sign({username: user.player_id, login: user.login}, ENCRYPTION_KEY, { algorithm: 'HS256'});
             res.status(200).send(token);
         } else {
             res.status(403).send({message: "Password is incorrect"});
@@ -37,8 +37,8 @@ export const registerUser = async (req, res) => {
     }
     const hashedPassword = bcrypt.hashSync(password, parseInt(CRYPT_SALT));
     await database.collection('users').insertOne({_id: login, username, password: hashedPassword});
-    const token = jwt.sign({username: username, login: login}, ENCRYPTION_KEY, { algorithm: 'RS256'});
-    res.status(200).send(token);
+    const token = jwt.sign({username: username, login: login}, ENCRYPTION_KEY, { algorithm: 'HS256'});
+    res.status(200).send({content: token});
 }
 
 export const saveUser = async (req, res) => {

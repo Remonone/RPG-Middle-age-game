@@ -1,36 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0da05b2-f4eb-454b-91b8-f5bb85811c3f" name="Changes" comment="Create register feature">
+    <list default="true" id="f0da05b2-f4eb-454b-91b8-f5bb85811c3f" name="Changes" comment="Create backend/client relation logic">
       <change afterPath="$PROJECT_DIR$/Assets/Backend/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/RPG/Core/SavingWrapper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/RPG/Core/SavingWrapper.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/RPG/Utils/Constants.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/RPG/Utils/Constants/DataConstants.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/RPG/Utils/Constants/DataConstants.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Backend/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Backend/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Backend/controllers/auth.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Backend/controllers/auth.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Backend/routers/auth.router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Backend/routers/auth.router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Backend/server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Backend/utils/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Backend/utils/secret.data.js" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Backend/utils/secret.data.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Creatures/Player/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Creatures/Player/PlayerController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Dialogs/Editor/DialogEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Dialogs/Editor/DialogEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Inventories/Items/InventoryItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Inventories/Items/InventoryItem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Network/Client/ClientGameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Network/Client/ClientGameManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Network/Controllers/AuthenticationController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Network/Controllers/AuthenticationController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Quests/Quest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Quests/Quest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Saving/SaveableEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Saving/SaveableEntity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Saving/SavingSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Saving/SavingSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/UI/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/UI/MainMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Utils/BackendCalls.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Utils/Constants/BackendCalls.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Utils/BackendCalls.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Utils/Constants/BackendCalls.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Utils/PropertyConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Utils/Constants/PropertyConstants.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/RPG/Utils/PropertyConstants.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/Utils/Constants/PropertyConstants.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/NetBootstrap.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/NetBootstrap.unity" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +57,7 @@
       <workItem from="1710711835262" duration="4528000" />
       <workItem from="1710880662615" duration="899000" />
       <workItem from="1711144287828" duration="1266000" />
-      <workItem from="1711398402643" duration="4149000" />
+      <workItem from="1711398402643" duration="4431000" />
     </task>
     <task id="LOCAL-00001" summary="Create register feature">
       <created>1711144950576</created>
@@ -93,7 +66,14 @@
       <option name="project" value="LOCAL" />
       <updated>1711144950576</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Create backend/client relation logic">
+      <created>1711402869499</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1711402869500</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -112,6 +92,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Create register feature" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create register feature" />
+    <MESSAGE value="Create backend/client relation logic" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create backend/client relation logic" />
   </component>
 </project>
