@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Linq;
 using static RPG.Utils.Constants.DataConstants;
 using Newtonsoft.Json.Linq;
 using RPG.Creatures.Player;
@@ -17,16 +19,15 @@ namespace RPG.Saving {
             StartCoroutine(AuthenticationController.SaveEntity(state));
         }
 
-        public void Load(PlayerController loader, string jwt) {
-            StartCoroutine(AuthenticationController.LoadEntity(jwt, data => {
-                RestoreFromToken(data, loader.gameObject);
-                loader.Init(data);
-            }));
+        public IEnumerator Load(GameObject loader, string jwt, Action<JToken> onLoadFinish) {
+            yield return AuthenticationController.LoadEntity(jwt, data => {
+                RestoreFromToken(data, loader);
+                onLoadFinish(data);
+            });
         }
 
         // PRIVATE
-
-
+        
         private JToken CaptureAsToken(string idToSave) {
             SaveableEntity entity = FindObjectsOfType<SaveableEntity>().First(obj => obj.UniqueIdentifier == idToSave);
             var objectToSave = entity.CaptureAsJToken();
@@ -36,11 +37,10 @@ namespace RPG.Saving {
         }
 
 
-        private bool RestoreFromToken(JObject state, GameObject loader) {
+        private void RestoreFromToken(JObject state, GameObject loader) {
             SaveableEntity entity = loader.GetComponent<SaveableEntity>();
-            if (!entity) return false;
+            if (!entity) return;
             entity.RestoreFromJToken(state);
-            return true;
         }
         
     }

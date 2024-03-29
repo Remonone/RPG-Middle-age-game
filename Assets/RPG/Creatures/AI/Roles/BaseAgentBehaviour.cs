@@ -33,8 +33,8 @@ namespace RPG.Creatures.AI.Roles {
             return _organisation;
         }
 
-        public Guid GetGuid() {
-            return _id;
+        public string GetId() {
+            return _id.ToString();
         }
     }
 }

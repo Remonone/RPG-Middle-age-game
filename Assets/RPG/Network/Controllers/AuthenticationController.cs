@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 
 namespace RPG.Network.Controllers {
     public static class AuthenticationController {
-        public static IEnumerator SignIn(string login, string password, Action<string> onLogin, int attemptCount = 10) {
+        public static IEnumerator SignIn(string login, string password, Action<JToken> onLogin, int attemptCount = 10) {
             bool isFailed = false;
             string result = "";
             for (int i = 0; i < attemptCount && !isFailed && string.IsNullOrEmpty(result); i++) {
@@ -34,15 +34,15 @@ namespace RPG.Network.Controllers {
                     "Connection Timeout.");
                 yield break;
             }
+            JToken data = JToken.Parse(result);
             
-            onLogin(result);
-            
+            onLogin(data);
         }
 
-        public static IEnumerator SignUp(string login, string username, string password, Action<string> onAuth, int attemptCount = 10) {
+        public static IEnumerator SignUp(string login, string username, string password, string serverName, Action<JToken> onAuth, int attemptCount = 10) {
             string result = "";
             bool isFailed = false;
-            string query = UserService.ConvertUserToForm(login, username, password);
+            string query = UserService.ConvertUserToForm(login, username, password, serverName);
 
             for (int i = 0; i < attemptCount && !isFailed; i++) {
                 using (UnityWebRequest www = UnityWebRequest.Post($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.REGISTER_USER}", query, "application/json")) {
@@ -72,7 +72,7 @@ namespace RPG.Network.Controllers {
                 yield break;
             }
 
-            onAuth((string)token["content"]);
+            onAuth(token);
         }
 
         public static IEnumerator SaveEntity(JToken entityToSave, int attemptCount = 10) {

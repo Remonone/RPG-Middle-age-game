@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using Newtonsoft.Json.Linq;
 using RPG.Core;
 using RPG.Movement;
 using RPG.Network.Client;
+using RPG.Saving;
 using RPG.Stats.Relations;
 using RPG.UI.Cursors;
 using Unity.Netcode;
@@ -22,22 +22,42 @@ namespace RPG.Creatures.Player {
         [SerializeField] private float _cameraRotationModifier = .5f;
         [SerializeField] private GameObject _cameraHolder;
         [SerializeField] private GameObject _cameraBehaviour;
-        private Guid _id;
+        private string _id;
         private Mover _mover;
+        private SavingSystem _system;
         
         // PUBLIC
-        public InputActionMap Map => _map;        
-        
+        public InputActionMap Map => _map;
+
+        private void Awake() {
+            _system = FindObjectOfType<SavingWrapper>().System;
+            _mover = GetComponent<Mover>();
+        }
+
         // PRIVATE
 
         public override void OnNetworkSpawn() {
             if (!IsOwner) return;
-            FindObjectOfType<SavingWrapper>().System.Load(this, ClientSingleton.Instance.Manager.Credentials);
+            
+            LoadClientServerRpc(ClientSingleton.Instance.Manager.Credentials);
         }
 
-
-        public void Init(JToken data) {
-            _id = Guid.Parse((string)data[PLAYER_ID]);
+        [ServerRpc(RequireOwnership = true)]
+        private void LoadClientServerRpc(string credentials, ServerRpcParams serverRpcParams = default) {
+            StartCoroutine(_system.Load(gameObject, credentials, data => {
+                ClientRpcParams param = new ClientRpcParams {
+                    Send = {
+                        TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
+                    }
+                };
+                InitClientRpc((string)data[PLAYER_ID], param);
+            }));
+        }
+        
+        [ClientRpc]
+        private void InitClientRpc(string id, ClientRpcParams clientRpcParams = default) {
+            if (!IsOwner) return;
+            _id = id;
             _cameraHolder.SetActive(IsOwner);
             _cameraBehaviour.SetActive(IsOwner);
             _map.Enable();
@@ -46,10 +66,9 @@ namespace RPG.Creatures.Player {
         public override void OnNetworkDespawn() {
             if (!IsOwner) return;
             _map.Disable();
-            FindObjectOfType<SavingWrapper>().System.Save(_id.ToString());
+            FindObjectOfType<SavingWrapper>().System.Save(_id);
         }
-
-
+        
         private void Update() {
             if (InteractWithCamera()) return;
             if (InteractWithUI()) return;
@@ -57,6 +76,7 @@ namespace RPG.Creatures.Player {
             if (MoveTowardPoint()) return;
             SetCursor(CursorType.EMPTY);
         }
+        
         private bool InteractWithCamera() {
             if (!_map["Camera Rotation"].IsPressed()) return false;
             var mouseDelta = _map["Mouse Delta"].ReadValue<Vector2>();
@@ -114,7 +134,7 @@ namespace RPG.Creatures.Player {
         public Organisation GetOrganisation() {
             return _organisation;
         }
-        public Guid GetGuid() {
+        public string GetId() {
             return _id;
         }
     }

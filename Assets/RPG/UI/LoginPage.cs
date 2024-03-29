@@ -1,6 +1,10 @@
-﻿using RPG.Network.Client;
+﻿using System;
+using Newtonsoft.Json.Linq;
+using RPG.Network.Client;
 using RPG.Network.Controllers;
 using RPG.Utils.UI;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -21,21 +25,22 @@ namespace RPG.UI {
         private bool _isFailed;
         private bool _isConnected;
         
-        private void Start() {
+        private void Awake() {
             _root = _document.rootVisualElement;
             _loginField = _root.Q<TextField>("Login");
             _passwordField = _root.Q<TextField>("Password");
-            
             _signUpButton = _root.Q<Button>("SignUp");
-            _signUpButton.clicked += RegisterAccount;
-            
             _signInButton = _root.Q<Button>("SignIn");
-            _signInButton.clicked += SendSignInRequest;
             _cancelButton = _root.Q<Button>("Exit");
-            _cancelButton.clicked += OnCancel;
         }
-        
-        private void OnDestroy() {
+
+        private void OnEnable() {
+            _signInButton.clicked += SendSignInRequest;
+            _cancelButton.clicked += OnCancel;
+            _signUpButton.clicked += RegisterAccount;
+        }
+
+        private void OnDisable() {
             _signInButton.clicked -= SendSignInRequest;
             _cancelButton.clicked -= OnCancel;
             _signUpButton.clicked -= RegisterAccount;
@@ -47,10 +52,11 @@ namespace RPG.UI {
             StartCoroutine(AuthenticationController.SignIn(_loginField.value, _passwordField.value, OnLogin));
         }
 
-        private void OnLogin(string token) {
-            ClientSingleton.Instance.Manager.SetData(token);
+        private void OnLogin(JToken data) {
+            ClientSingleton.Instance.Manager.SetData((string)data["token"]);
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ipv4Address: (string)data["ip"], port: (ushort)data["port"]);
             SceneManager.LoadScene("Main Screen");
-        } 
+        }
 
         void RegisterAccount() {
             _registerPage.gameObject.SetActive(true);
