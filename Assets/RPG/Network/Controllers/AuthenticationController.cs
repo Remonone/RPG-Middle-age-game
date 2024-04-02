@@ -15,7 +15,6 @@ namespace RPG.Network.Controllers {
             for (int i = 0; i < attemptCount && !isFailed && string.IsNullOrEmpty(result); i++) {
                 using (UnityWebRequest www = UnityWebRequest.Get($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.FETCH_USER}?login={login}&password={password}")) {
                     yield return www.SendWebRequest();
-                    Debug.Log(www.responseCode);
                     switch (www.result) {
                         case UnityWebRequest.Result.Success:
                             result = www.downloadHandler.text;
@@ -75,16 +74,16 @@ namespace RPG.Network.Controllers {
             onAuth(token);
         }
 
-        public static IEnumerator SaveEntity(JToken entityToSave, int attemptCount = 10) {
+        public static IEnumerator SaveEntity(JToken entityToSave, string token, int attemptCount = 10) {
             bool isFailed = false;
-            using (UnityWebRequest www = UnityWebRequest.Put($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.SAVE_USER}", JsonConvert.ToString(entityToSave))) {
-                for (int i = 0; i < attemptCount && !isFailed; i++) {
+            for (int i = 0; i < attemptCount && !isFailed; i++) {
+                using (UnityWebRequest www = UnityWebRequest.Put($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.SAVE_USER}?token={token}", entityToSave.ToString())) {
                     yield return www.SendWebRequest();
                     switch (www.result) {
                         case UnityWebRequest.Result.Success:
                         case UnityWebRequest.Result.ConnectionError:
                             break;
-                        case UnityWebRequest.Result.ProtocolError:
+                        case UnityWebRequest.Result.DataProcessingError:
                             isFailed = true;
                             break;
                     }

@@ -12,10 +12,13 @@ namespace RPG.Stats.Relations {
         [SerializeField] private float _defaultRelation;
         [SerializeField] private Color _color;
         [SerializeField] private Image _flag;
-        [SerializeField] private Image _emblem;
+        [SerializeField] private Sprite _emblem;
         [SerializeField] private float _agroThreshold;
         
         private readonly Dictionary<Organisation, float> _relations = new();
+
+        public Sprite Emblem => _emblem;
+        public Color Color => _color;
 
         public float AgroThreshold => _agroThreshold;
 

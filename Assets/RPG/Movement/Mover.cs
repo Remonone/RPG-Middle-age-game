@@ -34,6 +34,7 @@ namespace RPG.Movement {
         }
         
         private void Update() {
+            if (!IsOwner) return;
             _agent.enabled = _health.IsAlive;
             if ((_agent.destination - transform.position).magnitude < _threshold) {
                 Cancel();
@@ -52,15 +53,20 @@ namespace RPG.Movement {
         }
 
         [ServerRpc]
-        private void TranslateObjectServerRpc(Vector3 destination) {
+        private void TranslateObjectServerRpc(Vector3 destination, ServerRpcParams serverRpcParams = default) {
             _agent.isStopped = false;
             _agent.destination = destination;
             _animator.SetFloat(_speed, 1);
-            TranslateObjectClientRpc(destination);
+            ClientRpcParams clientRpcParams = new ClientRpcParams {
+                Send = new ClientRpcSendParams {
+                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
+                }
+            };
+            TranslateObjectClientRpc(destination, clientRpcParams);
         }
 
         [ClientRpc]
-        private void TranslateObjectClientRpc(Vector3 destination) {
+        private void TranslateObjectClientRpc(Vector3 destination, ClientRpcParams clientRpcParams = default) {
             _agent.isStopped = false;
             _agent.destination = destination;
             _animator.SetFloat(_speed, 1);
@@ -72,14 +78,19 @@ namespace RPG.Movement {
         }
 
         [ServerRpc]
-        private void CancelServerRpc() {
+        private void CancelServerRpc(ServerRpcParams serverRpcParams = default) {
             _agent.isStopped = true;
             _animator.SetFloat(_speed, 0);
-            CancelClientRpc();
+            ClientRpcParams clientRpcParams = new ClientRpcParams {
+                Send = new ClientRpcSendParams {
+                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
+                }
+            };
+            CancelClientRpc(clientRpcParams);
         }
 
         [ClientRpc]
-        private void CancelClientRpc() {
+        private void CancelClientRpc(ClientRpcParams clientRpcParams) {
             _agent.isStopped = true;
             _animator.SetFloat(_speed, 0);
         }

@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="VisualElement" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: 300px; height: 50px;">
+        <ui:VisualElement name="Info" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.58); flex-direction: row; align-items: center;">
+            <ui:VisualElement name="Color" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 100%; width: 5px;" />
+            <ui:VisualElement name="Organisation" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 35px; margin-left: 10px; flex-shrink: 0; align-items: center; justify-content: center; align-self: center; max-width: 35px; height: 100%;" />
+            <ui:Label tabindex="-1" text="user" display-tooltip-when-elided="true" name="Username" style="width: 185px; text-overflow: ellipsis; background-color: rgba(0, 0, 0, 0); color: rgb(222, 222, 222); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; align-self: center; font-size: 16px;" />
+            <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                <ui:Label tabindex="-1" text="LV." display-tooltip-when-elided="true" name="Label" style="font-size: 18px; color: rgb(221, 221, 221); -unity-font: resource(&apos;FlatSkin/Font/Roboto-Regular&apos;); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; justify-content: flex-start; align-self: center;" />
+                <ui:Label tabindex="-1" text="01" display-tooltip-when-elided="true" name="Level" style="color: rgb(222, 222, 222); -unity-font: resource(&apos;FlatSkin/Font/Roboto-Regular&apos;); font-size: 18px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; align-self: center;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="HP" style="flex-grow: 0; background-color: rgb(140, 0, 28); height: 15px; flex-direction: column; justify-content: flex-end;">
+            <ui:VisualElement name="Current" style="flex-grow: 1; background-color: rgb(5, 224, 33); width: 51px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

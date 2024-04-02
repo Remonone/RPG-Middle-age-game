@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using RPG.Core;
 using RPG.Movement;
 using RPG.Network.Client;
 using RPG.Saving;
 using RPG.Stats.Relations;
 using RPG.UI.Cursors;
+using RPG.UI.InfoBar;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -22,54 +24,82 @@ namespace RPG.Creatures.Player {
         [SerializeField] private float _cameraRotationModifier = .5f;
         [SerializeField] private GameObject _cameraHolder;
         [SerializeField] private GameObject _cameraBehaviour;
+        [SerializeField] private HpBar _bar;
         private string _id;
         private Mover _mover;
         private SavingSystem _system;
+        private string _credentials;
         
         // PUBLIC
         public InputActionMap Map => _map;
 
         private void Awake() {
             _system = FindObjectOfType<SavingWrapper>().System;
-            _mover = GetComponent<Mover>();
         }
 
         // PRIVATE
 
         public override void OnNetworkSpawn() {
+            base.OnNetworkSpawn();
             if (!IsOwner) return;
             
+            _mover = GetComponent<Mover>();
             LoadClientServerRpc(ClientSingleton.Instance.Manager.Credentials);
         }
 
         [ServerRpc(RequireOwnership = true)]
         private void LoadClientServerRpc(string credentials, ServerRpcParams serverRpcParams = default) {
-            StartCoroutine(_system.Load(gameObject, credentials, data => {
+            StartCoroutine(_system.Load(gameObject, credentials,  data => {
                 ClientRpcParams param = new ClientRpcParams {
                     Send = {
                         TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
                     }
                 };
-                InitClientRpc((string)data[PLAYER_ID], param);
+                _credentials = credentials;
+                _id = (string)data[PLAYER_ID];
+                InitClientRpc(data.ToString(), param);
             }));
         }
         
         [ClientRpc]
-        private void InitClientRpc(string id, ClientRpcParams clientRpcParams = default) {
+        private void InitClientRpc(string stringifiedData, ClientRpcParams clientRpcParams = default) {
             if (!IsOwner) return;
-            _id = id;
+            var data = JObject.Parse(stringifiedData);
+            _id = (string)data[PLAYER_ID];
+            
+            // BAD SOLUTION
+            SaveableEntity entity = GetComponent<SaveableEntity>();
+            if (!entity) return;
+            entity.RestoreFromJToken(data);
+            ///////
+            _bar.StartInit(_id);
             _cameraHolder.SetActive(IsOwner);
+            _cameraHolder.GetComponentInChildren<Camera>().tag = "MainCamera";
             _cameraBehaviour.SetActive(IsOwner);
             _map.Enable();
         }
         
         public override void OnNetworkDespawn() {
-            if (!IsOwner) return;
-            _map.Disable();
-            FindObjectOfType<SavingWrapper>().System.Save(_id);
+            base.OnNetworkDespawn();
+            if (IsOwner) {
+                _map.Disable();
+            }
+            if (IsServer) {
+                _system.Save(GetComponent<SaveableEntity>(), _id, _credentials);
+            }
         }
         
+        // [ServerRpc(RequireOwnership = true)]
+        // private void SavePlayerServerRpc(string id, string credentials) {
+        //     Debug.Log("Saving... " + id + " " + credentials);
+        //     _system.Save(id, credentials);
+        // }
+
         private void Update() {
+            if (!IsOwner) {
+                SetCursor(CursorType.EMPTY);
+                return;
+            }
             if (InteractWithCamera()) return;
             if (InteractWithUI()) return;
             if (InteractWithComponent()) return;
@@ -123,7 +153,8 @@ namespace RPG.Creatures.Player {
                 return false;
             }
             SetCursor(CursorType.MOVEMENT);
-            if (_map["Action"].WasPressedThisFrame()) _mover.StartMovingToPoint(hit.point);;
+
+            if (_map["Action"].WasPressedThisFrame()) _mover.StartMovingToPoint(hit.point);
             return true;
         }
         

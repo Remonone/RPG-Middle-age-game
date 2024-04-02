@@ -14,7 +14,7 @@ using UnityEngine;
 // TODO: REDUCE DEPENDENCY LIST
 
 namespace RPG.Combat {
-    public class Fighter : MonoBehaviour, IAction, IPredicateHandler{
+    public class Fighter : NetworkBehaviour, IAction, IPredicateHandler{
 
         [SerializeField] private Cooldown _cooldown;
         [SerializeField] private bool _shouldResetOnAttack;
@@ -35,20 +35,26 @@ namespace RPG.Combat {
         public bool CanAttack(Health target) => target is { IsAlive: true };
         
         public void Cancel() {
-            // if (!IsOwner) return;
+            if (!IsOwner) return;
             _target = null;
             _mover.Cancel();
         }
         
         //[ServerRpc]
         public void Attack(SelectableEnemy target) {
-            // if (!IsOwner) return;
-            if (!target._isTargetable) return;
-            var health = target.GetComponent<Health>();
-            if (health == null || !health.IsAlive) return;
-            _scheduler.SwitchAction(this);
-            _target = health;
+            if (!IsOwner) return;
+            
         }
+
+        // [ServerRpc]
+        // private void AttackServerRpc() {
+        //     if (!target._isTargetable) return;
+        //     var health = target.GetComponent<Health>();
+        //     if (health == null || !health.IsAlive) return;
+        //     _scheduler.SwitchAction(this);
+        //     _target = health;
+        // }
+        
         
         public void Attack(Health target) {
             if (target == null || !target.IsAlive) return;
@@ -75,7 +81,7 @@ namespace RPG.Combat {
         
         private object PerformHit(object[] arguments) {
             var objToHit = PredicateWorker.GetPredicateMonoBehaviour((string)arguments[0]);
-            if (objToHit.GetComponent<Health>() is not Health target) return null;
+            if (objToHit.GetComponent<Health>() is not { } target) return null;
             var report =
                 DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), gameObject);
             target.HitEntity(report);

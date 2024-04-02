@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f0da05b2-f4eb-454b-91b8-f5bb85811c3f" name="Changes" comment="Create backend/client relation logic">
       <change afterPath="$PROJECT_DIR$/Assets/Backend/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Backend/utils/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/RPG/UI/RegisterPage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/RPG/UI/RegisterPage.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,16 +29,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/7546f/Desktop/lessons",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Unity projects\GumuPeachu\Assets\Backend" />
@@ -58,6 +59,7 @@
       <workItem from="1710880662615" duration="899000" />
       <workItem from="1711144287828" duration="1266000" />
       <workItem from="1711398402643" duration="4431000" />
+      <workItem from="1711916894309" duration="9000" />
     </task>
     <task id="LOCAL-00001" summary="Create register feature">
       <created>1711144950576</created>

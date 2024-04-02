@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using static RPG.Utils.Constants.DataConstants;
 using Newtonsoft.Json.Linq;
-using RPG.Creatures.Player;
 using RPG.Network.Controllers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,15 +9,15 @@ using UnityEngine.SceneManagement;
 namespace RPG.Saving {
     public class SavingSystem : MonoBehaviour {
         
-        public void Save(string uniqueId) {
-            var state = CaptureAsToken(uniqueId);
-            PushStateToDataBase(state);
+        public void Save(SaveableEntity entity, string uniqueId, string jwt) {
+            var state = CaptureAsToken(entity, uniqueId);
+            PushStateToDataBase(state, jwt);
         }
-        private void PushStateToDataBase(JToken state) {
-            StartCoroutine(AuthenticationController.SaveEntity(state));
+        private void PushStateToDataBase(JToken state, string token) {
+            StartCoroutine(AuthenticationController.SaveEntity(state, token));
         }
 
-        public IEnumerator Load(GameObject loader, string jwt, Action<JToken> onLoadFinish) {
+        public IEnumerator Load(GameObject loader, string jwt, Action<JObject> onLoadFinish) {
             yield return AuthenticationController.LoadEntity(jwt, data => {
                 RestoreFromToken(data, loader);
                 onLoadFinish(data);
@@ -27,9 +25,8 @@ namespace RPG.Saving {
         }
 
         // PRIVATE
-        
-        private JToken CaptureAsToken(string idToSave) {
-            SaveableEntity entity = FindObjectsOfType<SaveableEntity>().First(obj => obj.UniqueIdentifier == idToSave);
+
+        private JToken CaptureAsToken(SaveableEntity entity, string idToSave) {
             var objectToSave = entity.CaptureAsJToken();
             objectToSave[PLAYER_ID] = idToSave;
             objectToSave[SCENE_INDEX] = SceneManager.GetActiveScene().buildIndex;

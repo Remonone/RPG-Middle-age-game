@@ -6,19 +6,20 @@ using RPG.Combat;
 using RPG.Combat.Buffs;
 using RPG.Core.Predicate.Interfaces;
 using RPG.Saving;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Stats {
     [RequireComponent(typeof(BuffContainer))]
-    public class BaseStats : MonoBehaviour, ISaveable, IPredicateHandler {
+    public class BaseStats : NetworkBehaviour, ISaveable, IPredicateHandler {
         [SerializeField] private StatsContainer _stats;
 
-        [SerializeField] private int _level;
-        [SerializeField] private float _experience;
+        [SerializeField] private NetworkVariable<int> _level = new();
+        [SerializeField] private NetworkVariable<float> _experience = new();
 
         public CreatureClass CreatureClass => _stats.CreatureClass;
-        public int Level => _level;
-        public float Experience => _experience;
+        public int Level => _level.Value;
+        public float Experience => _experience.Value;
         
         public event Action OnLevelUp;
         public event Action OnStatUpdated;
@@ -26,14 +27,21 @@ namespace RPG.Stats {
         //TODO: CHANGE IT TO MODIFICATIONS
         private List<PredicatedStats> _predicatedStats = new();
         private List<PredicatedStats> _temporaryStats = new();
-        
+
+        public override void OnNetworkSpawn() {
+            base.OnNetworkSpawn();
+            if (IsServer) {
+                _level.Value = 1;
+                _experience.Value = 0;
+            }
+        }
 
         public void AddExperience(float amount) {
             var exp = Stat.EXPERIENCE_TO_PROMOTE;
-            _experience += amount;
-            if (_experience > _stats.GetBaseStat(exp) + _stats.GetLevelStat(exp, _level)) {
-                _experience = 0F;
-                _level += 1;
+            _experience.Value += amount;
+            if (_experience.Value > _stats.GetBaseStat(exp) + _stats.GetLevelStat(exp, _level.Value)) {
+                _experience.Value = 0F;
+                _level.Value += 1;
                 OnLevelUp?.Invoke();
             }
         }
@@ -41,7 +49,7 @@ namespace RPG.Stats {
         public float GetBaseStat(Stat stat) => _stats.GetBaseStat(stat);
 
         public float GetStatValue(Stat stat) {
-            return (_stats.GetBaseStat(stat) + _stats.GetLevelStat(stat, _level) + CalculateFlatStatChangers(stat)) * CalculatePercentStatChangers(stat);
+            return (_stats.GetBaseStat(stat) + _stats.GetLevelStat(stat, _level.Value) + CalculateFlatStatChangers(stat)) * CalculatePercentStatChangers(stat);
         }
         
         public object Predicate(string command, object[] arguments) {
@@ -105,13 +113,13 @@ namespace RPG.Stats {
         
         public JToken CaptureAsJToken() {
             return new JObject(
-                new JProperty("level", _level),
-                new JProperty("experience", _experience)
+                new JProperty("level", _level.Value),
+                new JProperty("experience", _experience.Value)
             );
         }
         public void RestoreFromJToken(JToken state) {
-            _level = (int)state["level"];
-            _experience = (int)state["experience"];
+            _level.Value = (int)state["level"];
+            _experience.Value = (int)state["experience"];
         }
 
         private sealed class PredicatedStats {

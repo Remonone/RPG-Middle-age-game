@@ -1,27 +1,23 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using Unity.Collections;
+using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 using static RPG.Utils.Constants.DataConstants;
 
 namespace RPG.Saving {
     [ExecuteAlways]
-    public class SaveableEntity : MonoBehaviour { 
+    public class SaveableEntity : NetworkBehaviour { 
         
-        [SerializeField] string uniqueIdentifier = "";
+        [SerializeField] NetworkVariable<FixedString64Bytes> uniqueIdentifier = new();
         
-        public string UniqueIdentifier {
-            get { return uniqueIdentifier; }
-            set { uniqueIdentifier = string.IsNullOrEmpty(uniqueIdentifier) ? value : uniqueIdentifier; }
-        }
+        public string UniqueIdentifier => uniqueIdentifier.Value.Value;
+            
         
         // CACHED STATE
         static Dictionary<string, SaveableEntity> globalLookup = new();
-        
-        public string GetUniqueIdentifier() {
-            return uniqueIdentifier;
-        }
-    
+
         public JToken CaptureAsJToken() {
             JObject state = new JObject();
             IDictionary<string, JToken> stateDict = state;
@@ -34,9 +30,12 @@ namespace RPG.Saving {
         }
 
         public void RestoreFromJToken(JToken s) {
-            JObject state = s.ToObject<JObject>();
+            if (IsServer) {
+                uniqueIdentifier.Value = (string)s[PLAYER_ID];
+            }
+            if (s["content"] == null) return;
+            JObject state = s["content"].ToObject<JObject>();
             IDictionary<string, JToken> stateDict = state;
-            uniqueIdentifier = (string)stateDict[PLAYER_ID];
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {
                 string component = jsonSaveable.GetType().ToString();
                 if (stateDict.ContainsKey(component)) {
@@ -70,7 +69,7 @@ namespace RPG.Saving {
                 return true;
             }
 
-            if (globalLookup[candidate].GetUniqueIdentifier() != candidate) {
+            if (globalLookup[candidate].UniqueIdentifier != candidate) {
                 globalLookup.Remove(candidate);
                 return true;
             }
