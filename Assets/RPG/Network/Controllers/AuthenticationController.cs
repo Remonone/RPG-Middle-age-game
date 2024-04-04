@@ -78,9 +78,11 @@ namespace RPG.Network.Controllers {
             bool isFailed = false;
             for (int i = 0; i < attemptCount && !isFailed; i++) {
                 using (UnityWebRequest www = UnityWebRequest.Put($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.SAVE_USER}?token={token}", entityToSave.ToString())) {
+                    www.SetRequestHeader("Content-Type", "application/json");
                     yield return www.SendWebRequest();
                     switch (www.result) {
                         case UnityWebRequest.Result.Success:
+                            yield break;
                         case UnityWebRequest.Result.ConnectionError:
                             break;
                         case UnityWebRequest.Result.DataProcessingError:

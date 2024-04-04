@@ -49,14 +49,14 @@ export const registerUser = async (req, res) => {
 export const saveUser = async (req, res) => {
     const username = req.body.username;
     const userToken = req.query["token"];
-    const userData = jwt.verify(token, ENCRYPTION_KEY);
+    const userData = jwt.verify(userToken, ENCRYPTION_KEY);
     const user = await database.collection('users').findOne({_id: userData.login});
     console.log(req.body);
     if(user.username !== username) { 
         res.status(403).send({message: "Wrong credentials!"});
         return;
     }
-    await database.updateOne({username}, {
+    await database.collection('users').updateOne({username}, {
         $set: {
             content: req.body.content,
         }

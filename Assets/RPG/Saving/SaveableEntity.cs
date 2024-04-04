@@ -16,11 +16,11 @@ namespace RPG.Saving {
             
         
         // CACHED STATE
-        static Dictionary<string, SaveableEntity> globalLookup = new();
+        static readonly Dictionary<string, SaveableEntity> GlobalLookup = new();
 
         public JToken CaptureAsJToken() {
-            JObject state = new JObject();
-            IDictionary<string, JToken> stateDict = state;
+            JObject state = new JObject(new JProperty("content", new JObject()));
+            JToken stateDict = state["content"];
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {
                 JToken token = jsonSaveable.CaptureAsJToken();
                 string component = jsonSaveable.GetType().ToString();
@@ -33,7 +33,7 @@ namespace RPG.Saving {
             if (IsServer) {
                 uniqueIdentifier.Value = (string)s[PLAYER_ID];
             }
-            if (s["content"] == null) return;
+            if (s["content"].Type == JTokenType.Null) return;
             JObject state = s["content"].ToObject<JObject>();
             IDictionary<string, JToken> stateDict = state;
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {
@@ -57,20 +57,20 @@ namespace RPG.Saving {
                 serializedObject.ApplyModifiedProperties();
             }
 
-            globalLookup[property.stringValue] = this;
+            GlobalLookup[property.stringValue] = this;
         }
     #endif
 
         private bool IsUnique(string candidate) {
-            if (!globalLookup.ContainsKey(candidate)) return true;
-            if (globalLookup[candidate] == this) return true;
-            if (globalLookup[candidate] == null) { 
-                globalLookup.Remove(candidate);
+            if (!GlobalLookup.ContainsKey(candidate)) return true;
+            if (GlobalLookup[candidate] == this) return true;
+            if (GlobalLookup[candidate] == null) { 
+                GlobalLookup.Remove(candidate);
                 return true;
             }
 
-            if (globalLookup[candidate].UniqueIdentifier != candidate) {
-                globalLookup.Remove(candidate);
+            if (GlobalLookup[candidate].UniqueIdentifier != candidate) {
+                GlobalLookup.Remove(candidate);
                 return true;
             }
             return false;

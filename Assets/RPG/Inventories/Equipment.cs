@@ -61,20 +61,21 @@ namespace RPG.Inventories {
         }
         
         public JToken CaptureAsJToken() {
-            var equipmentInfo = new JProperty("equipment", new JArray(
+            var equipmentInfo = new JArray(
                 from equipmentID in _items 
                 select new JObject(
                         new JProperty("slot", equipmentID.Key.ToString()),
                         new JProperty("id", equipmentID.Value.ID)
                     )
-            ));
+            );
             return equipmentInfo;
         }
         public void RestoreFromJToken(JToken state) {
-            foreach (var id in state["equipment"]) {
-                var item = InventoryItem.GetItemByGuid((string)id);
-                var slot = Enum.Parse<EquipmentSlot>((string)state["slot"]);
-                _items[slot] = (EquipmentItem) item;
+            foreach (var item in state) {
+                if (item.Type == JTokenType.Null) continue;
+                var equipment = InventoryItem.GetItemByGuid((string)item["id"]);
+                var slot = Enum.Parse<EquipmentSlot>((string)item["slot"]);
+                _items[slot] = (EquipmentItem) equipment;
             }
         }
 

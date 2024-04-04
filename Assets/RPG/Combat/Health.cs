@@ -87,7 +87,7 @@ namespace RPG.Combat {
         }
 
         public JToken CaptureAsJToken() {
-            var healthInfo = new JObject(new JProperty("current_health", _currentHealth));
+            var healthInfo = new JObject(new JProperty("current_health", _currentHealth.Value));
             return healthInfo;
         }
         public void RestoreFromJToken(JToken state) {
