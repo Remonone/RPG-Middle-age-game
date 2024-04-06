@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RPG.Network.Service;
 using RPG.Utils.Constants;

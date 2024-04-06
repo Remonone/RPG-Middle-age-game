@@ -88,12 +88,6 @@ namespace RPG.Creatures.Player {
                 _system.Save(GetComponent<SaveableEntity>(), _id, _credentials);
             }
         }
-        
-        // [ServerRpc(RequireOwnership = true)]
-        // private void SavePlayerServerRpc(string id, string credentials) {
-        //     Debug.Log("Saving... " + id + " " + credentials);
-        //     _system.Save(id, credentials);
-        // }
 
         private void Update() {
             if (!IsOwner) {
@@ -134,9 +128,10 @@ namespace RPG.Creatures.Player {
         }
 
         private RaycastHit[] SortedRaycast() {
-            var hits = Physics.RaycastAll(GetMouseRay());
-            var distances = new float[hits.Length];
-            for (var i = 0; i < distances.Length; i++) {
+            RaycastHit[] hits = new RaycastHit[10]; 
+            var hitAmount = Physics.RaycastNonAlloc(GetMouseRay(), hits);
+            var distances = new float[hitAmount];
+            for (var i = 0; i < hitAmount; i++) {
                 distances[i] = hits[i].distance;
             }
             Array.Sort(distances, hits);

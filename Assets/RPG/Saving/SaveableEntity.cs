@@ -11,8 +11,7 @@ namespace RPG.Saving {
     public class SaveableEntity : NetworkBehaviour { 
         
         [SerializeField] NetworkVariable<FixedString64Bytes> uniqueIdentifier = new();
-        
-        public string UniqueIdentifier => uniqueIdentifier.Value.Value;
+        public string EntityId => uniqueIdentifier.Value.Value;
             
         
         // CACHED STATE
@@ -69,12 +68,11 @@ namespace RPG.Saving {
                 return true;
             }
 
-            if (GlobalLookup[candidate].UniqueIdentifier != candidate) {
+            if (GlobalLookup[candidate].EntityId != candidate) {
                 GlobalLookup.Remove(candidate);
                 return true;
             }
             return false;
         }
-
     }
 }

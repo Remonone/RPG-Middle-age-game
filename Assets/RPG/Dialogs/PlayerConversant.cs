@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using RPG.Core.Predicate;
-using RPG.Core.Predicate.Interfaces;
 using UnityEngine;
 
 namespace RPG.Dialogs {

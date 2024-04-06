@@ -18,6 +18,7 @@ namespace RPG.Combat {
 
         [SerializeField] private Cooldown _cooldown;
         [SerializeField] private bool _shouldResetOnAttack;
+        [SerializeField] private NetworkObject _networkReference;
 
         private BaseStats _stats;
         private Mover _mover;
@@ -83,7 +84,7 @@ namespace RPG.Combat {
             var objToHit = PredicateWorker.GetPredicateMonoBehaviour((string)arguments[0]);
             if (objToHit.GetComponent<Health>() is not { } target) return null;
             var report =
-                DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), gameObject);
+                DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), _networkReference);
             target.HitEntity(report);
             return true;
         }
@@ -107,7 +108,7 @@ namespace RPG.Combat {
             if (!IsTargetInRange()) return;
             EquipmentItem weapon = _equipment.GetEquipmentItem(EquipmentSlot.WEAPON);
             DamageType type = weapon != null ? weapon.Type : DamageType.PHYSICAL;
-            var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), type, gameObject); 
+            var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), type, _networkReference); 
             OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
             _target.HitEntity(report);
             if (_shouldResetOnAttack) _scheduler.SwitchAction(null);

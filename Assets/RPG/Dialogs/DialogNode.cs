@@ -12,7 +12,6 @@ namespace RPG.Dialogs {
         [SerializeField] private List<string> _children = new();
         [SerializeField] private Rect _rectangle = new(10,10,200,100);
         [SerializeField] private bool _isPlayer;
-        // TODO: Invoke predicate worker on entering and exiting dialog node
         [SerializeField] private string _onExitPredicate;
         [SerializeField] private string _onEnterPredicate;
 

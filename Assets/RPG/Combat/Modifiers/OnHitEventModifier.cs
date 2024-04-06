@@ -16,8 +16,10 @@ namespace RPG.Combat.Modifiers {
             Performer.OnHit += OnHit;
         }
         private void OnHit(DamageReport report) {
-            var attackerID = ((PredicateMonoBehaviour)report.Attacker.GetComponent(_performerComponent)).EntityID;
-            var targetID = ((PredicateMonoBehaviour)report.Target.GetComponent(_performToComponent)).EntityID;
+            report.Attacker.TryGet(out var attacker);
+            report.Target.TryGet(out var target);
+            var attackerID = ((PredicateMonoBehaviour)attacker.GetComponent(_performerComponent)).EntityID;
+            var targetID = ((PredicateMonoBehaviour)target.GetComponent(_performToComponent)).EntityID;
             var preparedString = string.Format(_actionPredicate, attackerID, report.Damage, report.Type,
                 targetID, Strength);
             PredicateWorker.ExecutePredicate(preparedString, attackerID, out _);

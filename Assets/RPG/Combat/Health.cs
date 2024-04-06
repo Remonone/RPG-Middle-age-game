@@ -23,8 +23,12 @@ namespace RPG.Combat {
     /// </list> 
     /// </summary>
     public class Health : NetworkBehaviour, ISaveable, IPredicateHandler {
-        [ReadOnly] [SerializeField] private NetworkVariable<float> _currentHealth = new();
-        [ReadOnly] [SerializeField] private NetworkVariable<float> _maxHealth = new();
+
+        private LazyValue<float> _maxHealth;
+        private LazyValue<float> _currentHealth;
+        
+        public NetworkVariable<float> _targetNetHealth = new();
+        public NetworkVariable<float> _targetNetMaxHealth = new();
         [SerializeField] private Animator _animator;
 
         private BaseStats _stats;
@@ -40,9 +44,25 @@ namespace RPG.Combat {
 
         private void Awake() {
             _stats = GetComponent<BaseStats>();
+            _maxHealth = new LazyValue<float>(OnHealthInit);
+            _currentHealth = new LazyValue<float>(OnHealthInit);
+        }
+
+        private void OnCurrentHealthChange(float oldValue, float newValue) {
+            _targetNetHealth.Value = newValue;
+        }
+        private void OnMaxHealthChange(float oldValue, float newValue) {
+            _targetNetMaxHealth.Value = newValue;
+        }
+        private float OnHealthInit() {
+            return _stats.GetStatValue(Stat.BASE_HEALTH);
         }
 
         public override void OnNetworkSpawn() {
+            if (IsServer) {
+                _maxHealth.OnValueChanged += OnMaxHealthChange;
+                _currentHealth.OnValueChanged += OnCurrentHealthChange;
+            }
             if (!IsOwner) return;
             TrackHealthChangeServerRpc();
         }
@@ -74,6 +94,27 @@ namespace RPG.Combat {
 
         public void HitEntity(DamageReport report) {
             // Scaling resistance percent from actual resist(can explain later)
+            if (IsServer) return;
+            GetHitServerRpc(report);
+        }
+
+        [ServerRpc]
+        private void GetHitServerRpc(DamageReport report, ServerRpcParams serverRpcParams = default) {
+            var resistanceScale = 1 / (1 + Math.Pow(2, -_stats.GetStatValue((Stat)(int)report.Type))); 
+            _currentHealth.Value = (float)Math.Max(_currentHealth.Value - report.Damage * resistanceScale, 0);
+            OnHit?.Invoke(report);
+            OnHealthChanged?.Invoke(_currentHealth.Value);
+            if (_currentHealth.Value <= 0) Die();
+            ClientRpcParams clientRpcParams = new ClientRpcParams {
+                Send = {
+                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
+                }
+            };
+            GetHitClientRpc(report, clientRpcParams);
+        }
+
+        [ClientRpc]
+        private void GetHitClientRpc(DamageReport report, ClientRpcParams clientRpcParams = default) {
             var resistanceScale = 1 / (1 + Math.Pow(2, -_stats.GetStatValue((Stat)(int)report.Type))); 
             _currentHealth.Value = (float)Math.Max(_currentHealth.Value - report.Damage * resistanceScale, 0);
             OnHit?.Invoke(report);
@@ -81,6 +122,7 @@ namespace RPG.Combat {
             _animator.SetTrigger(Hit);
             if (_currentHealth.Value <= 0) Die();
         }
+        
         private void Die() {
             _animator.SetBool(Dead, true);
             OnDie?.Invoke();
