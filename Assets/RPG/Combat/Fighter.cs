@@ -11,8 +11,6 @@ using RPG.Utils;
 using Unity.Netcode;
 using UnityEngine;
 
-// TODO: REDUCE DEPENDENCY LIST
-
 namespace RPG.Combat {
     public class Fighter : NetworkBehaviour, IAction, IPredicateHandler{
 
@@ -42,21 +40,42 @@ namespace RPG.Combat {
         }
         
         //[ServerRpc]
-        public void Attack(SelectableEnemy target) {
+        public void Attack(SelectableTarget target) {
             if (!IsOwner) return;
-            
+            var reference = target.GetComponent<NetworkObjectReference>();
+            AttackServerRpc(reference);
         }
 
-        // [ServerRpc]
-        // private void AttackServerRpc() {
-        //     if (!target._isTargetable) return;
-        //     var health = target.GetComponent<Health>();
-        //     if (health == null || !health.IsAlive) return;
-        //     _scheduler.SwitchAction(this);
-        //     _target = health;
-        // }
+        [ServerRpc]
+        private void AttackServerRpc(NetworkObjectReference attackTo, ServerRpcParams serverRpcParams = default) {
+            attackTo.TryGet(out var targetNet);
+            var target = targetNet.GetComponent<SelectableTarget>();
+            if (!target.Targetable) return;
+            var health = target.GetComponent<Health>();
+            if (health == null || !health.IsAlive) return;
+            _scheduler.SwitchAction(this);
+            _target = health;
+
+            ClientRpcParams clientRpcParams = new ClientRpcParams {
+                Send = {
+                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
+                }
+            };
+            AttackClientRpc(attackTo, clientRpcParams);
+        }
         
-        
+        [ClientRpc]
+        private void AttackClientRpc(NetworkObjectReference attackTo, ClientRpcParams clientRpcParams = default) {
+            attackTo.TryGet(out var targetNet);
+            var target = targetNet.GetComponent<SelectableTarget>();
+            if (!target.Targetable) return;
+            var health = target.GetComponent<Health>();
+            if (health == null || !health.IsAlive) return;
+            _scheduler.SwitchAction(this);
+            _target = health;
+        }
+
+
         public void Attack(Health target) {
             if (target == null || !target.IsAlive) return;
             _scheduler.SwitchAction(this);
@@ -85,7 +104,8 @@ namespace RPG.Combat {
             if (objToHit.GetComponent<Health>() is not { } target) return null;
             var report =
                 DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), _networkReference);
-            target.HitEntity(report);
+            var netObject = objToHit.GetComponent<NetworkObject>();
+            target.HitEntity(report, netObject.NetworkObjectId);
             return true;
         }
 
@@ -104,15 +124,22 @@ namespace RPG.Combat {
         }
 
         void Hit() {
+            HitServerRpc();
+        }
+        
+        [ServerRpc]
+        private void HitServerRpc() {
             if (_target == null) return;
             if (!IsTargetInRange()) return;
             EquipmentItem weapon = _equipment.GetEquipmentItem(EquipmentSlot.WEAPON);
             DamageType type = weapon != null ? weapon.Type : DamageType.PHYSICAL;
             var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), type, _networkReference); 
             OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
-            _target.HitEntity(report);
+            var netObject = _target.GetComponent<NetworkObject>();
+            _target.HitEntity(report, netObject.NetworkObjectId);
             if (_shouldResetOnAttack) _scheduler.SwitchAction(null);
         }
+        
 
         private bool IsTargetInRange() {
             var distanceToTarget = Vector3.Distance(transform.position, _target.transform.position);

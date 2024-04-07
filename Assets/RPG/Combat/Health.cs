@@ -92,14 +92,9 @@ namespace RPG.Combat {
         }
 
 
-        public void HitEntity(DamageReport report) {
+        public void HitEntity(DamageReport report, ulong target) {
+            if (!IsServer) return;
             // Scaling resistance percent from actual resist(can explain later)
-            if (IsServer) return;
-            GetHitServerRpc(report);
-        }
-
-        [ServerRpc]
-        private void GetHitServerRpc(DamageReport report, ServerRpcParams serverRpcParams = default) {
             var resistanceScale = 1 / (1 + Math.Pow(2, -_stats.GetStatValue((Stat)(int)report.Type))); 
             _currentHealth.Value = (float)Math.Max(_currentHealth.Value - report.Damage * resistanceScale, 0);
             OnHit?.Invoke(report);
@@ -107,7 +102,7 @@ namespace RPG.Combat {
             if (_currentHealth.Value <= 0) Die();
             ClientRpcParams clientRpcParams = new ClientRpcParams {
                 Send = {
-                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
+                    TargetClientIds = new[] { target }
                 }
             };
             GetHitClientRpc(report, clientRpcParams);

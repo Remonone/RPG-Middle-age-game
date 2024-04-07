@@ -4,6 +4,7 @@
         public const float BACKGROUND_SIZE = 50f;
         public const string ITEMS_PATH = "Items";
         public const string QUESTS_PATH = "Quests";
+        public const string DIALOGS_PATH = "Dialogs";
         
         
         // SERVER

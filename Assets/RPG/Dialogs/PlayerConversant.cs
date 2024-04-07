@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RPG.Core;
 using RPG.Core.Predicate;
+using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Dialogs {
-    public class PlayerConversant : MonoBehaviour {
+    public class PlayerConversant : MonoBehaviour, IAction {
         [SerializeField] private string _entityName;
+        [SerializeField] private float _conversationRange;
 
         private Dialog _dialog;
         private DialogNode _currentNode;
         private bool _isChoosing;
         private AIConversant _aiConversant;
         private PredicateMonoBehaviour _predicate;
+        private TaskScheduler _scheduler;
 
         public event Action OnUpdate;
 
@@ -25,24 +30,43 @@ namespace RPG.Dialogs {
 
         public IEnumerable<DialogNode> GetChoices() => _dialog.GetPlayerChildren(_currentNode);
 
-        public void StartDialog(Dialog dialog, AIConversant associate) {
-            _aiConversant = associate;
-            _dialog = dialog;
-            _currentNode = dialog.GetRootNode();
+        private void Awake() {
+            _predicate = GetComponent<PredicateMonoBehaviour>();
+            _scheduler = GetComponent<TaskScheduler>();
+        }
+        
+        private void Update() {
+            if (ReferenceEquals(_aiConversant, null)) return;
+            if (IsConversantInRange()) {
+                InitDialog();
+            }
+        }
+        private void InitDialog() {
+            _currentNode = _dialog.GetRootNode();
             OnEnterAction();
             OnUpdate?.Invoke();
         }
 
-        private void Awake() {
-            _predicate = GetComponent<PredicateMonoBehaviour>();
+        public void StartDialog(Dialog dialog, AIConversant associate) {
+            _aiConversant = associate;
+            _dialog = dialog;
+            _scheduler.SwitchAction(this);
+            StartDialogServerRpc(new FixedString512Bytes(dialog.name), associate.GetComponent<NetworkObject>());
+        }
+
+        [ServerRpc]
+        private void StartDialogServerRpc(FixedString512Bytes dialogName, NetworkObjectReference conversant) {
+            conversant.TryGet(out var conversantNet);
+            var dialog = Dialog.GetDialogByName(dialogName.Value);
+            var associate = conversantNet.GetComponent<AIConversant>();
+            _aiConversant = associate;
+            _dialog = dialog;
+            _scheduler.SwitchAction(this);
         }
 
         public void Quit() {
             OnExitAction();
-            _aiConversant = null;
-            _currentNode = null;
-            _dialog = null;
-            _isChoosing = false;
+            Cancel();
             OnUpdate?.Invoke();
         }
 
@@ -81,10 +105,32 @@ namespace RPG.Dialogs {
             _currentNode = choice;
             TriggerAction(_currentNode.OnEnterPredicate);
             _isChoosing = !_isChoosing;
+            SelectChoiceServerRpc(choice.Rectangle.position);
+        }
+
+        [ServerRpc]
+        public void SelectChoiceServerRpc(Vector2 choicePosition) {
+            TriggerAction(_currentNode.OnExitPredicate);
+            _currentNode = _dialog.GetNode(choicePosition);
+            TriggerAction(_currentNode.OnEnterPredicate);
+            _isChoosing = !_isChoosing;
             Next();
         }
+        
         public bool HasNext() {
             return _dialog.GetAllChildren(_currentNode).Any();
+        }
+        
+        private bool IsConversantInRange() {
+            var distanceToTarget = Vector3.Distance(transform.position, _aiConversant.transform.position);
+            return distanceToTarget <= _conversationRange;
+        }
+        
+        public void Cancel() {
+            _aiConversant = null;
+            _currentNode = null;
+            _dialog = null;
+            _isChoosing = false;
         }
     }
 }

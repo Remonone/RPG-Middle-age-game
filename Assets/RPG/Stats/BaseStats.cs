@@ -37,6 +37,23 @@ namespace RPG.Stats {
         }
 
         public void AddExperience(float amount) {
+            AddExperienceServerRpc(amount);
+        }
+        
+        [ServerRpc]
+        private void AddExperienceServerRpc(float amount) {
+            var exp = Stat.EXPERIENCE_TO_PROMOTE;
+            _experience.Value += amount;
+            if (_experience.Value > _stats.GetBaseStat(exp) + _stats.GetLevelStat(exp, _level.Value)) {
+                _experience.Value = 0F;
+                _level.Value += 1;
+                OnLevelUp?.Invoke();
+            }
+            AddExperienceClientRpc(amount);
+        }
+        
+        [ClientRpc]
+        private void AddExperienceClientRpc(float amount) {
             var exp = Stat.EXPERIENCE_TO_PROMOTE;
             _experience.Value += amount;
             if (_experience.Value > _stats.GetBaseStat(exp) + _stats.GetLevelStat(exp, _level.Value)) {
@@ -45,7 +62,7 @@ namespace RPG.Stats {
                 OnLevelUp?.Invoke();
             }
         }
-        
+
         public float GetBaseStat(Stat stat) => _stats.GetBaseStat(stat);
 
         public float GetStatValue(Stat stat) {

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RPG.Quests;
+using RPG.Utils.Constants;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +12,8 @@ namespace RPG.Dialogs {
         [SerializeField] private List<DialogNode> _nodes = new();
 
         private Dictionary<string, DialogNode> _nodeLookup = new();
+
+        private static Dictionary<string, Dialog> _dialogDictionary = new();
 
         public DialogNode GetRootNode() => _nodes[0];
 
@@ -87,6 +91,25 @@ namespace RPG.Dialogs {
                 _nodeLookup[node.name] = node;
             }
         }
+        
+        public static Dialog GetDialogByName(string questName) {
+            _dialogDictionary ??= GetFilledDialogDictionary();
+            return _dialogDictionary[questName];
+        }
+        
+        private static Dictionary<string, Dialog> GetFilledDialogDictionary() {
+            var questDictionary = new Dictionary<string, Dialog>();
+            var dialogs = Resources.LoadAll<Dialog>(PropertyConstants.DIALOGS_PATH);
+            foreach (var dialog in dialogs) {
+                if (questDictionary.ContainsKey(dialog.name)) {
+                    Debug.LogError($"There's a duplicate for objects: {questDictionary[dialog.name]} and {dialog}");
+                    continue;
+                }
+                _dialogDictionary.Add(dialog.name, dialog);
+            }
+            return questDictionary;
+        }
+        
 #endif
         
         public void OnBeforeSerialize() {
