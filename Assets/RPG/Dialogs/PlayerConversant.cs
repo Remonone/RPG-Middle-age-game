@@ -8,7 +8,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Dialogs {
-    public class PlayerConversant : MonoBehaviour, IAction {
+    public class PlayerConversant : NetworkBehaviour, IAction {
         [SerializeField] private string _entityName;
         [SerializeField] private float _conversationRange;
 
@@ -87,32 +87,44 @@ namespace RPG.Dialogs {
         
         private void OnEnterAction() {
             if (ReferenceEquals(_dialog, null)) return;
-            TriggerAction(_currentNode.OnEnterPredicate);
+            TriggerAction(_currentNode.OnEnterPredicate, GetIdFromExecutor(_currentNode.EnterExecutor));
         }
 
         private void OnExitAction() {
             if (ReferenceEquals(_dialog, null)) return;
-            TriggerAction(_currentNode.OnExitPredicate);
+            TriggerAction(_currentNode.OnExitPredicate, GetIdFromExecutor(_currentNode.ExitExecutor));
         }
-        // BUG: Need to pass component ID; Use Predicate as Component ID Receiver
-        private void TriggerAction(string actionPredicate) {
-            if (actionPredicate == "") return;
-            PredicateWorker.ExecutePredicate(actionPredicate, _predicate.EntityID, out _);
+        
+        private void TriggerAction(string actionPredicate, string executor) {
+            if (actionPredicate == "" || IsServer) return;
+            var formattedPredicate = string.Format(actionPredicate, executor);
+            PredicateWorker.ExecutePredicate(formattedPredicate, _predicate.EntityID, out _);
+        }
+
+        private string GetIdFromExecutor(Executor executor) {
+            switch (executor) {
+                case Executor.Player:
+                    return GetComponent<PredicateMonoBehaviour>().EntityID;
+                case Executor.Bot:
+                    return _aiConversant.GetComponent<PredicateMonoBehaviour>().EntityID;
+                default:
+                    return "";
+            }
         }
 
         public void SelectChoice(DialogNode choice) {
-            TriggerAction(_currentNode.OnExitPredicate);
+            TriggerAction(_currentNode.OnExitPredicate, GetIdFromExecutor(_currentNode.ExitExecutor));
             _currentNode = choice;
-            TriggerAction(_currentNode.OnEnterPredicate);
+            TriggerAction(_currentNode.OnEnterPredicate, GetIdFromExecutor(_currentNode.ExitExecutor));
             _isChoosing = !_isChoosing;
             SelectChoiceServerRpc(choice.Rectangle.position);
         }
 
         [ServerRpc]
         public void SelectChoiceServerRpc(Vector2 choicePosition) {
-            TriggerAction(_currentNode.OnExitPredicate);
+            TriggerAction(_currentNode.OnExitPredicate, GetIdFromExecutor(_currentNode.ExitExecutor));
             _currentNode = _dialog.GetNode(choicePosition);
-            TriggerAction(_currentNode.OnEnterPredicate);
+            TriggerAction(_currentNode.OnEnterPredicate, GetIdFromExecutor(_currentNode.EnterExecutor));
             _isChoosing = !_isChoosing;
             Next();
         }

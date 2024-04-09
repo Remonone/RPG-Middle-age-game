@@ -102,9 +102,9 @@ namespace RPG.Combat {
         private object PerformHit(object[] arguments) {
             var objToHit = PredicateWorker.GetPredicateMonoBehaviour((string)arguments[0]);
             if (objToHit.GetComponent<Health>() is not { } target) return null;
-            var report =
-                DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), _networkReference);
             var netObject = objToHit.GetComponent<NetworkObject>();
+            var report =
+                DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), netObject);
             target.HitEntity(report, netObject.NetworkObjectId);
             return true;
         }

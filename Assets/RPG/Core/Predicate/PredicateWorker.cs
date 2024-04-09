@@ -40,9 +40,6 @@ namespace RPG.Core.Predicate {
         public static bool? ExecutePredicate(string parse, string sessionID, out object result) {
             try {
                 var list = Lexer.LexAnalysis(parse);
-                // foreach (var item in list) {
-                //     Debug.Log("Type: " + item.type + "; Value: " + item.text);
-                // }
                 if (!VariableStore.ContainsKey(sessionID)) VariableStore[sessionID] = new Dictionary<string, object>();
                 var treeNode = Parser.ParseCode(list);
                 result = RunNodes(treeNode, sessionID);
@@ -67,7 +64,7 @@ namespace RPG.Core.Predicate {
                 var sender = (SenderNode)node;
                 var receiver = sender.Receiver.ID;
                 var id = Convert.ToString(RunNodes(receiver, sessionID));
-                string[] content = id.Split('.');
+                string[] content = id.Split(',');
                 var entity = PredicateBehavioursStore[content[0]];
                 if (!ReferenceEquals(entity, null) && entity.TryGetHandler(content[1], out IPredicateHandler handler)) {
                     var args = sender.Action.Args;
