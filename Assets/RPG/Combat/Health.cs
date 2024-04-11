@@ -74,8 +74,8 @@ namespace RPG.Combat {
 
         public object Predicate(string command, object[] arguments) {
             return command switch {
-                "GetCurrentHealth" => _currentHealth,
-                "GetTotalHealth" => _maxHealth,
+                "GetCurrentHealth" => _currentHealth.Value,
+                "GetTotalHealth" => _maxHealth.Value,
                 _ => "" 
             };
         }

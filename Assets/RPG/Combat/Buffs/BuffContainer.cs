@@ -4,10 +4,12 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using RPG.Core.Predicate.Interfaces;
 using RPG.Saving;
+using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Combat.Buffs {
-    public class BuffContainer : MonoBehaviour, ISaveable, IPredicateHandler {
+    public class BuffContainer : NetworkBehaviour, ISaveable, IPredicateHandler {
         
         private List<BuffProperties> _buffList = new();
         
@@ -20,6 +22,14 @@ namespace RPG.Combat.Buffs {
             }
         }
 
+        [ServerRpc]
+        private void AddBuffServerRpc(FixedString128Bytes buffId, int strength) {
+            Buff buff = Buff.GetBuffById(buffId.Value);
+            if (ReferenceEquals(buff, null)) return;
+            AddBuff(buff, strength);
+        }
+        
+        
         private void AddBuff(Buff buff, int strength) {
             if (strength < 1) return;
             var prop = _buffList.SingleOrDefault(prop => prop.Buff == buff);
@@ -41,6 +51,13 @@ namespace RPG.Combat.Buffs {
             buffProp.Buff.RegisterBuff(holder: gameObject);
         }
 
+        [ServerRpc]
+        private void RemoveBuffServerRpc(FixedString128Bytes buffId, int strength) {
+            Buff buff = Buff.GetBuffById(buffId.Value);
+            if (ReferenceEquals(buff, null)) return;
+            RemoveBuff(buff, strength);
+        }
+
         private void RemoveBuff(Buff buff, int quantity) {
             var prop = _buffList.SingleOrDefault(prop => prop.Buff == buff);
             if (prop == null) return;
@@ -51,6 +68,13 @@ namespace RPG.Combat.Buffs {
             }
             prop.Strength -= quantity;
             prop.Buff.SetStrength(prop.Strength);
+        }
+
+        [ServerRpc]
+        private void ClearBuffServerRpc(FixedString128Bytes buffId) {
+            Buff buff = Buff.GetBuffById(buffId.Value);
+            if (ReferenceEquals(buff, null)) return;
+            ClearBuff(buff);
         }
 
         private bool ClearBuff(Buff buff) {
@@ -109,6 +133,7 @@ namespace RPG.Combat.Buffs {
             string buffID = Convert.ToString(arguments[0]);
             if (string.IsNullOrWhiteSpace(buffID)) return false;
             Buff buffToClear = Buff.GetBuffById(buffID);
+            ClearBuffServerRpc(buffID);
             return ClearBuff(buffToClear);
         }
         
@@ -126,6 +151,7 @@ namespace RPG.Combat.Buffs {
             Buff buff = Buff.GetBuffById(buffID);
             if (ReferenceEquals(buff, null)) return false;
             RemoveBuff(buff, strengthValue);
+            RemoveBuffServerRpc(buffID, strengthValue);
             return true;
         }
         
@@ -138,6 +164,7 @@ namespace RPG.Combat.Buffs {
             Buff buff = Buff.GetBuffById(buffID);
             if (ReferenceEquals(buff, null)) return false;
             AddBuff(buff, strengthValue);
+            AddBuffServerRpc(buffID, strengthValue);
             return true;
         }
     }

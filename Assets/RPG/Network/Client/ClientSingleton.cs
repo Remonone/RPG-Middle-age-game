@@ -6,6 +6,7 @@ namespace RPG.Network.Client {
     public class ClientSingleton : MonoBehaviour {
 
         private static ClientSingleton _instance;
+        public static bool IsInitiated { get; private set; } 
 
         private ClientGameManager _manager;
 
@@ -35,6 +36,7 @@ namespace RPG.Network.Client {
             _manager = new ClientGameManager();
 
             await _manager.InitClient();
+            IsInitiated = true;
         }
     }
 }

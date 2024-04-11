@@ -4,6 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using RPG.Core.Predicate.Interfaces;
 using RPG.Core.Predicate.Nodes;
+using RPG.Network.Client;
 using UnityEngine;
 
 namespace RPG.Core.Predicate {
@@ -38,6 +39,10 @@ namespace RPG.Core.Predicate {
         /// <param name="result">output from parse string</param>
         /// <returns>True: has result, False: no result, NULL: unexpected error during parsing...</returns>
         public static bool? ExecutePredicate(string parse, string sessionID, out object result) {
+            if (!ClientSingleton.IsInitiated) {
+                result = "";
+                return null;
+            }
             try {
                 var list = Lexer.LexAnalysis(parse);
                 if (!VariableStore.ContainsKey(sessionID)) VariableStore[sessionID] = new Dictionary<string, object>();
