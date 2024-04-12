@@ -14,11 +14,11 @@ namespace RPG.Network.Client {
         
         public static ClientSingleton Instance {
             get {
-                if (_instance != null) return _instance;
+                if (ReferenceEquals(_instance, null)) return _instance;
 
                 _instance = FindObjectOfType<ClientSingleton>();
 
-                if (_instance == null) {
+                if (ReferenceEquals(_instance, null)) {
                     Debug.LogError("No ClientSingleton initialized!");
                     return null;
                 }

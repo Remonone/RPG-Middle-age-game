@@ -1,6 +1,6 @@
-﻿using RPG.Creatures.Player;
+﻿using RPG.Core.Cursors;
+using RPG.Creatures.Player;
 using RPG.Stats.Relations;
-using RPG.UI.Cursors;
 using UnityEngine;
 
 namespace RPG.Combat {

@@ -1,7 +1,7 @@
-﻿using System;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using RPG.Network.Client;
 using RPG.Network.Controllers;
+using RPG.UI.Elements.Snackbar;
 using RPG.Utils.UI;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -44,6 +44,15 @@ namespace RPG.UI {
             _signInButton.clicked -= SendSignInRequest;
             _cancelButton.clicked -= OnCancel;
             _signUpButton.clicked -= RegisterAccount;
+        }
+
+        private void Start() {
+            _root.Q<VisualElement>().Add(new SnackbarElement {
+                Text = "This is an error snackbar",
+                Type = SnackbarType.Error,
+                Position = SnackbarPosition.TopLeft,
+                TimeToClose = 10000f
+            });
         }
 
         void SendSignInRequest() {

@@ -1,6 +1,6 @@
 ﻿using RPG.Combat;
+using RPG.Core.Cursors;
 using RPG.Creatures.Player;
-using RPG.UI.Cursors;
 using UnityEngine;
 
 namespace RPG.Dialogs {

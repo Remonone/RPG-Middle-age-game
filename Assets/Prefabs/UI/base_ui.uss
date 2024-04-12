@@ -57,3 +57,54 @@
     margin-top: 0;
     margin-bottom: 0;
 }
+
+.snackbar {
+    border-radius: 10px;
+    position: absolute;
+    padding: 10px 20px;
+}
+
+.snackbar Label {
+    padding: 0;
+    margin: 0;
+}
+
+.snackbar.Success {
+    background-color: rgb(237, 247, 237);
+    color: rgb(30, 70, 32);
+}
+
+.snackbar.Error {
+    background-color: rgb(255, 228, 225);
+    color: rgb(169, 17, 1);
+}
+
+.snackbar.Info {
+    background-color: rgb(234, 234, 255);
+    color: rgb(75, 97, 209);
+}
+
+.snackbar.Debug {
+    background-color: rgb(255,255,255);
+    color: rgb(50,50,100);
+}
+
+.TopLeft {
+    top: 20px;
+    left: 20px;
+}
+
+.TopRight {
+    top: 20px;
+    right: 20px;
+}
+
+.BottomLeft {
+    bottom: 20px;
+    left: 20px;
+}
+
+.BottomRight {
+    bottom: 20px;
+    right: 20px;
+}
