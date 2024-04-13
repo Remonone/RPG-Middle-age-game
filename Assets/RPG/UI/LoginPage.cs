@@ -22,6 +22,9 @@ namespace RPG.UI {
         private Button _signUpButton;
         private Button _signInButton;
         private Button _cancelButton;
+
+        private SnackbarElement _snackbar;
+        
         private bool _isFailed;
         private bool _isConnected;
         
@@ -32,6 +35,7 @@ namespace RPG.UI {
             _signUpButton = _root.Q<Button>("SignUp");
             _signInButton = _root.Q<Button>("SignIn");
             _cancelButton = _root.Q<Button>("Exit");
+            _snackbar = _root.Q<SnackbarElement>();
         }
 
         private void OnEnable() {
@@ -46,19 +50,17 @@ namespace RPG.UI {
             _signUpButton.clicked -= RegisterAccount;
         }
 
-        private void Start() {
-            _root.Q<VisualElement>().Add(new SnackbarElement {
-                Text = "This is an error snackbar",
-                Type = SnackbarType.Error,
-                Position = SnackbarPosition.TopLeft,
-                TimeToClose = 10000f
-            });
-        }
 
         void SendSignInRequest() {
             if (_isConnected) return;
             if (DocumentUtils.CheckOnEmptyValues(_loginField, _passwordField)) return;
-            StartCoroutine(AuthenticationController.SignIn(_loginField.value, _passwordField.value, OnLogin));
+            StartCoroutine(AuthenticationController.SignIn(_loginField.value, _passwordField.value, OnLogin, OnFail));
+        }
+        private void OnFail(JToken obj) {
+            _snackbar.Position = SnackbarPosition.BottomLeft;
+            _snackbar.Type = SnackbarType.Error;
+            _snackbar.Text = "Some error occured during processing";
+            _snackbar.ShowSnackbar(5000);
         }
 
         private void OnLogin(JToken data) {

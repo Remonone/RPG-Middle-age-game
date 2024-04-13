@@ -8,17 +8,29 @@ namespace RPG.UI.Elements.Snackbar {
         public string Text { get; set; }
         public SnackbarType Type { get; set; }
         public SnackbarPosition Position { get; set; }
-        public float TimeToClose { get; set; }
         
-        public new class UxmlFactory : UxmlFactory<SnackbarElement, UxmlTraits> {}
+        private Timer _timer;
+
+        public Timer Timer {
+            get => _timer;
+            private set => _timer = value;
+        }
+
+        public void ShowSnackbar(float time) {
+            ClearClassList();
+            AddToClassList("snackbar");
+            AddToClassList(Position.ToString());
+            AddToClassList(Type.ToString());
+            _timer.Interval = time;
+            _timer.Start();
+        }
+
+        public new class UxmlFactory : UxmlFactory<SnackbarElement, UxmlTraits> { }
 
         public new class UxmlTraits : VisualElement.UxmlTraits {
             private UxmlStringAttributeDescription _text = new() { name = "value", defaultValue = "" };
             private UxmlEnumAttributeDescription<SnackbarType> _type = new() { name = "type", defaultValue = SnackbarType.Info };
             private UxmlEnumAttributeDescription<SnackbarPosition> _position = new() { name = "position", defaultValue = SnackbarPosition.BottomRight };
-            private UxmlFloatAttributeDescription _timeToClose = new() { name = "time_to_close", defaultValue = 10000F };
-            
-            private Timer _timer;
             
             public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription {
                 get { yield break; }
@@ -40,15 +52,15 @@ namespace RPG.UI.Elements.Snackbar {
                 snackbar.Position = _position.GetValueFromBag(bag, cc);
                 snackbar.AddToClassList(snackbar.Position.ToString());
 
-                snackbar.TimeToClose = _timeToClose.GetValueFromBag(bag, cc);
-                _timer = new Timer();
-                _timer.Interval = snackbar.TimeToClose;
-                _timer.Elapsed += (_, _) => {
-                    snackbar.RemoveFromHierarchy();
+                snackbar.Timer = new Timer();
+                snackbar.Timer.AutoReset = false;
+                
+                snackbar.AddToClassList("Hidden");
+                
+                snackbar.Timer.Elapsed += (_, _) => {
+                    snackbar.AddToClassList("Hidden");
                 };
-
-                _timer.AutoReset = false;
-                _timer.Enabled = true;
+                
             }
         }
         

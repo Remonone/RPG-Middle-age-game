@@ -15,5 +15,6 @@
                 <ui:Button text="Exit" display-tooltip-when-elided="true" name="Exit" style="width: auto; flex-grow: 1;" />
             </ui:VisualElement>
         </ui:VisualElement>
+        <RPG.UI.Elements.Snackbar.SnackbarElement value="test" type="Error" position="TopLeft" name="SnackbarElement" time_to_close="100" />
     </ui:VisualElement>
 </ui:UXML>

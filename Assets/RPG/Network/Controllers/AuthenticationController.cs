@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 namespace RPG.Network.Controllers {
     public static class AuthenticationController {
-        public static IEnumerator SignIn(string login, string password, Action<JToken> onLogin, int attemptCount = 10) {
+        public static IEnumerator SignIn(string login, string password, Action<JToken> onLogin, Action<JToken> onFail, int attemptCount = 10) {
             bool isFailed = false;
             string result = "";
             for (int i = 0; i < attemptCount && !isFailed && string.IsNullOrEmpty(result); i++) {
@@ -28,8 +28,7 @@ namespace RPG.Network.Controllers {
             }
 
             if (string.IsNullOrEmpty(result)) {
-                Debug.LogError(isFailed ? "Error during authentication..." : 
-                    "Connection Timeout.");
+                onFail(null);
                 yield break;
             }
             JToken data = JToken.Parse(result);

@@ -64,6 +64,10 @@
     padding: 10px 20px;
 }
 
+.snackbar.Hidden {
+    visibility: hidden;
+}
+
 .snackbar Label {
     padding: 0;
     margin: 0;
@@ -85,8 +89,8 @@
 }
 
 .snackbar.Debug {
-    background-color: rgb(255,255,255);
-    color: rgb(50,50,100);
+    background-color: rgb(255, 255, 255);
+    color: rgb(50, 50, 100);
 }
 
 .TopLeft {
