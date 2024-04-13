@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 262.38358, g: 325.10843, b: 430.30963, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -224,8 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e79664dafe542039bfa19184e9c6a16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentID: 
   _entityName: Dummy
+  _conversationRange: 0
 --- !u!1 &72007146 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1159351990771520630, guid: 91ad7bf144749b04ab484a680630a040,
@@ -6010,6 +6010,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Guardian
+      objectReference: {fileID: 0}
+    - target: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3131184015449607250, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}

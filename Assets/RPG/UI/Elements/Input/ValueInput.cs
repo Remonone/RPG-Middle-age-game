@@ -45,7 +45,13 @@ namespace RPG.UI.Elements.Input {
                 valueInput.Add(new Label(valueInput.Label));
 
                 valueInput.Value = _value.GetValueFromBag(bag, cc);
-                valueInput.Add(new TextField{value = valueInput.Value});
+                var input = new TextField { value = valueInput.Value };
+                valueInput.Add(input);
+                input.RegisterValueChangedCallback(evt => {
+                    if (evt.target is Label) return;
+
+                    valueInput.Value = evt.newValue;
+                });
                 
                 valueInput.Error = _error.GetValueFromBag(bag, cc);
                 valueInput.Add(new Label {

@@ -12,6 +12,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using static RPG.Utils.Constants.DataConstants;
 
 namespace RPG.Creatures.Player {
@@ -94,13 +95,20 @@ namespace RPG.Creatures.Player {
                 SetCursor(CursorType.EMPTY);
                 return;
             }
+
+            if (TransferToDifferentScene()) return;
             if (InteractWithCamera()) return;
             if (InteractWithUI()) return;
             if (InteractWithComponent()) return;
             if (MoveTowardPoint()) return;
             SetCursor(CursorType.EMPTY);
         }
-        
+        private bool TransferToDifferentScene() {
+            if (!_map["Transfer"].WasPerformedThisFrame()) return false;
+            SceneManager.LoadScene("Training Polygon");
+            return true;
+        }
+
         private bool InteractWithCamera() {
             if (!_map["Camera Rotation"].IsPressed()) return false;
             var mouseDelta = _map["Mouse Delta"].ReadValue<Vector2>();
@@ -128,10 +136,9 @@ namespace RPG.Creatures.Player {
         }
 
         private RaycastHit[] SortedRaycast() {
-            RaycastHit[] hits = new RaycastHit[10]; 
-            var hitAmount = Physics.RaycastNonAlloc(GetMouseRay(), hits);
-            var distances = new float[hitAmount];
-            for (var i = 0; i < hitAmount; i++) {
+            var hits = Physics.RaycastAll(GetMouseRay());
+            var distances = new float[hits.Length];
+            for (var i = 0; i < distances.Length; i++) {
                 distances[i] = hits[i].distance;
             }
             Array.Sort(distances, hits);

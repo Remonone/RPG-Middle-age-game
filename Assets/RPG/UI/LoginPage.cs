@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using RPG.Network.Client;
 using RPG.Network.Controllers;
+using RPG.UI.Elements.Input;
 using RPG.UI.Elements.Snackbar;
 using RPG.Utils.UI;
 using Unity.Netcode;
@@ -16,8 +17,8 @@ namespace RPG.UI {
 
         private VisualElement _root;
 
-        private TextField _loginField;
-        private TextField _passwordField;
+        private ValueInput _loginField;
+        private ValueInput _passwordField;
 
         private Button _signUpButton;
         private Button _signInButton;
@@ -30,8 +31,8 @@ namespace RPG.UI {
         
         private void Awake() {
             _root = _document.rootVisualElement;
-            _loginField = _root.Q<TextField>("Login");
-            _passwordField = _root.Q<TextField>("Password");
+            _loginField = _root.Q<ValueInput>("Login");
+            _passwordField = _root.Q<ValueInput>("Password");
             _signUpButton = _root.Q<Button>("SignUp");
             _signInButton = _root.Q<Button>("SignIn");
             _cancelButton = _root.Q<Button>("Exit");
@@ -54,7 +55,7 @@ namespace RPG.UI {
         void SendSignInRequest() {
             if (_isConnected) return;
             if (DocumentUtils.CheckOnEmptyValues(_loginField, _passwordField)) return;
-            StartCoroutine(AuthenticationController.SignIn(_loginField.value, _passwordField.value, OnLogin, OnFail));
+            StartCoroutine(AuthenticationController.SignIn(_loginField.Value, _passwordField.Value, OnLogin, OnFail));
         }
         private void OnFail(JToken obj) {
             _snackbar.Position = SnackbarPosition.BottomLeft;

@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using RPG.Network.Client;
 using RPG.Network.Controllers;
+using RPG.UI.Elements.Input;
 using RPG.Utils.UI;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -16,10 +17,10 @@ namespace RPG.UI {
 
         private VisualElement _root;
 
-        private TextField _loginField;
-        private TextField _usernameField;
-        private TextField _passwordField;
-        private TextField _confirmPasswordField;
+        private ValueInput _loginField;
+        private ValueInput _usernameField;
+        private ValueInput _passwordField;
+        private ValueInput _confirmPasswordField;
         private DropdownField _dropdown;
 
         private Button _signUpButton;
@@ -31,10 +32,10 @@ namespace RPG.UI {
             _root = _document.rootVisualElement;
             _dropdown = _root.Q<DropdownField>();
             InitDropdown();
-            _loginField = _root.Q<TextField>("Login");
-            _usernameField = _root.Q<TextField>("Username");
-            _passwordField = _root.Q<TextField>("Password");
-            _confirmPasswordField = _root.Q<TextField>("ConfirmPassword");
+            _loginField = _root.Q<ValueInput>("Login");
+            _usernameField = _root.Q<ValueInput>("Username");
+            _passwordField = _root.Q<ValueInput>("Password");
+            _confirmPasswordField = _root.Q<ValueInput>("ConfirmPassword");
             _signUpButton = _root.Q<Button>("Register");
             _cancelButton = _root.Q<Button>("Cancel");
         }
@@ -57,8 +58,8 @@ namespace RPG.UI {
         void SendSignUpRequest() {
             if (_isConnected) return;
             if (DocumentUtils.CheckOnEmptyValues(_loginField, _usernameField, _passwordField, _confirmPasswordField)) return;
-            if (_passwordField.value != _confirmPasswordField.value) return;
-            StartCoroutine(AuthenticationController.SignUp(_loginField.value, _usernameField.value, _passwordField.value, _dropdown.value, OnRegister));
+            if (_passwordField.Value != _confirmPasswordField.Value) return;
+            StartCoroutine(AuthenticationController.SignUp(_loginField.Value, _usernameField.Value, _passwordField.Value, _dropdown.value, OnRegister));
         }
 
         private void OnRegister(JToken data) {

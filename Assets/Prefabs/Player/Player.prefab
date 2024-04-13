@@ -2414,8 +2414,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stats: {fileID: 11400000, guid: 5aa3eece51b0e9446ad501f99091b193, type: 2}
-  _level: 2
-  _experience: 0
+  _level:
+    m_InternalValue: 0
+  _experience:
+    m_InternalValue: 0
 --- !u!114 &1541397424330717521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2431,6 +2433,7 @@ MonoBehaviour:
   _cooldown:
     _timeToReset: 1
   _shouldResetOnAttack: 0
+  _networkReference: {fileID: 0}
 --- !u!114 &2554701410160066476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2455,8 +2458,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b0924125744b23b723b5f346529977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHealth: 0
-  _maxHealth: 0
+  _targetNetHealth:
+    m_InternalValue: 0
+  _targetNetMaxHealth:
+    m_InternalValue: 0
   _animator: {fileID: 6799597165986895460}
 --- !u!114 &8708150651036845612
 MonoBehaviour:
@@ -2524,6 +2529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _entityName: Player
+  _conversationRange: 0
 --- !u!114 &5989623021214079980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2608,6 +2614,14 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
+    - m_Name: Transfer
+      m_Type: 1
+      m_ExpectedControlType: Button
+      m_Id: 6487ca93-8a07-4079-a737-cad53fca0be7
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
     m_Bindings:
     - m_Name: 
       m_Id: 01ea5194-9c98-4595-8a47-8b9995cb4b0f
@@ -2665,6 +2679,14 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Mouse Delta
       m_Flags: 0
+    - m_Name: 
+      m_Id: 96bed215-bb83-40ba-823a-652eec8720be
+      m_Path: <Keyboard>/f10
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Transfer
+      m_Flags: 0
   _cursors:
   - Type: 2
     Image: {fileID: 2800000, guid: aaa9d832f967d2c4f863066eaf3a277e, type: 3}
@@ -2683,6 +2705,7 @@ MonoBehaviour:
   _cameraRotationModifier: 0.5
   _cameraHolder: {fileID: 0}
   _cameraBehaviour: {fileID: 0}
+  _bar: {fileID: 0}
 --- !u!114 &5431978617928909791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2741,7 +2764,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fc28b2251414e0d98c0de0d740f1ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueIdentifier: 
+  uniqueIdentifier:
+    m_InternalValue:
+      utf8LengthInBytes: 0
+      bytes:
+        offset0000:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0
 --- !u!1 &9163236021900443580
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Village.unity
     guid: 5efc827b63e209e4795c5f002c22d731
+  - enabled: 1
+    path: Assets/Scenes/Training Polygon.unity
+    guid: 85bf5a41d64b3bc4d900a0d719512b47
   m_configObjects: {}

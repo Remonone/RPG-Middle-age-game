@@ -6,7 +6,11 @@ namespace RPG.Network.Client {
     public class ClientSingleton : MonoBehaviour {
 
         private static ClientSingleton _instance;
-        public static bool IsInitiated { get; private set; } 
+        private static bool _isInitiated;
+        public static bool IsInitiated { 
+            get => _isInitiated;
+            private set => _isInitiated = value;
+        } 
 
         private ClientGameManager _manager;
 
@@ -14,7 +18,7 @@ namespace RPG.Network.Client {
         
         public static ClientSingleton Instance {
             get {
-                if (ReferenceEquals(_instance, null)) return _instance;
+                if (!ReferenceEquals(_instance, null)) return _instance;
 
                 _instance = FindObjectOfType<ClientSingleton>();
 
