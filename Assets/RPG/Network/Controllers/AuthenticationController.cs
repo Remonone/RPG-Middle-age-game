@@ -9,9 +9,8 @@ using UnityEngine.Networking;
 namespace RPG.Network.Controllers {
     public static class AuthenticationController {
         public static IEnumerator SignIn(string login, string password, Action<JToken> onLogin, Action<JToken> onFail, int attemptCount = 10) {
-            bool isFailed = false;
-            string result = "";
-            for (int i = 0; i < attemptCount && !isFailed && string.IsNullOrEmpty(result); i++) {
+           string result = "";
+            for (int i = 0; i < attemptCount && string.IsNullOrEmpty(result); i++) {
                 using (UnityWebRequest www = UnityWebRequest.Get($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.FETCH_USER}?login={login}&password={password}")) {
                     yield return www.SendWebRequest();
                     switch (www.result) {
@@ -19,8 +18,10 @@ namespace RPG.Network.Controllers {
                             result = www.downloadHandler.text;
                             break;
                         case UnityWebRequest.Result.DataProcessingError:
-                            isFailed = true;
-                            break;
+                            
+                            result = www.downloadHandler.text;
+                            onFail(JToken.Parse(result));
+                            yield break;
                         case UnityWebRequest.Result.ConnectionError:
                             break;
                     }

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using RPG.Utils.FSM;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Core {
-    public sealed class GoapAgent : MonoBehaviour {
+    public sealed class GoapAgent : NetworkBehaviour {
         [SerializeField] private List<GoapAction> _availableActions = new();
         
         private Queue<GoapAction> _currentActions = new();
@@ -15,7 +16,8 @@ namespace RPG.Creatures.AI.Core {
         private FSM.FSMState _performActionState;
         private IGoap _provider;
 
-        private void Start() {
+        public override void OnNetworkSpawn() {
+            if (!IsServer) return;
             _provider = GetComponent<IGoap>();
             CreateIdleState();
             CreateMoveToState();
@@ -24,6 +26,7 @@ namespace RPG.Creatures.AI.Core {
         }
 
         private void Update() {
+            if (!IsServer) return;
             _stateMachine.Update(gameObject);
         }
 

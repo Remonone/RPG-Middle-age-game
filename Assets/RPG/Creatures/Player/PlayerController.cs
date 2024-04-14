@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Cinemachine;
 using Newtonsoft.Json.Linq;
 using RPG.Core;
 using RPG.Core.Cursors;
@@ -17,19 +18,23 @@ using static RPG.Utils.Constants.DataConstants;
 
 namespace RPG.Creatures.Player {
     public class PlayerController : NetworkBehaviour, IOrganisationWrapper {
-        [SerializeField] private Camera _camera;
         [SerializeField] private InputActionMap _map;
         [SerializeField] private CursorPreview[] _cursors;
         [SerializeField] private Organisation _organisation;
-        [SerializeField] private GameObject _followCamera;
         [SerializeField] private float _cameraRotationModifier = .5f;
+
+        [Header("On Init")] 
+        [SerializeField] private GameObject _UiContainer;
         [SerializeField] private GameObject _cameraHolder;
-        [SerializeField] private GameObject _cameraBehaviour;
+        [SerializeField] private GameObject _followCamera;
+        [SerializeField] private Camera _camera;
         [SerializeField] private HpBar _bar;
+        
         private string _id;
         private Mover _mover;
         private SavingSystem _system;
         private string _credentials;
+        private CinemachineVirtualCamera _behaviour;
         
         // PUBLIC
         public InputActionMap Map => _map;
@@ -73,10 +78,14 @@ namespace RPG.Creatures.Player {
             if (!entity) return;
             entity.RestoreFromJToken(data);
             ///////
-            _bar.StartInit(_id);
-            _cameraHolder.SetActive(IsOwner);
+            Instantiate(_UiContainer);
+            _cameraHolder.SetActive(true);
             _cameraHolder.GetComponentInChildren<Camera>().tag = "MainCamera";
-            _cameraBehaviour.SetActive(IsOwner);
+            _behaviour  = Instantiate(_followCamera).GetComponent<CinemachineVirtualCamera>();
+            _behaviour.Follow = transform;
+            var bar = Instantiate(_bar, transform);
+            bar.gameObject.SetActive(false);
+            bar.StartInit(_id, gameObject);
             _map.Enable();
         }
         
@@ -113,7 +122,7 @@ namespace RPG.Creatures.Player {
             if (!_map["Camera Rotation"].IsPressed()) return false;
             var mouseDelta = _map["Mouse Delta"].ReadValue<Vector2>();
             var yMouseDelta = mouseDelta.x * _cameraRotationModifier;
-            _followCamera.transform.Rotate(Vector3.up, yMouseDelta, Space.World);
+            _behaviour.transform.Rotate(Vector3.up, yMouseDelta, Space.World);
             return true;
         }
         private bool InteractWithUI() {

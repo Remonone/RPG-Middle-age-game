@@ -15,16 +15,16 @@ namespace RPG.Combat {
     public class Fighter : NetworkBehaviour, IAction, IPredicateHandler{
 
         [SerializeField] private Cooldown _cooldown;
-        [SerializeField] private bool _shouldResetOnAttack;
-        [SerializeField] private NetworkObject _networkReference;
+        [SerializeField] protected bool _shouldResetOnAttack;
+        [SerializeField] protected NetworkObject _networkReference;
 
-        private BaseStats _stats;
-        private Mover _mover;
-        private TaskScheduler _scheduler;
+        protected BaseStats Stats;
+        protected Mover Mover;
+        protected TaskScheduler Scheduler;
 
-        private Health _target;
-        private Equipment _equipment;
-        private Animator _animator;
+        protected Health Target;
+        protected Equipment Equipment;
+        protected Animator Animator;
 
         public event Action<DamageReport> OnAttack;
 
@@ -35,12 +35,11 @@ namespace RPG.Combat {
         
         public void Cancel() {
             if (!IsOwner) return;
-            _target = null;
-            _mover.Cancel();
+            Target = null;
+            Mover.Cancel();
         }
         
-        //[ServerRpc]
-        public void Attack(SelectableTarget target) {
+        public virtual void Attack(SelectableTarget target) {
             if (!IsOwner) return;
             var reference = target.GetComponent<NetworkObjectReference>();
             AttackServerRpc(reference);
@@ -53,8 +52,8 @@ namespace RPG.Combat {
             if (!target.Targetable) return;
             var health = target.GetComponent<Health>();
             if (health == null || !health.IsAlive) return;
-            _scheduler.SwitchAction(this);
-            _target = health;
+            Scheduler.SwitchAction(this);
+            Target = health;
 
             ClientRpcParams clientRpcParams = new ClientRpcParams {
                 Send = {
@@ -71,25 +70,25 @@ namespace RPG.Combat {
             if (!target.Targetable) return;
             var health = target.GetComponent<Health>();
             if (health == null || !health.IsAlive) return;
-            _scheduler.SwitchAction(this);
-            _target = health;
+            Scheduler.SwitchAction(this);
+            Target = health;
         }
 
 
         public void Attack(Health target) {
             if (target == null || !target.IsAlive) return;
-            _scheduler.SwitchAction(this);
-            _target = target;
+            Scheduler.SwitchAction(this);
+            Target = target;
         }
         
         // PRIVATE
 
         private void Awake() {
-            _mover = GetComponent<Mover>();
-            _stats = GetComponent<BaseStats>();
-            _scheduler = GetComponent<TaskScheduler>();
-            _animator = GetComponent<Animator>();
-            _equipment = GetComponent<Equipment>();
+            Mover = GetComponent<Mover>();
+            Stats = GetComponent<BaseStats>();
+            Scheduler = GetComponent<TaskScheduler>();
+            Animator = GetComponent<Animator>();
+            Equipment = GetComponent<Equipment>();
         }
         
         public object Predicate(string command, object[] arguments) {
@@ -109,40 +108,41 @@ namespace RPG.Combat {
         }
 
         private void Update() {
-            if (_target == null || !_target.IsAlive) return;
+            if (Target is not { IsAlive: true }) return;
             
             if (IsTargetInRange() && _cooldown.IsAvailable) {
-                AttackTarget();
+                Animator.SetTrigger(_isAttacking);
                 _cooldown.Reset();
                 return;
             }
-            _mover.TranslateToPoint(_target.transform.position);
-        }
-        public void AttackTarget() {
-            _animator.SetTrigger(_isAttacking);
+            Mover.TranslateToPoint(Target.transform.position);
         }
 
-        void Hit() {
+        public virtual void Hit() {
             HitServerRpc();
+        }
+
+        protected void InvokeOnAttackAction(DamageReport report) {
+            OnAttack?.Invoke(report);
         }
         
         [ServerRpc]
         private void HitServerRpc() {
-            if (_target == null) return;
+            if (Target == null) return;
             if (!IsTargetInRange()) return;
-            EquipmentItem weapon = _equipment.GetEquipmentItem(EquipmentSlot.WEAPON);
+            EquipmentItem weapon = Equipment.GetEquipmentItem(EquipmentSlot.WEAPON);
             DamageType type = weapon != null ? weapon.Type : DamageType.PHYSICAL;
-            var report = DamageUtils.CreateReport(_target, _stats.GetStatValue(Stat.BASE_ATTACK), type, _networkReference); 
+            var report = DamageUtils.CreateReport(Target, Stats.GetStatValue(Stat.BASE_ATTACK), type, _networkReference); 
             OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
-            var netObject = _target.GetComponent<NetworkObject>();
-            _target.HitEntity(report, netObject.NetworkObjectId);
-            if (_shouldResetOnAttack) _scheduler.SwitchAction(null);
+            var netObject = Target.GetComponent<NetworkObject>();
+            Target.HitEntity(report, netObject.NetworkObjectId);
+            if (_shouldResetOnAttack) Scheduler.SwitchAction(null);
         }
         
 
-        private bool IsTargetInRange() {
-            var distanceToTarget = Vector3.Distance(transform.position, _target.transform.position);
-            return distanceToTarget <= _stats.GetStatValue(Stat.ATTACK_RANGE);
+        protected bool IsTargetInRange() {
+            var distanceToTarget = Vector3.Distance(transform.position, Target.transform.position);
+            return distanceToTarget <= Stats.GetStatValue(Stat.ATTACK_RANGE);
         }
 
     }

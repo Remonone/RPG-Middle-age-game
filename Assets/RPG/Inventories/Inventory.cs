@@ -21,18 +21,18 @@ namespace RPG.Inventories {
 
         public override void OnNetworkSpawn() {
             base.OnNetworkSpawn();
-            if (IsOwner || IsServer) {
-                _inventorySlots = new InventorySlot[_slotsCount];
-                for (int i = 0; i < Size; i++) {
-                    _inventorySlots[i] = new InventorySlot {
-                        Item = null,
-                        Count = 0
-                    };
-                }
+            if (!IsOwner && !IsServer) return;
+            _inventorySlots = new InventorySlot[_slotsCount];
+            for (int i = 0; i < Size; i++) {
+                _inventorySlots[i] = new InventorySlot {
+                    Item = null,
+                    Count = 0
+                };
             }
         }
 
         private void Start() {
+            if (!IsOwner || !IsServer) return;
             _inventorySlots[0] = new InventorySlot {
                 Item = InventoryItem.GetItemByGuid("168820e5-f325-4e1e-9948-126e5ada4f18"),
                 Count = 1
@@ -106,10 +106,6 @@ namespace RPG.Inventories {
 
         public IEnumerable<InventorySlot> FindSlots(InventoryItem item) => _inventorySlots.Where(slot => slot.Item == item);
 
-        public static Inventory GetPlayerInventory() {
-            var player = GameObject.FindWithTag("Player");
-            return player.GetComponent<Inventory>();
-        }
         
         private int FindEmptySlot() {
             for (int i = 0; i < _slotsCount; i++) {

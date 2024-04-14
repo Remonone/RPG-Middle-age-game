@@ -16,10 +16,10 @@ export const fetchUser = async (req, res) => {
             const serverCredentials = await database.collection('servers').findOne({serverName: user.server});
             res.status(200).send({token, ip: serverCredentials.ip, port: serverCredentials.port});
         } else {
-            res.status(403).send({message: "Password is incorrect"});
+            res.status(403).send({type: "Password", message: "Password is incorrect"});
         }
     } else {
-        res.status(404).send({message: "User was not found"});
+        res.status(404).send({type: "Login", message: "User was not found"});
     }
 }
 
@@ -31,12 +31,12 @@ export const registerUser = async (req, res) => {
 
     const existingLogin = await database.collection('users').findOne({login});
     if(!!existingLogin){
-        res.status(400).send({error_message: "This user is already existing!"});
+        res.status(400).send({type: "Login", error_message: "This user is already existing!"});
         return;
     }
     const existingUsername = await database.collection('users').findOne({username});
     if(!!existingUsername){
-        res.status(400).send({error_message: "This username is already used."});
+        res.status(400).send({type:"Username", error_message: "This username is already used."});
         return;
     }
     const serverCredentials = await database.collection('servers').findOne({serverName: server});

@@ -13,7 +13,7 @@ namespace RPG.Creatures.AI.Actions {
 
         private Health _targetToAttack;
         private IFighterAgentBase _fighterAgent;
-        private Fighter _fighter;
+        private ServerFighter _fighter;
         
         public AttackPlayerWithWeapon() {
             _prerequisites.Add(new StateObject { Name = "is_enemy_visible", Value = true });
@@ -23,8 +23,8 @@ namespace RPG.Creatures.AI.Actions {
             _effects.Add(new StateObject { Name = "liquidate_target", Value = true });
         }
 
-        private void Awake() {
-            _fighter = GetComponent<Fighter>();
+        public override void OnNetworkSpawn() {
+            _fighter = GetComponent<ServerFighter>();
         }
 
         public override bool PerformAction(GameObject agent) {

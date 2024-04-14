@@ -11,52 +11,52 @@ using UnityEngine.AI;
 namespace RPG.Movement {
     public class Mover : NetworkBehaviour, IAction, ISaveable {
         
-        [SerializeField] private Animator _animator;
+        [SerializeField] protected Animator _animator;
         [SerializeField] private float _threshold = 2F;
         
-        private readonly int _speed = Animator.StringToHash("Movespeed");
+        protected readonly int Speed = Animator.StringToHash("Movespeed");
 
-        private BaseStats _baseStats;
-        private TaskScheduler _scheduler;
-        private NavMeshAgent _agent;
-        private Health _health;
+        protected BaseStats BaseStats;
+        protected TaskScheduler Scheduler;
+        protected NavMeshAgent Agent;
+        protected Health Health;
 
-        private void Awake() {
-            _agent = GetComponent<NavMeshAgent>();
-            _baseStats = GetComponent<BaseStats>();
-            _scheduler = GetComponent<TaskScheduler>();
-            _health = GetComponent<Health>();
+        public override void OnNetworkSpawn() {
+            Agent = GetComponent<NavMeshAgent>();
+            BaseStats = GetComponent<BaseStats>();
+            Scheduler = GetComponent<TaskScheduler>();
+            Health = GetComponent<Health>();
         }
 
-        private void Start() {
-            _agent.speed = _baseStats.GetStatValue(Stat.MOVEMENT_SPEED);
-            _agent.angularSpeed = 1000F;
+        protected virtual void Start() {
+            Agent.speed = BaseStats.GetStatValue(Stat.MOVEMENT_SPEED);
+            Agent.angularSpeed = 1000F;
         }
         
         private void Update() {
             if (!IsOwner) return;
-            _agent.enabled = _health.IsAlive;
-            if ((_agent.destination - transform.position).magnitude < _threshold) {
+            Agent.enabled = Health.IsAlive;
+            if ((Agent.destination - transform.position).magnitude < _threshold) {
                 Cancel();
             }
         }
 
-        public void StartMovingToPoint(Vector3 point) {
-            if (!_health.IsAlive) return;
-            _scheduler.SwitchAction(this);
+        public virtual void StartMovingToPoint(Vector3 point) {
+            if (!Health.IsAlive) return;
+            Scheduler.SwitchAction(this);
             TranslateToPoint(point);
         }
         
-        public void TranslateToPoint(Vector3 point) {
-            if (!_health.IsAlive) return;
+        public virtual void TranslateToPoint(Vector3 point) {
+            if (!Health.IsAlive) return;
             TranslateObjectServerRpc(point);
         }
 
         [ServerRpc]
         private void TranslateObjectServerRpc(Vector3 destination, ServerRpcParams serverRpcParams = default) {
-            _agent.isStopped = false;
-            _agent.destination = destination;
-            _animator.SetFloat(_speed, 1);
+            Agent.isStopped = false;
+            Agent.destination = destination;
+            _animator.SetFloat(Speed, 1);
             ClientRpcParams clientRpcParams = new ClientRpcParams {
                 Send = new ClientRpcSendParams {
                     TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
@@ -67,9 +67,9 @@ namespace RPG.Movement {
 
         [ClientRpc]
         private void TranslateObjectClientRpc(Vector3 destination, ClientRpcParams clientRpcParams = default) {
-            _agent.isStopped = false;
-            _agent.destination = destination;
-            _animator.SetFloat(_speed, 1);
+            Agent.isStopped = false;
+            Agent.destination = destination;
+            _animator.SetFloat(Speed, 1);
         }
 
 
@@ -79,8 +79,8 @@ namespace RPG.Movement {
 
         [ServerRpc]
         private void CancelServerRpc(ServerRpcParams serverRpcParams = default) {
-            _agent.isStopped = true;
-            _animator.SetFloat(_speed, 0);
+            Agent.isStopped = true;
+            _animator.SetFloat(Speed, 0);
             ClientRpcParams clientRpcParams = new ClientRpcParams {
                 Send = new ClientRpcSendParams {
                     TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
@@ -91,18 +91,18 @@ namespace RPG.Movement {
 
         [ClientRpc]
         private void CancelClientRpc(ClientRpcParams clientRpcParams) {
-            _agent.isStopped = true;
-            _animator.SetFloat(_speed, 0);
+            Agent.isStopped = true;
+            _animator.SetFloat(Speed, 0);
         }
         
         public JToken CaptureAsJToken() {
             return JToken.FromObject(transform.position.ToToken());
         }
         public void RestoreFromJToken(JToken state) {
-            _agent.enabled = false;
+            Agent.enabled = false;
             transform.position = state.ToObject<Vector3>();
-            _agent.enabled = true;
-            _scheduler.CancelAction();
+            Agent.enabled = true;
+            Scheduler.CancelAction();
         }
     }
 }

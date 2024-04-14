@@ -2285,6 +2285,7 @@ GameObject:
   - component: {fileID: 5431978617928909791}
   - component: {fileID: 3246495633520179780}
   - component: {fileID: 1794970210358145088}
+  - component: {fileID: 6396817456019856846}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2568,7 +2569,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d3b40428d0be5e45844dcb53bdc1f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 1777804671736299248}
   _map:
     m_Name: Map
     m_Id: 4198e60e-de69-4628-83ee-46c8af553c91
@@ -2701,11 +2701,14 @@ MonoBehaviour:
     Image: {fileID: 2800000, guid: 8bf839021e420dd459a61f9c1c0354f7, type: 3}
     Hotspot: {x: 0, y: 0}
   _organisation: {fileID: 11400000, guid: 4924b858861cded42aa30df588eb74f8, type: 2}
-  _followCamera: {fileID: 0}
   _cameraRotationModifier: 0.5
-  _cameraHolder: {fileID: 0}
-  _cameraBehaviour: {fileID: 0}
-  _bar: {fileID: 0}
+  _UiContainer: {fileID: 4353474780006429741, guid: 71e8b18b12a037e4fab8b182f6f8139e,
+    type: 3}
+  _cameraHolder: {fileID: 1730178670912464541}
+  _followCamera: {fileID: 6948367050108141612, guid: 18563e23340df274da22f947bfa7d8ad,
+    type: 3}
+  _camera: {fileID: 1777804671736299248}
+  _bar: {fileID: 3336414557371451553, guid: 7eaf17ff2f77f0348a4555cdbe05480f, type: 3}
 --- !u!114 &5431978617928909791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2744,9 +2747,9 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -2833,6 +2836,22 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
+--- !u!114 &6396817456019856846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8797686171297453995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &9163236021900443580
 GameObject:
   m_ObjectHideFlags: 0

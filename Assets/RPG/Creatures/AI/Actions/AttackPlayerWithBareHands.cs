@@ -23,7 +23,8 @@ namespace RPG.Creatures.AI.Actions {
             _effects.Add(new StateObject { Name = "liquidate_target", Value = true });
         }
 
-        private void Awake() {
+        public override void OnNetworkSpawn() {
+            if (!IsServer) return;
             _fighter = GetComponent<Fighter>();
         }
 

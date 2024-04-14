@@ -32,7 +32,7 @@ namespace RPG.Saving {
             if (IsServer) {
                 uniqueIdentifier.Value = (string)s[PLAYER_ID];
             }
-            if (s["content"].Type == JTokenType.Null) return;
+            if (s["content"] == null) return;
             JObject state = s["content"].ToObject<JObject>();
             IDictionary<string, JToken> stateDict = state;
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {

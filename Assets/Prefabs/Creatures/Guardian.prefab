@@ -79,7 +79,6 @@ GameObject:
   - component: {fileID: 4223870967063102429}
   - component: {fileID: 6473694305726389837}
   - component: {fileID: 5673777465415467946}
-  - component: {fileID: 6374397075787476267}
   - component: {fileID: 3131184015449607250}
   - component: {fileID: 6674042712874727537}
   - component: {fileID: 1642229169961346029}
@@ -87,12 +86,15 @@ GameObject:
   - component: {fileID: 3255395169396648235}
   - component: {fileID: 8886586193631549958}
   - component: {fileID: 225474559}
-  - component: {fileID: 225474572}
   - component: {fileID: 619423643}
   - component: {fileID: 619423655}
   - component: {fileID: 619423667}
   - component: {fileID: 619423668}
   - component: {fileID: 438375757760841350}
+  - component: {fileID: 2444100112856252223}
+  - component: {fileID: 6783468157494574424}
+  - component: {fileID: 5950736102060025871}
+  - component: {fileID: 662054739193005479}
   m_Layer: 0
   m_Name: Guardian
   m_TagString: Untagged
@@ -115,7 +117,7 @@ Transform:
   - {fileID: 2111256837}
   - {fileID: 3228092682281971162}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &8951930689630413553
 Animator:
@@ -167,9 +169,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b0924125744b23b723b5f346529977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentID: 
-  _currentHealth: 0
-  _maxHealth: 0
+  _targetNetHealth:
+    m_InternalValue: 0
+  _targetNetMaxHealth:
+    m_InternalValue: 0
   _animator: {fileID: 8951930689630413553}
 --- !u!114 &5673777465415467946
 MonoBehaviour:
@@ -185,25 +188,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _organisation: {fileID: 11400000, guid: 7ff063565a59b5740aa1fae9fbf2db7b, type: 2}
   _vision: {fileID: 2111256835}
-  _mover: {fileID: 6374397075787476267}
+  _mover: {fileID: 2444100112856252223}
   _stats: {fileID: 59265798070784182}
   _agroDuration: 3
   _suspiciousDuration: 15
   _detectionRadius: 10
---- !u!114 &6374397075787476267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3090550908769538078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4bf5c1ebdcc4d109d4b35d191370e49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animator: {fileID: 8951930689630413553}
-  _threshold: 1
 --- !u!114 &3131184015449607250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,7 +254,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f837253a7447f6ae813de479c8df2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentID: 
 --- !u!114 &59265798070784182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,10 +266,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9921b18577d843c4bf89955b1b7151dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentID: 
   _stats: {fileID: 11400000, guid: 6c7bbac02d04a9f479aa665aef4fcefb, type: 2}
-  _level: 1
-  _experience: 0
+  _level:
+    m_InternalValue: 0
+  _experience:
+    m_InternalValue: 0
 --- !u!136 &3255395169396648235
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -329,24 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacacc49cb2f47a78331d5e65cc2440a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentID: 
   _animator: {fileID: 8951930689630413553}
---- !u!114 &225474572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3090550908769538078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83aec79db9c64e1b985b483b347a295e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentID: 
-  _cooldown:
-    _timeToReset: 1
-  _shouldResetOnAttack: 1
 --- !u!114 &619423643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -455,6 +427,82 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &2444100112856252223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090550908769538078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8caad92823a4a55bbe8dc1de2e5ceec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 8951930689630413553}
+  _threshold: 1
+--- !u!114 &6783468157494574424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090550908769538078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b288d9483f480a8c56b25cc4fcc5f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cooldown:
+    _timeToReset: 1
+  _shouldResetOnAttack: 1
+  _networkReference: {fileID: 438375757760841350}
+--- !u!114 &5950736102060025871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090550908769538078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1
+--- !u!114 &662054739193005479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3090550908769538078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList:
+  - Layer: 0
+    OriginatingState: -453240694
+    DestinationState: -426650033
+    TransitionDuration: 0.1
+    TriggerNameHash: -1130678506
+    TransitionIndex: 0
+  m_Animator: {fileID: 8951930689630413553}
 --- !u!1001 &3228092682281824930
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -20,7 +20,7 @@ namespace RPG.UI.InfoBar {
         [SerializeField] private RectTransform _hpSize;
         [SerializeField] private RectTransform _currentHp;
         [SerializeField] private Vector3 _offset;
-        [SerializeField] private GameObject _holder;
+        
 
         private readonly NetworkVariable<FixedString32Bytes> _colorHex = new();
         private readonly NetworkVariable<FixedString64Bytes> _emblemImagePath = new();
@@ -31,6 +31,7 @@ namespace RPG.UI.InfoBar {
         
         private Health _healthBar;
         private BaseStats _stats;
+        private GameObject _holder;
 
         public override void OnNetworkSpawn() {
             base.OnNetworkSpawn();
@@ -40,19 +41,21 @@ namespace RPG.UI.InfoBar {
         }
 
 
-        public void StartInit(string username) {
+        public void StartInit(string username, GameObject holder) {
             if (IsOwner) {
-                InitFromServerRpc(username);
+                InitFromServerRpc(username, holder.GetComponent<NetworkBehaviourReference>());
                 gameObject.SetActive(false);
             }
             
-            _healthBar = _holder.GetComponent<Health>();
-            _stats = _holder.GetComponent<BaseStats>();
+            _healthBar = holder.GetComponent<Health>();
+            _stats = holder.GetComponent<BaseStats>();
+            _holder = holder;
         }
 
         [ServerRpc]
-        private void InitFromServerRpc(FixedString64Bytes username) {
-            var organisation = _holder.GetComponent<IOrganisationWrapper>().GetOrganisation();
+        private void InitFromServerRpc(FixedString64Bytes username, NetworkBehaviourReference reference) {
+            reference.TryGet(out var netObj);
+            var organisation = netObj.GetComponent<IOrganisationWrapper>().GetOrganisation();
             var emblem = RESOURCE_PATH + organisation.Emblem.texture.name;
             var color = organisation.Color;
             
@@ -60,10 +63,10 @@ namespace RPG.UI.InfoBar {
             _colorHex.Value = ColorUtility.ToHtmlStringRGBA(color);
             _emblemImagePath.Value = emblem;
 
-            _healthBar = _holder.GetComponent<Health>();
+            _healthBar = netObj.GetComponent<Health>();
             _healthBar.OnHealthChanged += UpdateHealthValue;
             
-            _stats = _holder.GetComponent<BaseStats>();
+            _stats = netObj.GetComponent<BaseStats>();
             _stats.OnLevelUp += UpdateLevelValue;
             UpdateLevelValue();
             _isInitialized.Value = true;

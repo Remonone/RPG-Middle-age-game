@@ -31,7 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1379188581
 MonoBehaviour:
@@ -50,7 +50,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1379188582}
-    PlayerPrefab: {fileID: 7136946672826793823, guid: eeb98436d09fcec42b55e3c52b43ccd8,
+    PlayerPrefab: {fileID: 8797686171297453995, guid: 6c76b28d14c2e84438d5112a9a2f876f,
       type: 3}
     NetworkPrefabs: []
     TickRate: 30
@@ -89,7 +89,7 @@ MonoBehaviour:
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
     Address: 127.0.0.1
-    Port: 7777
+    Port: 8000
     ServerListenAddress: 
   DebugSimulator:
     PacketDelayMS: 0

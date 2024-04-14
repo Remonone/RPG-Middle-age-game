@@ -58,9 +58,18 @@ namespace RPG.UI {
             StartCoroutine(AuthenticationController.SignIn(_loginField.Value, _passwordField.Value, OnLogin, OnFail));
         }
         private void OnFail(JToken obj) {
+            if ((string)obj["type"] == "internal") {
+                OnServerIssue();
+                return;
+            }
+
+            _root.Q<ValueInput>((string)obj["type"]).Error = (string)obj["error_message"];
+        }
+        
+        private void OnServerIssue() {
             _snackbar.Position = SnackbarPosition.BottomLeft;
             _snackbar.Type = SnackbarType.Error;
-            _snackbar.Text = "Some error occured during processing";
+            _snackbar.Text = "Some error occured on server side. Try later...";
             _snackbar.ShowSnackbar(5000);
         }
 

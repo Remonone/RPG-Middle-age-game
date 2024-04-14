@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 262.38358, g: 325.10843, b: 430.30963, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -453,7 +453,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 203942602}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 271.2259, y: 26.875624, z: 513.2482}
+  m_LocalPosition: {x: 271.2259, y: 23.85, z: 513.2482}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -481,7 +481,7 @@ PrefabInstance:
     - target: {fileID: 3090550908769538078, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3131184015449607250, guid: 4973c434493d6df4ab7255d5fa23064b,
         type: 3}
@@ -937,7 +937,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037437759}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 271.2259, y: 26.875624, z: 513.2482}
+  m_LocalPosition: {x: 294.42, y: 23.41, z: 510.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -952,19 +952,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1379188581, guid: 21b4c4b05ec21d04b8dbf2f78dda21bf, type: 3}
-      propertyPath: NetworkConfig.PlayerPrefab
-      value: 
-      objectReference: {fileID: 7136946672826793823, guid: eeb98436d09fcec42b55e3c52b43ccd8,
-        type: 3}
-    - target: {fileID: 1379188581, guid: 21b4c4b05ec21d04b8dbf2f78dda21bf, type: 3}
-      propertyPath: NetworkConfig.EnableSceneManagement
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1379188582, guid: 21b4c4b05ec21d04b8dbf2f78dda21bf, type: 3}
-      propertyPath: ConnectionData.Port
-      value: 8000
-      objectReference: {fileID: 0}
     - target: {fileID: 1930303000337672565, guid: 21b4c4b05ec21d04b8dbf2f78dda21bf,
         type: 3}
       propertyPath: m_Name
@@ -1026,8 +1013,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 564446469, guid: 21b4c4b05ec21d04b8dbf2f78dda21bf, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21b4c4b05ec21d04b8dbf2f78dda21bf, type: 3}
