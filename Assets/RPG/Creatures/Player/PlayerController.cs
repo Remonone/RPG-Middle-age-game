@@ -7,7 +7,6 @@ using RPG.Core.Cursors;
 using RPG.Movement;
 using RPG.Network.Client;
 using RPG.Saving;
-using RPG.Stats.Relations;
 using RPG.UI.InfoBar;
 using Unity.Netcode;
 using UnityEngine;
@@ -17,10 +16,9 @@ using UnityEngine.SceneManagement;
 using static RPG.Utils.Constants.DataConstants;
 
 namespace RPG.Creatures.Player {
-    public class PlayerController : NetworkBehaviour, IOrganisationWrapper {
+    public class PlayerController : NetworkBehaviour {
         [SerializeField] private InputActionMap _map;
         [SerializeField] private CursorPreview[] _cursors;
-        [SerializeField] private Organisation _organisation;
         [SerializeField] private float _cameraRotationModifier = .5f;
 
         [Header("On Init")] 
@@ -159,25 +157,19 @@ namespace RPG.Creatures.Player {
         private bool MoveTowardPoint() {
             Ray direction = GetMouseRay();
             Physics.Raycast(direction, out var hit, 100F);
-            if (hit.collider == null) {
+            if (ReferenceEquals(hit.collider, null)) {
                 SetCursor(CursorType.EMPTY);
                 return false;
             }
             SetCursor(CursorType.MOVEMENT);
 
-            if (_map["Action"].WasPressedThisFrame()) _mover.StartMovingToPoint(hit.point);
+            if (_map["Action"].WasPressedThisFrame()) _mover.RequestToMove(hit.point);
             return true;
         }
         
         private void SetCursor(CursorType type) {
             var cursor = _cursors.Single(cursor => cursor.Type == type);
             Cursor.SetCursor(cursor.Image, cursor.Hotspot, CursorMode.Auto);
-        }
-        public Organisation GetOrganisation() {
-            return _organisation;
-        }
-        public string GetId() {
-            return _id;
         }
     }
 

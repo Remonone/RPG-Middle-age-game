@@ -40,13 +40,6 @@ namespace RPG.Combat {
         public bool IsAlive => _currentHealth.Value > 0;
         public float CurrentHealth => _currentHealth.Value;
         public float MaxHealth => _maxHealth.Value;
-        
-
-        private void Awake() {
-            _stats = GetComponent<BaseStats>();
-            _maxHealth = new LazyValue<float>(OnHealthInit);
-            _currentHealth = new LazyValue<float>(OnHealthInit);
-        }
 
         private void OnCurrentHealthChange(float oldValue, float newValue) {
             _targetNetHealth.Value = newValue;
@@ -56,6 +49,12 @@ namespace RPG.Combat {
         }
         private float OnHealthInit() {
             return _stats.GetStatValue(Stat.BASE_HEALTH);
+        }
+
+        private void Awake() {
+            _stats = GetComponent<BaseStats>();
+            _maxHealth = new LazyValue<float>(OnHealthInit);
+            _currentHealth = new LazyValue<float>(OnHealthInit);
         }
 
         public override void OnNetworkSpawn() {
@@ -92,28 +91,20 @@ namespace RPG.Combat {
         }
 
 
-        public void HitEntity(DamageReport report, ulong target) {
+        public void HitEntity(DamageReport report) {
             if (!IsServer) return;
             // Scaling resistance percent from actual resist(can explain later)
             var resistanceScale = 1 / (1 + Math.Pow(2, -_stats.GetStatValue((Stat)(int)report.Type))); 
             _currentHealth.Value = (float)Math.Max(_currentHealth.Value - report.Damage * resistanceScale, 0);
             OnHit?.Invoke(report);
             OnHealthChanged?.Invoke(_currentHealth.Value);
+            _animator.SetTrigger(Hit);
             if (_currentHealth.Value <= 0) Die();
-            ClientRpcParams clientRpcParams = new ClientRpcParams {
-                Send = {
-                    TargetClientIds = new[] { target }
-                }
-            };
-            GetHitClientRpc(report, clientRpcParams);
+            GetHitClientRpc();
         }
 
         [ClientRpc]
-        private void GetHitClientRpc(DamageReport report, ClientRpcParams clientRpcParams = default) {
-            var resistanceScale = 1 / (1 + Math.Pow(2, -_stats.GetStatValue((Stat)(int)report.Type))); 
-            _currentHealth.Value = (float)Math.Max(_currentHealth.Value - report.Damage * resistanceScale, 0);
-            OnHit?.Invoke(report);
-            OnHealthChanged?.Invoke(_currentHealth.Value);
+        private void GetHitClientRpc(ClientRpcParams clientRpcParams = default) {
             _animator.SetTrigger(Hit);
             if (_currentHealth.Value <= 0) Die();
         }

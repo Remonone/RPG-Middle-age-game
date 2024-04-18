@@ -36,7 +36,7 @@ namespace RPG.Creatures.AI.Actions {
                 InRange = false;
                 return true;
             }
-            _fighter.Attack(_targetToAttack);
+            _fighter.Attack(_targetToAttack.gameObject);
             return true;
         }
         

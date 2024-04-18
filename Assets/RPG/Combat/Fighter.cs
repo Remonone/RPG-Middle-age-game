@@ -4,7 +4,6 @@ using RPG.Core;
 using RPG.Core.Predicate;
 using RPG.Core.Predicate.Interfaces;
 using RPG.Inventories;
-using RPG.Inventories.Items;
 using RPG.Movement;
 using RPG.Stats;
 using RPG.Utils;
@@ -16,80 +15,112 @@ namespace RPG.Combat {
 
         [SerializeField] private Cooldown _cooldown;
         [SerializeField] protected bool _shouldResetOnAttack;
-        [SerializeField] protected NetworkObject _networkReference;
 
-        protected BaseStats Stats;
-        protected Mover Mover;
-        protected TaskScheduler Scheduler;
+        private BaseStats _stats;
+        private Mover _mover;
+        private TaskScheduler _scheduler;
 
-        protected Health Target;
-        protected Equipment Equipment;
-        protected Animator Animator;
+        private readonly NetworkVariable<NetworkObjectReference> _target = new();
+        private Equipment _equipment;
+        private Animator _animator;
 
         public event Action<DamageReport> OnAttack;
 
         private readonly int _isAttacking = Animator.StringToHash("IsAttacking");
-        // PUBLIC
 
-        public bool CanAttack(Health target) => target is { IsAlive: true };
-        
-        public void Cancel() {
-            if (!IsOwner) return;
-            Target = null;
-            Mover.Cancel();
-        }
-        
-        public virtual void Attack(SelectableTarget target) {
-            if (!IsOwner) return;
-            var reference = target.GetComponent<NetworkObjectReference>();
-            AttackServerRpc(reference);
+        private Vector3? TargetPosition {
+            get {
+                if (NetworkManager.Singleton.SpawnManager == null) return null;
+                if (!_target.Value.TryGet(out var obj)) return null;
+                return obj.transform.position;
+            }
         }
 
+        public override void OnNetworkSpawn() {
+            _mover = GetComponent<Mover>();
+            _stats = GetComponent<BaseStats>();
+            _scheduler = GetComponent<TaskScheduler>();
+            _animator = GetComponent<Animator>();
+            _equipment = GetComponent<Equipment>();
+        }
+
+        private void Update() {
+            if (!TargetPosition.HasValue) return;
+            if (!IsOwner) return;
+            if (!IsTargetInRange()) {
+                _mover.RequestToTransfer(TargetPosition.Value);
+            } else {
+                 AttackTarget();
+            }
+            
+        }
+        private bool IsTargetInRange() {
+            return TargetPosition.HasValue && (TargetPosition.Value - transform.position).magnitude < _stats.GetStatValue(Stat.ATTACK_RANGE);
+        }
+
+        private void AttackTarget() {
+            if (!_cooldown.IsAvailable || !_target.Value.TryGet(out _)) return;
+            _mover.Cancel();
+            _animator.SetTrigger(_isAttacking);
+        }
+
+        void Hit() {
+            if (!IsTargetInRange()) return;
+            if (IsServer) {
+                ApplyHit();
+            }
+        }
+        
+        private void ApplyHit() {
+            // LATER: create range weapon
+            var weapon = _equipment.GetEquipmentItem(EquipmentSlot.WEAPON);
+            var damageType = ReferenceEquals(weapon, null) ? DamageType.PHYSICAL : weapon.Type;
+            _target.Value.TryGet(out var obj);
+            var targetHealth = obj.GetComponent<Health>();
+            var report = DamageUtils.CreateReport(targetHealth, _stats.GetStatValue(Stat.BASE_ATTACK), damageType, GetComponent<NetworkObject>());
+            OnAttack?.Invoke(report);
+            targetHealth.HitEntity(report);
+        }
+
+        public void Attack(GameObject target) {
+            if (!IsOwner) return;
+            var netObj = target.GetComponent<NetworkObject>();
+            if (target.GetComponent<Health>() is not { IsAlive: true }) return;
+            _scheduler.SwitchAction(this);
+            SetTargetServerRpc(netObj);
+        }
+        
         [ServerRpc]
-        private void AttackServerRpc(NetworkObjectReference attackTo, ServerRpcParams serverRpcParams = default) {
-            attackTo.TryGet(out var targetNet);
-            var target = targetNet.GetComponent<SelectableTarget>();
-            if (!target.Targetable) return;
-            var health = target.GetComponent<Health>();
-            if (health == null || !health.IsAlive) return;
-            Scheduler.SwitchAction(this);
-            Target = health;
+        private void SetTargetServerRpc(NetworkObjectReference netObj) {
+            netObj.TryGet(out var component);
+            SetTarget(component.gameObject);
+        }
 
-            ClientRpcParams clientRpcParams = new ClientRpcParams {
-                Send = {
-                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
-                }
-            };
-            AttackClientRpc(attackTo, clientRpcParams);
+        public void SetTarget(GameObject target) {
+            if (!IsServer) return;
+            var obj = target.GetComponent<NetworkObject>();
+            if (target.GetComponent<Health>() is not { IsAlive: true }) return;
+            _target.Value = obj;
+        }
+
+        public void Cancel() {
+            if (IsServer) {
+                ResetComponent();
+                return;
+            }
+            if (IsOwner) {
+                FighterResetComponentServerRpc();
+            }
         }
         
-        [ClientRpc]
-        private void AttackClientRpc(NetworkObjectReference attackTo, ClientRpcParams clientRpcParams = default) {
-            attackTo.TryGet(out var targetNet);
-            var target = targetNet.GetComponent<SelectableTarget>();
-            if (!target.Targetable) return;
-            var health = target.GetComponent<Health>();
-            if (health == null || !health.IsAlive) return;
-            Scheduler.SwitchAction(this);
-            Target = health;
+        [ServerRpc]
+        private void FighterResetComponentServerRpc() {
+            ResetComponent();
+        }
+        private void ResetComponent() {
+            _target.Value = new NetworkObjectReference();
         }
 
-
-        public void Attack(Health target) {
-            if (target == null || !target.IsAlive) return;
-            Scheduler.SwitchAction(this);
-            Target = target;
-        }
-        
-        // PRIVATE
-
-        private void Awake() {
-            Mover = GetComponent<Mover>();
-            Stats = GetComponent<BaseStats>();
-            Scheduler = GetComponent<TaskScheduler>();
-            Animator = GetComponent<Animator>();
-            Equipment = GetComponent<Equipment>();
-        }
         
         public object Predicate(string command, object[] arguments) {
             return command switch {
@@ -97,52 +128,14 @@ namespace RPG.Combat {
                 _ => null
             };
         }
-        
+        //
         private object PerformHit(object[] arguments) {
             var objToHit = PredicateWorker.GetPredicateMonoBehaviour((string)arguments[0]);
             if (objToHit.GetComponent<Health>() is not { } target) return null;
             var netObject = objToHit.GetComponent<NetworkObject>();
             var report = DamageUtils.CreateReport(target, (float)Convert.ToDouble(arguments[1]), (DamageType)Enum.Parse(typeof(DamageType), Convert.ToString(arguments[2])), netObject);
-            target.HitEntity(report, netObject.NetworkObjectId);
+            target.HitEntity(report);
             return true;
-        }
-
-        private void Update() {
-            if (Target is not { IsAlive: true }) return;
-            
-            if (IsTargetInRange() && _cooldown.IsAvailable) {
-                Animator.SetTrigger(_isAttacking);
-                _cooldown.Reset();
-                return;
-            }
-            Mover.TranslateToPoint(Target.transform.position);
-        }
-
-        public virtual void Hit() {
-            HitServerRpc();
-        }
-
-        protected void InvokeOnAttackAction(DamageReport report) {
-            OnAttack?.Invoke(report);
-        }
-        
-        [ServerRpc]
-        private void HitServerRpc() {
-            if (Target == null) return;
-            if (!IsTargetInRange()) return;
-            EquipmentItem weapon = Equipment.GetEquipmentItem(EquipmentSlot.WEAPON);
-            DamageType type = weapon != null ? weapon.Type : DamageType.PHYSICAL;
-            var report = DamageUtils.CreateReport(Target, Stats.GetStatValue(Stat.BASE_ATTACK), type, _networkReference); 
-            OnAttack?.Invoke(report); // whenever cause attack to target, may invoke this event to give ability to handle some buffs or additional changes
-            var netObject = Target.GetComponent<NetworkObject>();
-            Target.HitEntity(report, netObject.NetworkObjectId);
-            if (_shouldResetOnAttack) Scheduler.SwitchAction(null);
-        }
-        
-
-        protected bool IsTargetInRange() {
-            var distanceToTarget = Vector3.Distance(transform.position, Target.transform.position);
-            return distanceToTarget <= Stats.GetStatValue(Stat.ATTACK_RANGE);
         }
 
     }

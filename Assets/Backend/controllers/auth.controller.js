@@ -11,9 +11,9 @@ export const fetchUser = async (req, res) => {
     if(!!user) {
         if(bcrypt.compareSync(password, user.password)){
             const tokenToConvert = {username: user.username, login: user._id};
-            console.log(tokenToConvert);
             const token = jwt.sign(tokenToConvert, ENCRYPTION_KEY, { algorithm: 'HS256'});
             const serverCredentials = await database.collection('servers').findOne({serverName: user.server});
+            console.log(serverCredentials);
             res.status(200).send({token, ip: serverCredentials.ip, port: serverCredentials.port});
         } else {
             res.status(403).send({type: "Password", message: "Password is incorrect"});
@@ -68,9 +68,7 @@ export const loadUser = async (req, res) => {
     const token = req.query['jwt'];
     try {
         const userData = jwt.verify(token, ENCRYPTION_KEY);
-        console.log(userData);
         const user = await database.collection('users').findOne({_id: userData.login});
-        console.log("Found user: ", user);
         res.status(200).send(user);
     } catch(e) {
         console.log(e);

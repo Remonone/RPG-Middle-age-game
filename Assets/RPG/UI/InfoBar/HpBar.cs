@@ -55,7 +55,7 @@ namespace RPG.UI.InfoBar {
         [ServerRpc]
         private void InitFromServerRpc(FixedString64Bytes username, NetworkBehaviourReference reference) {
             reference.TryGet(out var netObj);
-            var organisation = netObj.GetComponent<IOrganisationWrapper>().GetOrganisation();
+            var organisation = netObj.GetComponent<OrganisationWrapper>().Organisation;
             var emblem = RESOURCE_PATH + organisation.Emblem.texture.name;
             var color = organisation.Color;
             

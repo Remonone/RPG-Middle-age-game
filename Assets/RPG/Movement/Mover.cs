@@ -14,95 +14,91 @@ namespace RPG.Movement {
         [SerializeField] protected Animator _animator;
         [SerializeField] private float _threshold = 2F;
         
-        protected readonly int Speed = Animator.StringToHash("Movespeed");
+        private readonly int Speed = Animator.StringToHash("Movespeed");
 
-        protected BaseStats BaseStats;
-        protected TaskScheduler Scheduler;
-        protected NavMeshAgent Agent;
-        protected Health Health;
+        private BaseStats _baseStats;
+        private TaskScheduler _scheduler;
+        private NavMeshAgent _agent;
+        private Health _health;
 
         public override void OnNetworkSpawn() {
-            Agent = GetComponent<NavMeshAgent>();
-            BaseStats = GetComponent<BaseStats>();
-            Scheduler = GetComponent<TaskScheduler>();
-            Health = GetComponent<Health>();
+            _agent = GetComponent<NavMeshAgent>();
+            _baseStats = GetComponent<BaseStats>();
+            _scheduler = GetComponent<TaskScheduler>();
+            _health = GetComponent<Health>();
         }
 
-        protected virtual void Start() {
-            Agent.speed = BaseStats.GetStatValue(Stat.MOVEMENT_SPEED);
-            Agent.angularSpeed = 1000F;
+        protected void Start() {
+            _agent.speed = _baseStats.GetStatValue(Stat.MOVEMENT_SPEED);
+            _agent.angularSpeed = 1000F;
         }
         
         private void Update() {
             if (!IsOwner) return;
-            Agent.enabled = Health.IsAlive;
-            if ((Agent.destination - transform.position).magnitude < _threshold) {
+            _agent.enabled = _health.IsAlive;
+            if ((_agent.destination - transform.position).magnitude < _threshold) {
                 Cancel();
             }
         }
 
-        public virtual void StartMovingToPoint(Vector3 point) {
-            if (!Health.IsAlive) return;
-            Scheduler.SwitchAction(this);
-            TranslateToPoint(point);
+        public void RequestToMove(Vector3 destination) {
+            if (!IsOwner) return;
+            _scheduler.SwitchAction(this);
+            _agent.isStopped = false;
+            _agent.destination = destination;
+            MoveToPointServerRpc(destination);
         }
         
-        public virtual void TranslateToPoint(Vector3 point) {
-            if (!Health.IsAlive) return;
-            TranslateObjectServerRpc(point);
+        public void RequestToTransfer(Vector3 destination) {
+            if (!IsOwner) return;
+            _agent.isStopped = false;
+            _agent.destination = destination;
+            MoveToPointServerRpc(destination);
         }
+        
 
         [ServerRpc]
-        private void TranslateObjectServerRpc(Vector3 destination, ServerRpcParams serverRpcParams = default) {
-            Agent.isStopped = false;
-            Agent.destination = destination;
-            _animator.SetFloat(Speed, 1);
-            ClientRpcParams clientRpcParams = new ClientRpcParams {
-                Send = new ClientRpcSendParams {
-                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
-                }
-            };
-            TranslateObjectClientRpc(destination, clientRpcParams);
+        private void MoveToPointServerRpc(Vector3 destination) {
+            MoveToPoint(destination);
         }
-
-        [ClientRpc]
-        private void TranslateObjectClientRpc(Vector3 destination, ClientRpcParams clientRpcParams = default) {
-            Agent.isStopped = false;
-            Agent.destination = destination;
-            _animator.SetFloat(Speed, 1);
+        
+        public void MoveToPoint(Vector3 destination) {
+            if (!IsServer) return;
+            _agent.isStopped = false;
+            _agent.destination = destination;
+            _animator.SetFloat(Speed, 1f);
         }
-
 
         public void Cancel() {
-            CancelServerRpc();
-        }
+            if (IsServer) {
+                ResetComponent();
+                return;
+            }
 
+            if (!IsOwner) return;
+            _agent.isStopped = true;
+            _animator.SetFloat(Speed, 0f);
+            MoverResetComponentServerRpc();
+        }
         [ServerRpc]
-        private void CancelServerRpc(ServerRpcParams serverRpcParams = default) {
-            Agent.isStopped = true;
-            _animator.SetFloat(Speed, 0);
-            ClientRpcParams clientRpcParams = new ClientRpcParams {
-                Send = new ClientRpcSendParams {
-                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
-                }
-            };
-            CancelClientRpc(clientRpcParams);
+        private void MoverResetComponentServerRpc() {
+            ResetComponent();
+        }
+        private void ResetComponent() {
+            if (!IsServer) return;
+            _agent.isStopped = true;
+            _animator.SetFloat(Speed, 0f);
         }
 
-        [ClientRpc]
-        private void CancelClientRpc(ClientRpcParams clientRpcParams) {
-            Agent.isStopped = true;
-            _animator.SetFloat(Speed, 0);
-        }
-        
         public JToken CaptureAsJToken() {
+            Debug.Log(transform.position.ToToken());
             return JToken.FromObject(transform.position.ToToken());
         }
         public void RestoreFromJToken(JToken state) {
-            Agent.enabled = false;
+            _agent.enabled = false;
             transform.position = state.ToObject<Vector3>();
-            Agent.enabled = true;
-            Scheduler.CancelAction();
+            _agent.enabled = true;
+            _scheduler.CancelAction();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace RPG.Creatures.AI.Actions {
 
         private Health _targetToAttack;
         private IFighterAgentBase _fighterAgent;
-        private ServerFighter _fighter;
+        private Fighter _fighter;
         
         public AttackPlayerWithWeapon() {
             _prerequisites.Add(new StateObject { Name = "is_enemy_visible", Value = true });
@@ -24,7 +24,7 @@ namespace RPG.Creatures.AI.Actions {
         }
 
         public override void OnNetworkSpawn() {
-            _fighter = GetComponent<ServerFighter>();
+            _fighter = GetComponent<Fighter>();
         }
 
         public override bool PerformAction(GameObject agent) {
@@ -35,7 +35,7 @@ namespace RPG.Creatures.AI.Actions {
                 InRange = false;
                 return true;
             }
-            _fighter.Attack(_targetToAttack);
+            _fighter.Attack(_targetToAttack.gameObject);
             return true;
         }
         

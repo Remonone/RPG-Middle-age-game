@@ -20,3 +20,6 @@ MonoBehaviour:
   _flag: {fileID: 0}
   _emblem: {fileID: 0}
   _agroThreshold: 1
+  _listOfRelations:
+  - _Organisation: {fileID: 11400000, guid: 4924b858861cded42aa30df588eb74f8, type: 2}
+    _Relation: -10

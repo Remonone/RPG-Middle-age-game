@@ -16,7 +16,7 @@ PrefabInstance:
     - target: {fileID: 5360683131785772904, guid: 0331b169005eb1d469455efaa6b9024a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5360683131785772904, guid: 0331b169005eb1d469455efaa6b9024a,
         type: 3}
@@ -100,6 +100,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1737163106}
+    - targetCorrespondingSourceObject: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6498973252112288757}
   m_SourcePrefab: {fileID: 100100000, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
 --- !u!1 &6079981149459276173 stripped
 GameObject:
@@ -139,7 +143,6 @@ MonoBehaviour:
   _cooldown:
     _timeToReset: 0
   _shouldResetOnAttack: 0
-  _networkReference: {fileID: 0}
 --- !u!114 &1305972743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,7 +208,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isTargetable: 1
-  _isAggresive: 0
 --- !u!114 &1737163106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,6 +224,19 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &6498973252112288757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6079981149459276173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285c39def7754519a9417320bc59532c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _organisation: {fileID: 11400000, guid: 322ed8b1108a7284286b11949004595c, type: 2}
 --- !u!95 &6386393948329803976 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5615497917579445399, guid: 0331b169005eb1d469455efaa6b9024a,

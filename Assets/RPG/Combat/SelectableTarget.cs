@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace RPG.Combat {
     public class SelectableTarget : MonoBehaviour, ITrajectory {
-        private bool _isTargetable;
-        private IOrganisationWrapper _organisation;
+        [SerializeField] private bool _isTargetable;
+        private OrganisationWrapper _wrapper;
         
         public bool Targetable => _isTargetable;
         
@@ -14,6 +14,7 @@ namespace RPG.Combat {
 
         private void Awake() {
             _health = GetComponent<Health>();
+            _wrapper = GetComponent<OrganisationWrapper>();
         }
 
         public CursorType GetCursorType() {
@@ -21,7 +22,7 @@ namespace RPG.Combat {
         }
 
         public bool IsAggressiveTo(Organisation organisation) {
-            var org = _organisation.GetOrganisation();
+            var org = _wrapper.Organisation;
             var relations = org.GetRelationWithOrganisation(organisation);
             return relations < org.AgroThreshold;
         }
@@ -30,9 +31,9 @@ namespace RPG.Combat {
         public bool HandleRaycast(PlayerController invoker) {
             if (!enabled || !_isTargetable) return false;
             var fighter = invoker.GetComponent<Fighter>();
-            if (!fighter.CanAttack(_health)) return false;
-            if (!IsAggressiveTo(invoker.GetOrganisation())) return false;
-            if (invoker.Map["Action"].WasPressedThisFrame()) fighter.Attack(this);
+            if (_health is not {IsAlive: true}) return false;
+            if (!IsAggressiveTo(invoker.GetComponent<OrganisationWrapper>().Organisation)) return false;
+            if (invoker.Map["Action"].WasPressedThisFrame()) fighter.Attack(gameObject);
             return true;
         }
     }

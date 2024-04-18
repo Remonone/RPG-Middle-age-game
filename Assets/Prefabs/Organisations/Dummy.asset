@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 284e4b19b1fd471dbcfde19e80cab2da, type: 3}
-  m_Name: Wanderer
+  m_Name: Dummy
   m_EditorClassIdentifier: 
-  _name: Wanderer
-  _description: Independent stranger
+  _name: Dummy
+  _description: Just a dummy
   _localDescription: 
-  _defaultRelation: 1
-  _color: {r: 0, g: 0.503809, b: 0.8113208, a: 0}
+  _defaultRelation: 0
+  _color: {r: 0, g: 0, b: 0, a: 0}
   _flag: {fileID: 0}
-  _emblem: {fileID: 21300000, guid: feb8709f10385a94095b55fe8d0f625c, type: 3}
-  _agroThreshold: -1000
+  _emblem: {fileID: 0}
+  _agroThreshold: 0
   _listOfRelations:
-  - _Organisation: {fileID: 11400000, guid: 322ed8b1108a7284286b11949004595c, type: 2}
+  - _Organisation: {fileID: 11400000, guid: 4924b858861cded42aa30df588eb74f8, type: 2}
     _Relation: -100

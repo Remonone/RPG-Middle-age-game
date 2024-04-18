@@ -26,7 +26,7 @@ namespace RPG.Dialogs {
         public bool IsChoosing => _isChoosing;
 
         
-        public string GetCurrentText() => _currentNode == null ? "" : _currentNode.Text;
+        public string GetCurrentText() => ReferenceEquals(_currentNode, null) ? "" : _currentNode.Text;
 
         public IEnumerable<DialogNode> GetChoices() => _dialog.GetPlayerChildren(_currentNode);
 
@@ -121,7 +121,7 @@ namespace RPG.Dialogs {
         }
 
         [ServerRpc]
-        public void SelectChoiceServerRpc(Vector2 choicePosition) {
+        private void SelectChoiceServerRpc(Vector2 choicePosition) {
             TriggerAction(_currentNode.OnExitPredicate, GetIdFromExecutor(_currentNode.ExitExecutor));
             _currentNode = _dialog.GetNode(choicePosition);
             TriggerAction(_currentNode.OnEnterPredicate, GetIdFromExecutor(_currentNode.EnterExecutor));

@@ -18,6 +18,7 @@ namespace RPG.Saving {
         static readonly Dictionary<string, SaveableEntity> GlobalLookup = new();
 
         public JToken CaptureAsJToken() {
+            Debug.Log("capturing...");
             JObject state = new JObject(new JProperty("content", new JObject()));
             JToken stateDict = state["content"];
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {
