@@ -27,6 +27,7 @@ namespace RPG.Combat {
         public event Action<DamageReport> OnAttack;
 
         private readonly int _isAttacking = Animator.StringToHash("IsAttacking");
+        private readonly int _resetAttacking = Animator.StringToHash("ResetAttacking");
 
         private Vector3? TargetPosition {
             get {
@@ -61,6 +62,8 @@ namespace RPG.Combat {
         private void AttackTarget() {
             if (!_cooldown.IsAvailable || !_target.Value.TryGet(out _)) return;
             _mover.Cancel();
+            _target.Value.TryGet(out var obj);
+            transform.LookAt(obj.transform);
             _animator.SetTrigger(_isAttacking);
         }
 
@@ -104,13 +107,16 @@ namespace RPG.Combat {
         }
 
         public void Cancel() {
+            Debug.Log("disabling");
             if (IsServer) {
                 ResetComponent();
                 return;
             }
-            if (IsOwner) {
-                FighterResetComponentServerRpc();
-            }
+
+            if (!IsOwner) return;
+            _animator.ResetTrigger(_isAttacking);
+            _animator.SetTrigger(_resetAttacking);
+            FighterResetComponentServerRpc();
         }
         
         [ServerRpc]
@@ -118,6 +124,8 @@ namespace RPG.Combat {
             ResetComponent();
         }
         private void ResetComponent() {
+            _animator.ResetTrigger(_isAttacking);
+            _animator.SetTrigger(_resetAttacking);
             _target.Value = new NetworkObjectReference();
         }
 
@@ -128,7 +136,7 @@ namespace RPG.Combat {
                 _ => null
             };
         }
-        //
+        
         private object PerformHit(object[] arguments) {
             var objToHit = PredicateWorker.GetPredicateMonoBehaviour((string)arguments[0]);
             if (objToHit.GetComponent<Health>() is not { } target) return null;
