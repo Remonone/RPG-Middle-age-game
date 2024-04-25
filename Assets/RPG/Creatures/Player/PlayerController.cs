@@ -7,7 +7,9 @@ using RPG.Core.Cursors;
 using RPG.Movement;
 using RPG.Network.Client;
 using RPG.Saving;
+using RPG.SceneManagement.Network;
 using RPG.UI.InfoBar;
+using RPG.Utils.Constants;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -70,7 +72,8 @@ namespace RPG.Creatures.Player {
             if (!IsOwner) return;
             var data = JObject.Parse(stringifiedData);
             _id = (string)data[PLAYER_ID];
-            
+            int sceneIndex = data[SCENE_INDEX] == null ? PropertyConstants.STARTER_SCENE : (int)data[SCENE_INDEX];
+            LoadSceneServerRpc(sceneIndex);
             // BAD SOLUTION
             SaveableEntity entity = GetComponent<SaveableEntity>();
             if (!entity) return;
@@ -87,6 +90,18 @@ namespace RPG.Creatures.Player {
             _map.Enable();
         }
         
+        [ServerRpc]
+        private void LoadSceneServerRpc(int sceneId, ServerRpcParams serverRpcParams = default) {
+            FindObjectOfType<SceneDistributor>().LoadScene(sceneId, transform.position, serverRpcParams.Receive.SenderClientId);
+        }
+
+        public void LoadScene(int sceneId, Vector3 position) {
+            Debug.Log(sceneId);
+            if (!IsOwner) return;
+            SceneManager.LoadScene(sceneId);
+            transform.position = position;
+        }
+
         public override void OnNetworkDespawn() {
             base.OnNetworkDespawn();
             if (IsOwner) {

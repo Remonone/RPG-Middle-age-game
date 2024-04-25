@@ -1,21 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using RPG.Creatures.Player;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 namespace RPG.SceneManagement.Network {
     public class SceneDistributor : NetworkBehaviour {
 
-        private readonly Dictionary<int, List<ulong>> _sceneDistribution = new();
+        private Dictionary<int, List<ulong>> _sceneDistribution;
 
         private void Start() {
-            DontDestroyOnLoad(this);
+            
+            NetworkManager.OnServerStarted += OnStartServer;
+            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null) {
+                DontDestroyOnLoad(this);
+                NetworkManager.StartServer();
+            }
+        }
+        private void OnStartServer() {
+            NetworkManager.OnClientDisconnectCallback += OnPlayerLeaveScene;
+            _sceneDistribution = new Dictionary<int, List<ulong>>();
         }
 
-        private void Awake() {
-            NetworkManager.OnClientDisconnectCallback += OnPlayerLeaveScene;
-        }
         private void OnPlayerLeaveScene(ulong playerId) {
             var sceneId = GetSceneIdByClientId(playerId);
             if (sceneId == -1) return;
@@ -34,25 +42,26 @@ namespace RPG.SceneManagement.Network {
                     TargetClientIds = new[] { senderId }
                 }
             };
+            var client = NetworkManager.ConnectedClients.First(id => id.Key == senderId).Value;
+            var reference = client.PlayerObject.GetComponent<NetworkObjectReference>();
             if (_sceneDistribution.ContainsKey(sceneId)) {
-                LoadSceneClientRpc(sceneId, position, param);
+                LoadSceneClientRpc(sceneId, position, reference, param);
                 _sceneDistribution[sceneId].Add(senderId);
                 return;
             }
 
-            string sceneName = SceneManager.GetSceneByBuildIndex(sceneId).name;
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(sceneId);
+            string sceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
             NetworkManager.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+            
             _sceneDistribution.Add(sceneId, new List<ulong> {senderId});
-            LoadSceneClientRpc(sceneId, position, param);
+            LoadSceneClientRpc(sceneId, position, reference, param);
         }
         
         [ClientRpc]
-        private void LoadSceneClientRpc(int sceneId, Vector3 position, ClientRpcParams clientRpcParams = default) {
-            SceneManager.LoadSceneAsync(sceneId).completed += (obj) => {
-                var client = NetworkManager.ConnectedClients.First(id => id.Key == NetworkManager.LocalClientId).Value;
-                client.PlayerObject.transform.position = position;
-            };
-            
+        private void LoadSceneClientRpc(int sceneId, Vector3 position, NetworkObjectReference playerObject, ClientRpcParams clientRpcParams = default) {
+            playerObject.TryGet(out var obj);
+            obj.GetComponent<PlayerController>().LoadScene(sceneId, position);
         }
 
         public void TransferToScene(int sceneId, Vector3 position, ulong senderId) {
@@ -61,9 +70,11 @@ namespace RPG.SceneManagement.Network {
                     TargetClientIds = new[] { senderId }
                 }
             };
+            var client = NetworkManager.ConnectedClients.First(id => id.Key == senderId).Value;
+            var reference = client.PlayerObject.GetComponent<NetworkObjectReference>();
             if (_sceneDistribution.ContainsKey(sceneId)) {
                 OnPlayerLeaveScene(senderId);
-                TransferToSceneClientRpc(sceneId, position, param);
+                LoadSceneClientRpc(sceneId, position, reference, param);
                 _sceneDistribution[sceneId].Add(senderId);
                 return;
             }
@@ -71,7 +82,7 @@ namespace RPG.SceneManagement.Network {
             string sceneName = SceneManager.GetSceneByBuildIndex(sceneId).name;
             NetworkManager.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
             _sceneDistribution.Add(sceneId, new List<ulong> {senderId});
-            TransferToSceneClientRpc(sceneId, position, param);
+            LoadSceneClientRpc(sceneId, position, reference, param);
         }
 
         private int GetSceneIdByClientId(ulong id) {
@@ -80,14 +91,5 @@ namespace RPG.SceneManagement.Network {
             }
             return -1;
         }
-
-        [ClientRpc]
-        private void TransferToSceneClientRpc(int sceneId, Vector3 position, ClientRpcParams clientRpcParams = default) {
-            SceneManager.LoadSceneAsync(sceneId).completed += (obj) => {
-                var client = NetworkManager.ConnectedClients.First(id => id.Key == NetworkManager.LocalClientId).Value;
-                client.PlayerObject.transform.position = position;
-            };
-        }
-
     }
 }

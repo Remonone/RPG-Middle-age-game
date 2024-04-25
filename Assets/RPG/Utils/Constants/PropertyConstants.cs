@@ -5,6 +5,7 @@
         public const string ITEMS_PATH = "Items";
         public const string QUESTS_PATH = "Quests";
         public const string DIALOGS_PATH = "Dialogs";
+        public const int STARTER_SCENE = 3;
         
         
         // SERVER
