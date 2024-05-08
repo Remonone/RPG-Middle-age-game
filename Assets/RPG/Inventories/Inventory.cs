@@ -102,10 +102,6 @@ namespace RPG.Inventories {
 
         public IEnumerable<InventorySlot> FindSlots(InventoryItem item) => _inventorySlots.Where(slot => slot.Item == item);
 
-        public static Inventory GetPlayerInventory() {
-            var player = GameObject.FindWithTag("Player");
-            return player.GetComponent<Inventory>();
-        }
         
         private int FindEmptySlot() {
             for (int i = 0; i < _slotsCount; i++) {
@@ -123,23 +119,20 @@ namespace RPG.Inventories {
 
         public JToken CaptureAsJToken() {
             var inventoryState = new JArray(
-                            from item in _inventorySlots
-                            select new JObject(
-                                    new JProperty("slot", Array.FindIndex(_inventorySlots, slot => slot == item)),
-                                    new JProperty("item" , new JObject(
-                                                new JProperty("id", item.Item.ID),
-                                                new JProperty("count", item.Count)
-                                            ))
-                                )
-                        );
+                        from slot in _inventorySlots
+                        select new JObject(
+                            new JProperty("slot", Array.FindIndex(_inventorySlots, pos => pos == slot)),
+                            new JProperty("id", new JValue(slot.Item != null ? slot.Item.ID : "")),
+                            new JProperty("count", slot.Count)
+                        )
+                    );
             return inventoryState;
         }
         public void RestoreFromJToken(JToken state) {
             foreach (var slot in state) {
                 var index = (int)slot["slot"];
-                var itemConfig = slot["item"];
-                var item = InventoryItem.GetItemByGuid((string)itemConfig["id"]);
-                var count = (int)itemConfig["count"];
+                var item = InventoryItem.GetItemByGuid((string)slot["id"]);
+                var count = (int)slot["count"];
                 _inventorySlots[index] = new InventorySlot {
                     Item = item,
                     Count = count

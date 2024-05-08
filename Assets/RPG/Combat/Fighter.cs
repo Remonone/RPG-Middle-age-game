@@ -10,8 +10,6 @@ using RPG.Stats;
 using RPG.Utils;
 using UnityEngine;
 
-// TODO: REDUCE DEPENDENCY LIST
-
 namespace RPG.Combat {
     public class Fighter : MonoBehaviour, IAction, IPredicateHandler{
 
@@ -38,8 +36,8 @@ namespace RPG.Combat {
             _mover.Cancel();
         }
 
-        public void Attack(SelectableEnemy target) {
-            if (!target._isTargetable) return;
+        public void Attack(SelectableTarget target) {
+            if (!target.Targetable) return;
             var health = target.GetComponent<Health>();
             if (health == null || !health.IsAlive) return;
             _scheduler.SwitchAction(this);

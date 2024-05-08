@@ -25,8 +25,15 @@ namespace RPG.Quests {
             InitQuest();
         }
         
-        private void InitQuest() {
+        public QuestState(QuestStore store, Quest quest, int objective) {
+            _store = store;
+            _quest = quest;
+            InitQuest(objective);
+        }
+
+        private void InitQuest(int objectiveIndex = 0) {
             foreach(var objective in _quest.Objectives) _objectivesList.Push(objective);
+            for (int i = 0; i < objectiveIndex - 1; i++) _objectivesList.Pop();
             var task = _objectivesList.Pop();
             _currentObjective = task;
             task.OnObjectiveCompeted += OnObjectiveFinished;

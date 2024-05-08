@@ -1,7 +1,7 @@
 ﻿using System;
-using RPG.Creatures.Controls;
+using RPG.Core.Cursors;
+using RPG.Creatures.Player;
 using RPG.Inventories.Items;
-using RPG.UI.Cursors;
 using UnityEngine;
 
 namespace RPG.Inventories.Pickups {

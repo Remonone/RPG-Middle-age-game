@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RPG.Utils.Constants;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ namespace RPG.Dialogs {
         [SerializeField] private List<DialogNode> _nodes = new();
 
         private Dictionary<string, DialogNode> _nodeLookup = new();
+
+        private static Dictionary<string, Dialog> _dialogDictionary = new();
 
         public DialogNode GetRootNode() => _nodes[0];
 
@@ -33,17 +36,40 @@ namespace RPG.Dialogs {
 
 
         private void Awake() {
+            #if UNITY_EDITOR
             FillNodesDict();
+            #endif
         }
 
         private void OnValidate() {
+            #if UNITY_EDITOR
             if (_nodes.Count == 0) {
                 AddNewNode(null);
             }
             _nodeLookup.Clear();
             FillNodesDict();
+            #endif
         }
         
+        public static Dialog GetDialogByName(string questName) {
+            _dialogDictionary ??= GetFilledDialogDictionary();
+            return _dialogDictionary[questName];
+        }
+        
+        private static Dictionary<string, Dialog> GetFilledDialogDictionary() {
+            var questDictionary = new Dictionary<string, Dialog>();
+            var dialogs = Resources.LoadAll<Dialog>(PropertyConstants.DIALOGS_PATH);
+            foreach (var dialog in dialogs) {
+                if (questDictionary.ContainsKey(dialog.name)) {
+                    Debug.LogError($"There's a duplicate for objects: {questDictionary[dialog.name]} and {dialog}");
+                    continue;
+                }
+                _dialogDictionary.Add(dialog.name, dialog);
+            }
+            return questDictionary;
+        }
+        
+#if UNITY_EDITOR
         public void AddNewNode(DialogNode node) {
             var newNode = CreateNode(node);
             Undo.RegisterCreatedObjectUndo(newNode, "Create Dialog Node");
@@ -82,8 +108,11 @@ namespace RPG.Dialogs {
                 _nodeLookup[node.name] = node;
             }
         }
+
+#endif
         
         public void OnBeforeSerialize() {
+#if UNITY_EDITOR
             if (_nodes.Count == 0) {
                 DialogNode node = CreateNode(null);
                 _nodes.Add(node);
@@ -96,7 +125,9 @@ namespace RPG.Dialogs {
                     }
                 }
             }
+#endif
         }
+        
         public void OnAfterDeserialize() { }
     }
 }

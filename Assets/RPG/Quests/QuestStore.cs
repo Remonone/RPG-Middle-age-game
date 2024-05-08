@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using RPG.Core.Predicate;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 using RPG.Inventories;
+using RPG.Saving;
 using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Quests {
-    public class QuestStore : MonoBehaviour {
+    public class QuestStore : MonoBehaviour, ISaveable {
         private List<QuestState> _states = new();
-        private PredicateMonoBehaviour _predicate;
 
         public IEnumerable<QuestState> States => _states;
 
         public event Action<QuestState> OnStateUpdated;
-
-        private void Awake() {
-            _predicate = GetComponent<PredicateMonoBehaviour>();
-        }
 
         public void AddQuest(Quest quest) {
             if (HasQuest(quest)) return;
@@ -51,6 +48,28 @@ namespace RPG.Quests {
             OnStateUpdated?.Invoke(questState);
             if (questState.IsCompleted) {
                 FinishQuest(questState);
+            }
+        }
+        public JToken CaptureAsJToken() {
+            var quests = new JArray(
+                    from state in _states
+                    select new JObject(
+                            new JProperty("quest_name", state.Quest),
+                            new JProperty("completed_objectives", state.ObjectiveIndex)
+                        )
+                );
+            return quests;
+        }
+        
+        public void RestoreFromJToken(JToken state) {
+            foreach (var quest in state) {
+                _states.Add(
+                    new QuestState(
+                        this, 
+                        Quest.GetQuestByName((string)quest["quest_name"]), 
+                        (int)quest["completed_objectives"]
+                    )
+                );
             }
         }
     }

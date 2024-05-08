@@ -11,7 +11,7 @@ namespace RPG.Movement {
     public class Mover : MonoBehaviour, IAction, ISaveable {
         
         [SerializeField] private Animator _animator;
-        [SerializeField] private float _threshold = 2F;
+        [SerializeField] private float _threshold = 2F ;
         
         private readonly int _speed = Animator.StringToHash("Movespeed");
 

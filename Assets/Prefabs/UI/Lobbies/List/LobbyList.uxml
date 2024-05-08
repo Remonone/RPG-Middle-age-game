@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Prefabs/UI/Lobbies/List/lobbies.uss?fileID=7433441132597879392&amp;guid=0a8b7cad3ce255e4f9ceb13b338e4bed&amp;type=3#lobbies" />
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); min-height: auto; min-width: auto; align-items: auto; justify-content: center;">
+        <ui:VisualElement name="Lobbies" style="flex-grow: 0; background-color: rgb(135, 135, 135); width: 95%; height: 90%; min-height: auto; min-width: auto; align-self: center; justify-content: flex-start; align-items: stretch; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
+            <ui:Button text="Back" display-tooltip-when-elided="true" name="Back" style="max-width: 70px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;" />
+            <ui:ListView focusable="true" name="List" style="margin-top: 15px; background-color: rgb(103, 103, 103); align-self: stretch; align-items: center;" />
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-top: 15px; margin-bottom: 10px; flex-shrink: 0; flex-direction: row; justify-content: space-around; align-items: center; align-self: auto;">
+                <ui:Button text="Refresh" display-tooltip-when-elided="true" name="Refresh" style="flex-grow: 1;" />
+                <ui:Button text="Connect" display-tooltip-when-elided="true" name="Connect" focusable="true" style="margin-top: 0; margin-left: 0; margin-right: 0; margin-bottom: 0; width: auto; align-self: auto; align-items: auto; justify-content: flex-start; flex-grow: 1;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
