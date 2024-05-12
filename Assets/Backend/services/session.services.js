@@ -6,7 +6,8 @@ export const generateNewSession = async (hostId) => {
     const session = {
         _id: generateID(24),
         host_id: hostId,
-        session_map: DEFAULT_SCENE
+        session_map: DEFAULT_SCENE,
+        level: 1,
     };
     await database.collection('session').insertOne({...session});
     return session;

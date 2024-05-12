@@ -8,5 +8,6 @@
         //LOBBY
         public const string LOAD_LOBBIES = "api/v1/lobby/";
         public const string FETCH_LOBBY = "api/v1/lobby/receive";
+        public const string CREATE_LOBBY = "api/v1/lobby/create";
     }
 }

@@ -13,7 +13,7 @@ using static RPG.Utils.Constants.DataConstants;
 namespace RPG.Network.Controllers {
     public static class LobbyController {
         public static IEnumerator GetLobbyList(Action<List<LobbyPack>> onLobbies, Action<string> onFail) {
-            string result = "";
+            string result = @"{}";
             using (UnityWebRequest www = UnityWebRequest.Get($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.LOAD_LOBBIES}")) {
                 yield return www.SendWebRequest();
                 switch (www.result) {
@@ -37,15 +37,8 @@ namespace RPG.Network.Controllers {
 
                 List<LobbyPack> packs = new List<LobbyPack>();
                 foreach (var lobby in lobbieData) {
-                    LobbyPack.Builder builder = LobbyPack.Builder.GetBuilder();
-                    builder.SetRoomID((ulong)lobby[LOBBY_ID]);
-                    builder.SetRoomName((string)lobby[LOBBY_NAME]);
-                    builder.SetPlayerCount((int)lobby[LOBBY_PLAYERS]);
-                    builder.SetMapName((string)lobby[LOBBY_MAP]);
-                    builder.SetIsSecured((bool)lobby[LOBBY_SECURED]);
-                    builder.SetLevel((int)lobby[LOBBY_LEVEL]);
-                    builder.SetHostName((string)lobby[LOBBY_HOST]);
-                    packs.Add(builder.Build());
+                    LobbyPack pack = LobbyService.CreateLobbyPack(lobby.ToString());
+                    packs.Add(pack);
                 }
                 
                 onLobbies.Invoke(packs);
@@ -65,6 +58,27 @@ namespace RPG.Network.Controllers {
                 }
                 
                 onConnect.Invoke(www.downloadHandler.text);
+            }
+        }
+
+        public static IEnumerator CreateLobby(LobbyCreateData lobby, Action<LobbyPack> onCreate, Action<JToken> onFail) {
+            string query = LobbyService.CreateDataPayload(lobby);
+            using (UnityWebRequest www = UnityWebRequest.Post($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.CREATE_LOBBY}", query, "application/json")) {
+                yield return www.SendWebRequest();
+                if (www.result is UnityWebRequest.Result.ConnectionError) {
+                    onFail.Invoke(www.error);
+                    yield break;
+                }
+
+                if (www.result is UnityWebRequest.Result.DataProcessingError) {
+                    onFail.Invoke(JToken.Parse(www.downloadHandler.text));
+                    yield break;
+                }
+
+                if (www.result is UnityWebRequest.Result.Success) {
+                    var lobbyData = LobbyService.CreateLobbyPack(www.downloadHandler.text);
+                    onCreate.Invoke(lobbyData);
+                }
             }
         }
     }

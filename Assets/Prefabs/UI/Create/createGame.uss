@@ -1,0 +1,37 @@
+#SelectWorld {
+    background-color: rgb(154, 150, 150);
+    width: 30%;
+    margin-right: 20px;
+}
+
+TextField > * {
+    color: rgb(2, 2, 2);
+}
+
+Toggle > * {
+    color: rgb(27, 27, 27);
+}
+
+Toggle > Label {
+    width: auto;
+    max-width: none;
+    min-width: 0;
+}
+
+.disabled {
+    display: none;
+}
+
+#Control Button {
+    min-width: 150px;
+    color: rgb(7, 7, 7);
+}
+
+#Control Label {
+    width: auto;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: stretch;
+    align-self: center;
+    font-size: 20px;
+}

@@ -1,6 +1,7 @@
 import {createErrorMessage} from "../utils/error-convertor.js";
 import {handleData} from "../services/content.services.js";
 import {database} from "../server.js";
+import {generateNewSession} from "../services/session.services.js";
 
 export const updateSession = async (req, res) => {
     const query = req.body;
@@ -21,4 +22,12 @@ export const updateSession = async (req, res) => {
             await handleData(player_id, session_id, content);
     }
     res.status(200).send();
+}
+
+export const generateSession = async (req, res) => {
+    const { hostId } = req.query;
+
+    const session = generateNewSession(hostId);
+
+    res.status(200).send(session);
 }

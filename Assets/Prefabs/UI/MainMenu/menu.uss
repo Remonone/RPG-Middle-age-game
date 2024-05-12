@@ -1,0 +1,22 @@
+#Menu {
+    background-color: rgb(250, 250, 250);
+    align-self: center;
+    width: 40%;
+    max-height: 50%;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: auto;
+    flex-direction: column;
+    border-left-color: rgb(108, 108, 108);
+    border-right-color: rgb(108, 108, 108);
+    border-top-color: rgb(108, 108, 108);
+    border-bottom-color: rgb(108, 108, 108);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}

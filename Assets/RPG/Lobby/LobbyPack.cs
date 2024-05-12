@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace RPG.Lobby {
     public class LobbyPack {
         public string RoomName { get; private set; }

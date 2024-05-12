@@ -34,7 +34,7 @@ export const getLobbyCredentials = async(req, res) => {
 }
 
 export const createLobby = async(req, res) => {
-    const { token, roomName, roomPassword, sessionId } = req.query;
+    const { token, roomName, roomPassword, sessionId } = req.body;
     let userData;
     if(roomName === undefined || roomName === '') {
         res.status(400).send(createErrorMessage("Room name was not provided"));
@@ -54,7 +54,8 @@ export const createLobby = async(req, res) => {
     }
     let session = await database.collection('sessions').findOne({session_id: sessionId || "null", host_id: userData.login});
     if(session === undefined) {
-        session = generateNewSession();
+        res.status(404).send(createErrorMessage("Session was not found."));
+        return;
     }
     const room_id = generateID(9);
     const lobby = {

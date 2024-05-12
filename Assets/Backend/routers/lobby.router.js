@@ -11,7 +11,7 @@ const router = Router();
 
 router.get('/', fetchLobby);
 router.get('/receive', getLobbyCredentials);
-router.get('/create', createLobby);
+router.post('/create', createLobby);
 router.delete('/delete', deleteLobby);
 router.put('/update', updateLobby);
 

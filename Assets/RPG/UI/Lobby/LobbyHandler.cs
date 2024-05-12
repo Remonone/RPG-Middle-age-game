@@ -1,5 +1,7 @@
 using System;
 using RPG.Lobby;
+using RPG.UI.Elements.LobbyElement;
+using RPG.UI.Elements.LobbyElement.LobbyConnect;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,6 +9,7 @@ namespace RPG.UI.Lobby {
     public class LobbyHandler : MonoBehaviour {
         [SerializeField] private LobbyDataContainer _dataPackage;
         [SerializeField] private UIDocument _lobbyList;
+        [SerializeField] private GameObject _mainMenu;
         
         private LobbyPack _selectedLobby;
         private VisualElement _root;
@@ -24,6 +27,7 @@ namespace RPG.UI.Lobby {
             _connectButton = _root.Q<Button>("Connect");
             _refreshButton = _root.Q<Button>("Refresh");
             _backButton = _root.Q<Button>("Back");
+            _listView = _root.Q<ListView>("List");
         }
 
         private void OnEnable() {
@@ -34,8 +38,17 @@ namespace RPG.UI.Lobby {
             _refreshButton.clicked += OnRefreshPerformed;
             _backButton.clicked += OnBackPerformed;
         }
+
+        private void OnDisable() {
+            _dataPackage.OnUpdate -= UpdateList;
+            _connectButton.clicked -= OnConnectPerformed;
+            _refreshButton.clicked -= OnRefreshPerformed;
+            _backButton.clicked -= OnBackPerformed;
+        }
+
         private void OnBackPerformed() {
-            throw new NotImplementedException();
+            _mainMenu.SetActive(true);
+            gameObject.SetActive(false);
         }
         private void OnRefreshPerformed() {
             if (_isRefreshing) return;
@@ -52,14 +65,28 @@ namespace RPG.UI.Lobby {
             _dataPackage.ConnectToLobby(_selectedLobby.RoomID);
         }
         private void PerformSecuredLobby(LobbyPack selectedLobby) {
-            throw new NotImplementedException();
+            var connectElement = new LobbyConnect {
+                RoomID = selectedLobby.RoomID
+            };
+            connectElement.OnConnect += OnConnectToLobby;
+            _root.Add(connectElement);
+        }
+        private void OnConnectToLobby(ulong id, string password) {
+            _dataPackage.ConnectToLobby(id, password);
         }
 
         private void UpdateList() {
             foreach (var lobby in _dataPackage.Lobbies) {
-                
+                var lobbyEl = new LobbyElement {
+                    IsSecured = lobby.IsSecured,
+                    RoomName = lobby.RoomName,
+                    RoomMap = lobby.MapName,
+                    PlayersAmount = lobby.PlayerCount,
+                    RoomHost = lobby.HostName
+                };
+                _listView.Add(lobbyEl);
             }
-
+            _listView.Rebuild();
             _isRefreshing = false;
         }
     }
