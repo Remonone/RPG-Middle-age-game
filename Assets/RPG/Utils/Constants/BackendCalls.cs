@@ -9,5 +9,9 @@
         public const string LOAD_LOBBIES = "api/v1/lobby/";
         public const string FETCH_LOBBY = "api/v1/lobby/receive";
         public const string CREATE_LOBBY = "api/v1/lobby/create";
+        
+        // SESSION
+        public const string CREATE_WORLD = "api/v1/session/create";
+        public const string FETCH_WORLDS = "api/v1/session/fetch";
     }
 }

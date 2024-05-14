@@ -13,9 +13,7 @@ export const fetchUser = async (req, res) => {
         if(bcrypt.compareSync(password, user.password)){
             const tokenToConvert = {username: user.username, login: user._id};
             const token = jwt.sign(tokenToConvert, ENCRYPTION_KEY, { algorithm: 'HS256'});
-            const serverCredentials = await database.collection('servers').findOne({serverName: user.server});
-            console.log(serverCredentials);
-            res.status(200).send({token, ip: serverCredentials.ip, port: serverCredentials.port});
+            res.status(200).send({token});
         } else {
             res.status(403).send(createErrorMessageWithType("Password is incorrect", "Password"));
         }
@@ -28,7 +26,6 @@ export const registerUser = async (req, res) => {
     const login = req.body['login'];
     const username = req.body['username'];
     const password = req.body['password'];
-    const server = req.body['server_name'];
 
     const existingLogin = await database.collection('users').findOne({login});
     if(!!existingLogin){
@@ -40,11 +37,10 @@ export const registerUser = async (req, res) => {
         res.status(400).send(createErrorMessageWithType("Username", "This username is already used."));
         return;
     }
-    const serverCredentials = await database.collection('servers').findOne({serverName: server});
     const hashedPassword = bcrypt.hashSync(password, parseInt(CRYPT_SALT));
-    await database.collection('users').insertOne({_id: login, username, password: hashedPassword, server});
+    await database.collection('users').insertOne({_id: login, username, password: hashedPassword});
     const token = jwt.sign({username: username, login: login}, ENCRYPTION_KEY, { algorithm: 'HS256'});
-    res.status(200).send({token: token, ip: serverCredentials.ip, port: serverCredentials.port});
+    res.status(200).send({token: token});
 }
 
 export const saveUser = async (req, res) => {

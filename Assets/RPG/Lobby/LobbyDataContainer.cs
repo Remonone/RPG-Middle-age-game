@@ -9,13 +9,18 @@ using UnityEngine;
 namespace RPG.Lobby {
     public class LobbyDataContainer : MonoBehaviour {
 
-        [SerializeField] private ApplicationManager _manager;
+        private ApplicationManager _manager;
         
         private List<LobbyPack> _lobbies;
 
         public IEnumerable<LobbyPack> Lobbies => _lobbies;
 
         public Action OnUpdate;
+
+
+        private void Awake() {
+            _manager = FindObjectOfType<ApplicationManager>();
+        }
 
         public void UpdateList() {
             StartCoroutine(LobbyController.GetLobbyList(OnLoad, OnFail));
@@ -31,11 +36,11 @@ namespace RPG.Lobby {
             OnUpdate?.Invoke();
         }
 
-        public void ConnectToLobby(ulong lobbyId) {
+        public void ConnectToLobby(string lobbyId) {
             StartCoroutine(LobbyController.JoinLobby(new LobbyPayload { RoomID = lobbyId }, OnJoin, OnJoinFailed));
         }
         
-        public void ConnectToLobby(ulong lobbyId, string password) {
+        public void ConnectToLobby(string lobbyId, string password) {
             StartCoroutine(LobbyController.JoinLobby(new LobbyPayload { RoomID = lobbyId, Password = password}, OnJoin, OnJoinFailed));
         }
         

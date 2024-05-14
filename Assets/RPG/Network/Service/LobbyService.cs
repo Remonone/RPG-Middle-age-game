@@ -25,7 +25,7 @@ namespace RPG.Network.Service {
         public static LobbyPack CreateLobbyPack(string receivedData) {
             var lobby = JToken.Parse(receivedData);
             var builder = LobbyPack.Builder.GetBuilder();
-            builder.SetRoomID((ulong)lobby[LOBBY_ID]);
+            builder.SetRoomID((string)lobby[LOBBY_ID]);
             builder.SetRoomName((string)lobby[LOBBY_NAME]);
             builder.SetPlayerCount((int)lobby[LOBBY_PLAYERS]);
             builder.SetMapName((string)lobby[LOBBY_MAP]);

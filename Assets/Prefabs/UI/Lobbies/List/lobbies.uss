@@ -5,6 +5,7 @@ LobbyElement {
     justify-content: space-between;
     align-self: auto;
     align-items: center;
+    width: 100%;
 }
 
 LobbyElement Label {

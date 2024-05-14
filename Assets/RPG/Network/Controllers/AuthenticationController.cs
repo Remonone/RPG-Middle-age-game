@@ -37,10 +37,10 @@ namespace RPG.Network.Controllers {
             onLogin(data);
         }
 
-        public static IEnumerator SignUp(string login, string username, string password, string serverName, Action<JToken> onAuth, int attemptCount = 10) {
+        public static IEnumerator SignUp(string login, string username, string password, Action<JToken> onAuth, int attemptCount = 10) {
             string result = "";
             bool isFailed = false;
-            string query = UserService.ConvertUserToForm(login, username, password, serverName);
+            string query = UserService.ConvertUserToForm(login, username, password);
 
             for (int i = 0; i < attemptCount && !isFailed; i++) {
                 using (UnityWebRequest www = UnityWebRequest.Post($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.REGISTER_USER}", query, "application/json")) {

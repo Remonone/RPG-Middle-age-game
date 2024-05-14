@@ -16,20 +16,20 @@ namespace RPG.UI.Menu {
         private Button _settingsButton;
         private Button _exitButton;
         
-        private void Awake() {
-            _root = _menuDocument.rootVisualElement;
 
+        private void OnEnable() {
+            _root = _menuDocument.rootVisualElement;
             _createGameButton = _root.Q<Button>("Create");
-            _createGameButton.clicked += CreateGame;
             _joinGameButton = _root.Q<Button>("Join");
-            _joinGameButton.clicked += JoinGame;
             _settingsButton = _root.Q<Button>("Settings");
-            _settingsButton.clicked += OnSettings;
             _exitButton = _root.Q<Button>("Exit");
+            _createGameButton.clicked += CreateGame;
+            _joinGameButton.clicked += JoinGame;
+            _settingsButton.clicked += OnSettings;
             _exitButton.clicked += OnExit;
         }
 
-        private void OnDestroy() {
+        private void OnDisable() {
             _createGameButton.clicked -= CreateGame;
             _joinGameButton.clicked -= JoinGame;
             _settingsButton.clicked -= OnSettings;
@@ -38,7 +38,7 @@ namespace RPG.UI.Menu {
         
         private void OnExit() {
 #if UNITY_EDITOR
-                EditorApplication.ExitPlaymode();
+                EditorApplication.isPlaying = false;
 #else
                 Application.Quit();
 #endif

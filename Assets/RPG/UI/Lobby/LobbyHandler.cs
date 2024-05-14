@@ -1,7 +1,8 @@
-using System;
+using System.Collections.Generic;
 using RPG.Lobby;
 using RPG.UI.Elements.LobbyElement;
 using RPG.UI.Elements.LobbyElement.LobbyConnect;
+using RPG.Utils.Constants;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -17,9 +18,15 @@ namespace RPG.UI.Lobby {
         private Button _connectButton;
         private Button _refreshButton;
         private Button _backButton;
-        private ListView _listView;
+        private VisualElement _listContainer;
+
+        private List<LobbyPack> _lobbies = new();
+
+        private ListView _view;
 
         private bool _isRefreshing;
+        
+        LobbyElement CreateItem() => new();
 
         private void Awake() {
             _root = _lobbyList.rootVisualElement;
@@ -27,7 +34,7 @@ namespace RPG.UI.Lobby {
             _connectButton = _root.Q<Button>("Connect");
             _refreshButton = _root.Q<Button>("Refresh");
             _backButton = _root.Q<Button>("Back");
-            _listView = _root.Q<ListView>("List");
+            _listContainer = _root.Q<VisualElement>("Container");
         }
 
         private void OnEnable() {
@@ -56,7 +63,8 @@ namespace RPG.UI.Lobby {
             _dataPackage.UpdateList();
         }
         private void OnConnectPerformed() {
-            if (ReferenceEquals(_selectedLobby, null)) return;
+            if (_view.selectedIndex < 0) return;
+            _selectedLobby = _lobbies[_view.selectedIndex];
             if (_selectedLobby.IsSecured) {
                 PerformSecuredLobby(_selectedLobby);
                 return;
@@ -71,23 +79,33 @@ namespace RPG.UI.Lobby {
             connectElement.OnConnect += OnConnectToLobby;
             _root.Add(connectElement);
         }
-        private void OnConnectToLobby(ulong id, string password) {
+        private void OnConnectToLobby(string id, string password) {
             _dataPackage.ConnectToLobby(id, password);
         }
 
         private void UpdateList() {
+            _lobbies.Clear();
             foreach (var lobby in _dataPackage.Lobbies) {
-                var lobbyEl = new LobbyElement {
-                    IsSecured = lobby.IsSecured,
-                    RoomName = lobby.RoomName,
-                    RoomMap = lobby.MapName,
-                    PlayersAmount = lobby.PlayerCount,
-                    RoomHost = lobby.HostName
-                };
-                _listView.Add(lobbyEl);
+                
+                _lobbies.Add(lobby);
             }
-            _listView.Rebuild();
+
+            BuildListView();
             _isRefreshing = false;
+        }
+        private void BuildListView() {
+            if(!ReferenceEquals(_view, null)) _view.RemoveFromHierarchy();
+            _view = new ListView(_lobbies, PropertyConstants.ITEM_HEIGHT, CreateItem, BindItem);
+            _listContainer.Add(_view);
+        }
+        private void BindItem(VisualElement element, int index) {
+            var el = element as LobbyElement;
+            var lobby = _lobbies[index];
+            el.IsSecured = lobby.IsSecured;
+            el.RoomName = lobby.RoomName;
+            el.RoomMap = lobby.MapName;
+            el.PlayersAmount = lobby.PlayerCount;
+            el.RoomHost = lobby.HostName;
         }
     }
 }

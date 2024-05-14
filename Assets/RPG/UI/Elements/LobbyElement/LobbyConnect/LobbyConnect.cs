@@ -4,14 +4,14 @@ using UnityEngine.UIElements;
 
 namespace RPG.UI.Elements.LobbyElement.LobbyConnect {
     public class LobbyConnect : VisualElement{
-        public ulong RoomID { get; set; }
+        public string RoomID { get; set; }
         public string Password { get; set; }
-        public Action<ulong, string> OnConnect;
+        public Action<string, string> OnConnect;
         
         public new class UxmlFactory : UxmlFactory<LobbyConnect, UxmlTraits> {}
 
         public new class UxmlTraits : VisualElement.UxmlTraits {
-            private UxmlLongAttributeDescription _roomId = new() { name = "room_id" };
+            private UxmlStringAttributeDescription _roomId = new() { name = "room_id" };
             private UxmlStringAttributeDescription _roomPassword = new() { name = "room_password" };
 
             public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription {
@@ -24,7 +24,7 @@ namespace RPG.UI.Elements.LobbyElement.LobbyConnect {
                 connectElement.Clear();
                 
                 connectElement.AddToClassList("lobby_connect");
-                connectElement.RoomID = (ulong)_roomId.GetValueFromBag(bag, cc);
+                connectElement.RoomID = _roomId.GetValueFromBag(bag, cc);
                 connectElement.Password = _roomPassword.GetValueFromBag(bag, cc);
                 var input = new TextField { value = connectElement.Password };
                 connectElement.Add(input);

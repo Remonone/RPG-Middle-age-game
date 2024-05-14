@@ -1,0 +1,119 @@
+.value_input TextField {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.input_error TextField {
+    border-left-color: rgb(186, 0, 0);
+    border-right-color: rgb(186, 0, 0);
+    border-top-color: rgb(186, 0, 0);
+    border-bottom-color: rgb(186, 0, 0);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+.value_input #unity-text-input {
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+}
+
+.value_input #error {
+    display: none;
+}
+
+.input_error #error {
+    display: flex;
+}
+
+.input_error Label {
+    color: rgb(185, 0, 0);
+}
+
+.value_input Label {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.snackbar {
+    border-radius: 10px;
+    position: absolute;
+    padding: 10px 20px;
+}
+
+.snackbar.Hidden {
+    visibility: hidden;
+}
+
+.snackbar Label {
+    padding: 0;
+    margin: 0;
+}
+
+.snackbar.Success {
+    background-color: rgb(237, 247, 237);
+    color: rgb(30, 70, 32);
+}
+
+.snackbar.Error {
+    background-color: rgb(255, 228, 225);
+    color: rgb(169, 17, 1);
+}
+
+.snackbar.Info {
+    background-color: rgb(234, 234, 255);
+    color: rgb(75, 97, 209);
+}
+
+.snackbar.Debug {
+    background-color: rgb(255, 255, 255);
+    color: rgb(50, 50, 100);
+}
+
+.TopLeft {
+    top: 20px;
+    left: 20px;
+}
+
+.TopRight {
+    top: 20px;
+    right: 20px;
+}
+
+.BottomLeft {
+    bottom: 20px;
+    left: 20px;
+}
+
+.BottomRight {
+    bottom: 20px;
+    right: 20px;
+}
+
+WorldRow {
+    flex-direction: row;
+    justify-content: space-between;
+}
