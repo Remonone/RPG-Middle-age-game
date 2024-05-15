@@ -1,7 +1,9 @@
-﻿using RPG.Network.Management.Managers;
+﻿using RPG.Lobby;
+using RPG.Network.Management.Managers;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RPG.Network.Management {
     [RequireComponent(typeof(NetworkManager))]
@@ -13,11 +15,16 @@ namespace RPG.Network.Management {
 
         public IManager Manager => _manager;
 
-        public void HostServer() {
+        public void HostServer(LobbyPack pack) {
             if (!ReferenceEquals(_manager, null)) return;
             _manager = gameObject.AddComponent<HostManager>();
             _manager.Token = Token;
             NetworkManager.Singleton.StartHost();
+            NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
+            FindObjectOfType<LobbyProcessor>().Init(pack);
+            var playerObj = NetworkManager.Singleton.LocalClient.PlayerObject;
+            var model = playerObj.gameObject.transform.GetChild(0);
+            model.gameObject.SetActive(false);
         }
         
         

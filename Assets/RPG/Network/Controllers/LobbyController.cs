@@ -129,11 +129,17 @@ namespace RPG.Network.Controllers {
                     var worlds = data["sessions"];
                     foreach (var session in worlds) {
                         SessionData ses = new SessionData((string)session["_id"], (string)session["host_id"],
-                            (string)session["session_map"], (int)session["level"], (string)session["name"]);
+                            (string)session["session_map"], (int)session["level"], (string)session["session_name"]);
                         sessions.Add(ses);
                     }
                     onFetch.Invoke(sessions);
                 }
+            }
+        }
+
+        public static IEnumerator UnloadLobby(string token, string roomId) {
+            using (UnityWebRequest www = UnityWebRequest.Delete($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.DELETE_LOBBY}?token={token}&roomId={roomId}")) {
+                yield return www.SendWebRequest();
             }
         }
     }

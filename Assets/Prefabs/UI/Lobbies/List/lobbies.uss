@@ -28,3 +28,12 @@ LobbyElement .lobby_secured {
 LobbyElement .secured {
     background-color: rgb(185, 1, 1);
 }
+
+#Container ListView {
+    background-color: rgb(149, 149, 149);
+    border-left-color: rgb(91, 91, 91);
+    border-right-color: rgb(91, 91, 91);
+    border-top-color: rgb(91, 91, 91);
+    border-bottom-color: rgb(91, 91, 91);
+    height: 100%;
+}

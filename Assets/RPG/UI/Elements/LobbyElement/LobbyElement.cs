@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine.UIElements;
 
 namespace RPG.UI.Elements.LobbyElement {
     public class LobbyElement : VisualElement {
+        
+        private Action<Label, string> _onDataChanged;
         
         public string RoomName { get; set; }
         public int PlayersAmount { get; set; }

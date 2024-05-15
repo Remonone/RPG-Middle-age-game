@@ -136,7 +136,7 @@ namespace RPG.UI.Create {
             StartCoroutine(LobbyController.CreateLobby(data, OnSuccess, OnFail));
         }
         private void OnSuccess(LobbyPack obj) {
-            // TODO: Transfer to lobby
+            FindObjectOfType<ApplicationManager>().HostServer(obj);
         }
         private void OnFail(JToken obj) {
             Debug.Log((string)obj["error_message"]);
