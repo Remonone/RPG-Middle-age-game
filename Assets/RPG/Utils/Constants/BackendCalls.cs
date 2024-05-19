@@ -14,5 +14,8 @@
         // SESSION
         public const string CREATE_WORLD = "api/v1/session/create";
         public const string FETCH_WORLDS = "api/v1/session/fetch";
+        
+        // CONTENT
+        public const string GET_CONTENT = "api/v1/content/";
     }
 }

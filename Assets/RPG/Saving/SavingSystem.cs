@@ -17,8 +17,8 @@ namespace RPG.Saving {
             StartCoroutine(AuthenticationController.SaveEntity(state, token));
         }
 
-        public IEnumerator Load(GameObject loader, string jwt, Action<JObject> onLoadFinish) {
-            yield return AuthenticationController.LoadEntity(jwt, data => {
+        public IEnumerator Load(GameObject loader, string playerId, string sessionId, Action<JObject> onLoadFinish) {
+            yield return ContentController.GetPlayerContent(playerId, sessionId, data => {
                 RestoreFromToken(data, loader);
                 onLoadFinish(data);
             });

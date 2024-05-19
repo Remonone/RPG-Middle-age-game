@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using RPG.Lobby;
 using RPG.Network.Controllers;
 using RPG.Network.Management;
 using RPG.UI.Elements.Input;
@@ -69,7 +70,12 @@ namespace RPG.UI {
         }
 
         private void OnLogin(JToken data) {
-            FindObjectOfType<ApplicationManager>().Token = (string)data["token"];
+            var application = FindObjectOfType<ApplicationManager>();
+            application.Token = (string)data["token"];
+            application.PlayerData = new PlayerData((string)data["user"]["_id"], (string)data["user"]["username"]);
+            application.IP = (string)data["ip"];
+            application.Port = (ushort)data["port"];
+            Debug.Log(application.IP + ":" + application.Port);
             SceneManager.LoadScene("Main");
         }
 

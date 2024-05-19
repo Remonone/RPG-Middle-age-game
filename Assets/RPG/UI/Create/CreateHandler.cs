@@ -131,8 +131,8 @@ namespace RPG.UI.Create {
         
         private void OnWorldStart() {
             if (ReferenceEquals(_selectedWorld, null)) return;
-            var token = FindObjectOfType<ApplicationManager>().Token;
-            LobbyCreateData data = new LobbyCreateData(_selectedWorld.Id, token, _password.Value, _roomName.Value);
+            var application = FindObjectOfType<ApplicationManager>();
+            LobbyCreateData data = new LobbyCreateData(_selectedWorld.Id, application.Token, _password.Value, _roomName.Value, application.IP, application.Port);
             StartCoroutine(LobbyController.CreateLobby(data, OnSuccess, OnFail));
         }
         private void OnSuccess(LobbyPack obj) {
@@ -162,6 +162,8 @@ namespace RPG.UI.Create {
             _selectedWorld = null;
             _room.EnableInClassList("disabled", true);
             _password.EnableInClassList("disabled", true);
+            _sessionList.Clear();
+            _view.RemoveFromHierarchy();
         }
     }
 }

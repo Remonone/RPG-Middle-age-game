@@ -16,7 +16,8 @@ export const fetchLobby = async(req, res) => {
 }
 
 export const getLobbyCredentials = async(req, res) => {
-    const lobbyId = req.query["lobby"];
+    console.log("Joining the lobby: " + req.query["id"]);
+    const lobbyId = req.query["id"];
     const password = req.query["password"];
     const lobby = await database.collection('lobbies').findOne({_id: lobbyId});
     if(!lobby) {
@@ -33,7 +34,7 @@ export const getLobbyCredentials = async(req, res) => {
 }
 
 export const createLobby = async(req, res) => {
-    const { token, roomName, roomPassword, sessionId } = req.body;
+    const { token, roomName, roomPassword, sessionId, ip, port } = req.body;
     let userData;
     if(roomName === undefined || roomName === '' || sessionId === '' || sessionId === undefined) {
         res.status(400).send(createErrorMessage("Room name was not provided"));
@@ -64,15 +65,20 @@ export const createLobby = async(req, res) => {
     const lobby = {
         _id: room_id,
         room_name: roomName,
-        room_secured: roomPassword !== undefined,
+        room_secured: roomPassword !== "",
         room_password: roomPassword || '',
         room_map: session.session_map,
         room_level: session.level,
         room_players: 1,
         room_host: user._id,
     };
-    console.log({...lobby});
-    await database.collection('lobbies').insertOne({...lobby});
+    const lobbyToInsert = {
+        ...lobby,
+        server_ip: ip,
+        server_port: port,
+    }
+    console.log({...lobbyToInsert});
+    await database.collection('lobbies').insertOne({...lobbyToInsert});
     res.status(201).send({...lobby, session_id: session._id});
 }
 
@@ -94,6 +100,7 @@ export const deleteLobby = async(req, res) => {
     if(lobby.host !== userData.host) {
         res.status(403).send(createErrorMessage("Only host can delete the lobby!"))
     }
+    console.log("Lobby to delete: " + lobby);
     await database.collection('lobbies').deleteOne(lobby);
     res.status(204).send();
 }

@@ -1,5 +1,6 @@
-﻿using RPG.Lobby;
-using RPG.Network.Management.Managers;
+﻿using System;
+using RPG.Lobby;
+using RPG.UI.Lobby;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -8,33 +9,56 @@ using UnityEngine.SceneManagement;
 namespace RPG.Network.Management {
     [RequireComponent(typeof(NetworkManager))]
     public class ApplicationManager : MonoBehaviour {
+        private bool _isConnected;
+        private PlayerData _data;
 
-        private IManager _manager;
+        public string IP { get; set; }
+        public ushort Port { get; set; }
         
         public string Token { get; set; }
+        
+        public PlayerData PlayerData {
+            get => _data;
+            set {
+                if (!string.IsNullOrEmpty(_data.PlayerID.Value)) return;
+                _data = value;
+            }
+        }
 
-        public IManager Manager => _manager;
+        private LobbyPack _lobby;
 
         public void HostServer(LobbyPack pack) {
-            if (!ReferenceEquals(_manager, null)) return;
-            _manager = gameObject.AddComponent<HostManager>();
-            _manager.Token = Token;
+            if (_isConnected) return;
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(IP, Port);
             NetworkManager.Singleton.StartHost();
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += OnSceneLoaded;
+            _lobby = pack;
             NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
-            FindObjectOfType<LobbyProcessor>().Init(pack);
+            
+        }
+        private void OnSceneLoaded(ulong clientid, string scenename, LoadSceneMode loadscenemode) {
+            FindObjectOfType<LobbyProcessor>().Init(_lobby);
             var playerObj = NetworkManager.Singleton.LocalClient.PlayerObject;
-            var model = playerObj.gameObject.transform.GetChild(0);
-            model.gameObject.SetActive(false);
+            playerObj.gameObject.SetActive(false);
+            _isConnected = true;
+            FindObjectOfType<LobbyInstanceHandler>().Initialize();
+            NetworkManager.Singleton.SceneManager.OnLoadComplete -= OnSceneLoaded;
         }
-        
-        
+
+
         public void ConnectToServer(string ip, ushort port) {
-            if (!ReferenceEquals(_manager, null)) return;
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ip, port);
-            _manager = gameObject.AddComponent<ClientManager>();
-            _manager.Token = Token;
+            if (_isConnected) return;
+            var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.SetConnectionData(ip, port);
             NetworkManager.Singleton.StartClient();
+            transport.OnTransportEvent += OnTransport;
         }
-        
+        private void OnTransport(NetworkEvent eventtype, ulong clientid, ArraySegment<byte> payload, float receivetime) {
+            if (eventtype == NetworkEvent.Disconnect) {
+                SceneManager.LoadScene("Main");
+                _isConnected = false;
+            }
+        }
+
     }
 }

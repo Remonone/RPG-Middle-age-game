@@ -7,13 +7,17 @@ import {createErrorMessage, createErrorMessageWithType} from "../utils/error-con
 export const fetchUser = async (req, res) => {
     const login = req.query['login'];
     const password = req.query['password'];
-
+    console.log(req.ip);
+    let ip = req.ip;
+    if (ip.slice(0, 7) === "::ffff:") {
+        ip = ip.slice(7)
+    }
     const user = await database.collection('users').findOne({_id: login});
     if(!!user) {
         if(bcrypt.compareSync(password, user.password)){
             const tokenToConvert = {username: user.username, login: user._id};
             const token = jwt.sign(tokenToConvert, ENCRYPTION_KEY, { algorithm: 'HS256'});
-            res.status(200).send({token});
+            res.status(200).send({token, user, ip, port: 7000});
         } else {
             res.status(403).send(createErrorMessageWithType("Password is incorrect", "Password"));
         }
@@ -38,9 +42,10 @@ export const registerUser = async (req, res) => {
         return;
     }
     const hashedPassword = bcrypt.hashSync(password, parseInt(CRYPT_SALT));
-    await database.collection('users').insertOne({_id: login, username, password: hashedPassword});
+    const newUser = {_id: login, username, password: hashedPassword};
+    await database.collection('users').insertOne({...newUser});
     const token = jwt.sign({username: username, login: login}, ENCRYPTION_KEY, { algorithm: 'HS256'});
-    res.status(200).send({token: token});
+    res.status(200).send({token, user: newUser});
 }
 
 export const saveUser = async (req, res) => {

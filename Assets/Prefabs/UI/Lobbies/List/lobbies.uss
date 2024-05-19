@@ -15,7 +15,7 @@ LobbyElement Label {
     -unity-text-align: upper-left;
 }
 
-LobbyElement .lobby_secured {
+.lobby_secured {
     width: 20px;
     height: 20px;
     background-color: rgb(0, 200, 9);
@@ -25,7 +25,7 @@ LobbyElement .lobby_secured {
     border-bottom-right-radius: 10px;
 }
 
-LobbyElement .secured {
+.secured {
     background-color: rgb(185, 1, 1);
 }
 

@@ -16,10 +16,12 @@ namespace RPG.Network.Service {
         }
         public static string CreateDataPayload(LobbyCreateData lobby) {
             JObject payload = new();
-            payload["token"] = lobby.token;
-            payload["roomName"] = lobby.roomName;
-            payload["roomPassword"] = lobby.roomPassword;
-            payload["sessionId"] = lobby.sessionId;
+            payload["token"] = lobby.Token;
+            payload["roomName"] = lobby.RoomName;
+            payload["roomPassword"] = lobby.RoomPassword;
+            payload["sessionId"] = lobby.SessionId;
+            payload["ip"] = lobby.IP;
+            payload["port"] = lobby.Port;
             return payload.ToString();
         }
         public static LobbyPack CreateLobbyPack(string receivedData) {
@@ -32,6 +34,7 @@ namespace RPG.Network.Service {
             builder.SetIsSecured((bool)lobby[LOBBY_SECURED]);
             builder.SetLevel((int)lobby[LOBBY_LEVEL]);
             builder.SetHostName((string)lobby[LOBBY_HOST]);
+            builder.SetSessionId((string)lobby[SESSION_ID]);
             return builder.Build();
         }
     }

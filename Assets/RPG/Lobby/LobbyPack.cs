@@ -6,6 +6,7 @@ namespace RPG.Lobby {
         public string MapName { get; private set; }
         public int Level { get; private set; }
         public string RoomID { get; private set; }
+        public string SessionId { get; private set; }
         
         public string HostName { get; private set; }
 
@@ -26,6 +27,7 @@ namespace RPG.Lobby {
             public void SetRoomID(string id) => _lobbyPack.RoomID = id;
 
             public void SetHostName(string host) => _lobbyPack.HostName = host;
+            public void SetSessionId(string id) => _lobbyPack.SessionId = id;
             
             public LobbyPack Build() {
                 return _lobbyPack;

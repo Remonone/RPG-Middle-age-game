@@ -6,15 +6,87 @@ namespace RPG.UI.Elements.LobbyElement {
     public class LobbyElement : VisualElement {
         
         private Action<Label, string> _onDataChanged;
+
+        private string _roomName;
+        private string _roomMap;
+        private string _roomHost;
+        private int _playersAmount;
+        private int _roomLevel;
+        private bool _isSecured;
         
-        public string RoomName { get; set; }
-        public int PlayersAmount { get; set; }
-        public bool IsSecured { get; set; }
-        public string RoomMap { get; set; }
-        public string RoomHost { get; set; }
-        public int RoomLevel { get; set; }
+        public string RoomName {
+            get => _roomName;
+            set {
+                _roomName = value;
+                _roomNameEl.text = value;
+            }
+        }
+
+        public int PlayersAmount {
+            get => _playersAmount;
+            set {
+                _playersAmount = value;
+                _playersAmountEl.text = $"{value}/4";
+            }
+        }
+
+        public bool IsSecured {
+            get => _isSecured;
+            set {
+                _isSecured = value;
+                _isSecuredEl.EnableInClassList("lobby_secured", value);
+            }
+        }
+
+        public string RoomMap {
+            get => _roomMap;
+            set {
+                _roomMap = value;
+                _roomInfoEl.text = $"{value}({_roomLevel})";
+            }
+        }
+
+        public string RoomHost {
+            get => _roomHost;
+            set {
+                _roomHost = value;
+                _roomHostEl.text = value;
+            }
+        }
+
+        public int RoomLevel {
+            get => _roomLevel;
+            set {
+                _roomLevel = value;
+                _roomInfoEl.text = $"{_roomMap}({value})";
+            }
+        }
+
         public ulong RoomID { get; set; }
-        public bool IsSelected { get; set; }
+        
+        
+        
+        private readonly VisualElement _isSecuredEl = new();
+        private readonly Label _roomNameEl = new();
+        private readonly Label _roomInfoEl = new();
+        private readonly Label _roomHostEl = new();
+        private readonly Label _playersAmountEl = new();
+
+        public LobbyElement() {
+            AddToClassList("lobby_line");
+            Add(_isSecuredEl);
+            _isSecuredEl.AddToClassList("lobby_secured");
+            _isSecuredEl.AddToClassList(IsSecured ? "secured" : "");
+            Add(_roomNameEl);
+            _roomNameEl.text = RoomName;
+            Add(_roomInfoEl);
+            _roomInfoEl.text = $"{RoomMap}({RoomLevel})";
+            Add(_roomHostEl);
+            _roomHostEl.text = RoomHost;
+            
+            Add(_playersAmountEl);
+            _playersAmountEl.text = $"{PlayersAmount}/4";
+        }
         
         public new class UxmlFactory : UxmlFactory<LobbyElement, UxmlTraits> { }
 
@@ -26,8 +98,7 @@ namespace RPG.UI.Elements.LobbyElement {
             private UxmlBoolAttributeDescription _isSecured = new() { name = "is_secured" };
             private UxmlIntAttributeDescription _roomPlayers = new() { name = "room_players", defaultValue = 1};
             private UxmlIntAttributeDescription _roomLevel = new() { name = "room_level" };
-            private UxmlBoolAttributeDescription _isSelected = new() { name = "is_selected", defaultValue = false};
-
+            
             public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription {
                 get {yield break;}
             }
@@ -57,9 +128,6 @@ namespace RPG.UI.Elements.LobbyElement {
 
                 lobbyElement.PlayersAmount = _roomPlayers.GetValueFromBag(bag, cc);
                 lobbyElement.Add(new Label(lobbyElement.PlayersAmount + " / 4"));
-
-                lobbyElement.IsSelected = _isSelected.GetValueFromBag(bag, cc);
-                lobbyElement.AddToClassList(lobbyElement.IsSelected ? "selected" : "");
 
                 lobbyElement.RoomID = (ulong)_roomID.GetValueFromBag(bag, cc);
             }

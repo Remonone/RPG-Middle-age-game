@@ -1,9 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:engine="UnityEngine.UIElements"
-    xmlns:editor="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd"
->
-    
-</engine:UXML>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Prefabs/UI/Lobbies/Instance/LobbyInstance.uss?fileID=7433441132597879392&amp;guid=4f2bbe476e0172c4bbf35fbf8a2b924d&amp;type=3#LobbyInstance" />
+    <ui:VisualElement name="Instance" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; flex-wrap: nowrap; flex-shrink: 0; align-self: auto; justify-content: flex-start; align-items: center;">
+        <ui:VisualElement style="background-color: rgba(0, 0, 0, 0); width: 70%; align-self: auto; align-items: stretch; flex-shrink: 1; flex-grow: 1;">
+            <ui:VisualElement name="LobbyInfo" style="background-color: rgba(0, 0, 0, 0); flex-shrink: 1; flex-grow: 1; height: 40%; margin-bottom: 10px;">
+                <ui:VisualElement class="element" style="flex-grow: 1;">
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                        <ui:Button text="Quit Lobby" display-tooltip-when-elided="true" name="Quit" style="width: 15%; height: 20px;" />
+                        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                            <ui:Label tabindex="-1" text="Room Name:" display-tooltip-when-elided="true" />
+                            <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="Name" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                            <ui:Label tabindex="-1" text="Room Map:" display-tooltip-when-elided="true" />
+                            <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="Map" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                            <ui:Label tabindex="-1" text="Room Level:" display-tooltip-when-elided="true" />
+                            <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="Level" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row;">
+                            <ui:Label tabindex="-1" text="Room Host:" display-tooltip-when-elided="true" />
+                            <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" name="Host" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="Chat" style="background-color: rgba(0, 0, 0, 0); flex-shrink: 1; flex-grow: 1; height: 60%; margin-top: 10px;">
+                <ui:VisualElement class="element" style="flex-grow: 1;">
+                    <ui:Label tabindex="-1" text="Chat" display-tooltip-when-elided="true" style="font-size: 16px;" />
+                    <ui:VisualElement name="ChatContainer" style="flex-grow: 1; background-color: rgb(125, 125, 125);" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" name="ChatInput" style="margin-left: 0; margin-right: 0; margin-top: 5px; margin-bottom: 0; font-size: 12px;">
+                        <ui:Button text="Send" display-tooltip-when-elided="true" name="SendMessage" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; color: rgb(0, 0, 0);" />
+                    </ui:TextField>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 30%; flex-shrink: 1;">
+            <ui:VisualElement name="PlayerList" style="background-color: rgba(0, 0, 0, 0); flex-grow: 1; flex-shrink: 1; margin-bottom: 10px; height: 80%;">
+                <ui:VisualElement class="element" style="flex-grow: 0; height: 100%;">
+                    <ui:Label tabindex="-1" text="Player List" display-tooltip-when-elided="true" style="font-size: 16px;" />
+                    <ui:VisualElement name="PlayerContainer" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="Controls" style="background-color: rgba(0, 0, 0, 0); flex-shrink: 1; flex-grow: 1; margin-top: 10px; height: 20%;">
+                <ui:VisualElement class="element" style="flex-grow: 1; flex-shrink: 1; height: 100%;">
+                    <ui:Label tabindex="-1" text="Controls" display-tooltip-when-elided="true" style="font-size: 16px;" />
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); min-height: 0;">
+                        <ui:Button text="Start" display-tooltip-when-elided="true" name="Start" style="color: rgb(0, 0, 0);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

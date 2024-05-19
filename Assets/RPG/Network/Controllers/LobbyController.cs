@@ -125,7 +125,6 @@ namespace RPG.Network.Controllers {
                 if (www.result is UnityWebRequest.Result.Success) {
                     var data = JToken.Parse(www.downloadHandler.text);
                     List<SessionData> sessions = new();
-                    Debug.Log(www.downloadHandler.text);
                     var worlds = data["sessions"];
                     foreach (var session in worlds) {
                         SessionData ses = new SessionData((string)session["_id"], (string)session["host_id"],

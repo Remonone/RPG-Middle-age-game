@@ -1,0 +1,25 @@
+#Instance > VisualElement {
+    width: auto;
+    height: auto;
+    align-self: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.element {
+    background-color: rgb(178, 178, 178);
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.disabled {
+    display: none;
+}

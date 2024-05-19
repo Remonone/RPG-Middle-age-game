@@ -46,8 +46,8 @@ namespace RPG.Lobby {
         
         private void OnJoin(string obj) {
             var connectionData = JToken.Parse(obj);
-            string ip = (string)connectionData["ip"];
-            ushort port = (ushort)connectionData["port"];
+            string ip = (string)connectionData["server_ip"];
+            ushort port = (ushort)connectionData["server_port"];
             _manager.ConnectToServer(ip, port);
             
         }

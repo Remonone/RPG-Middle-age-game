@@ -11,6 +11,8 @@
         public const string LOBBY_PLAYERS = "room_players";
         public const string LOBBY_HOST = "room_host";
 
+        public const string SESSION_ID = "session_id";
+
         public const string ERROR_MESSAGE = "error_message";
     }
 }

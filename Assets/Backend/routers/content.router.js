@@ -1,10 +1,12 @@
 import {Router} from 'express';
 import {
+    getPlayerContent,
     handlePlayerContent,
 } from "../controllers/content.controller.js";
 
 const router = Router();
 
-router.get('/', handlePlayerContent);
+router.post('/update', handlePlayerContent);
+router.get('/', getPlayerContent);
 
 export default router;

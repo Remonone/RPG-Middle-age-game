@@ -106,6 +106,7 @@ namespace RPG.UI.Lobby {
             el.RoomMap = lobby.MapName;
             el.PlayersAmount = lobby.PlayerCount;
             el.RoomHost = lobby.HostName;
+            el.RoomLevel = lobby.Level;
         }
     }
 }
