@@ -8,7 +8,7 @@ namespace RPG.Dialogs {
     public class AIConversant : MonoBehaviour, ITrajectory {
         [SerializeField] private Dialog _dialog;
         [SerializeField] private string _entityName;
-        private SelectableTarget _selectable;
+        [SerializeField] private SelectableTarget _selectable;
         
         public string EntityName => _entityName;
 

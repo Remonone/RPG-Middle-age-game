@@ -10,15 +10,13 @@ namespace RPG.Saving {
     [ExecuteAlways]
     public class SaveableEntity : NetworkBehaviour { 
         
-        [SerializeField] NetworkVariable<FixedString64Bytes> uniqueIdentifier = new();
-        public string EntityId => uniqueIdentifier.Value.Value;
+        private string _uniqueIdentifier;
             
         
         // CACHED STATE
         static readonly Dictionary<string, SaveableEntity> GlobalLookup = new();
 
         public JToken CaptureAsJToken() {
-            Debug.Log("capturing...");
             JObject state = new JObject(new JProperty("content", new JObject()));
             JToken stateDict = state["content"];
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {
@@ -30,9 +28,6 @@ namespace RPG.Saving {
         }
 
         public void RestoreFromJToken(JToken s) {
-            if (IsServer) {
-                uniqueIdentifier.Value = (string)s[PLAYER_ID];
-            }
             if (s["content"] == null) return;
             JObject state = s["content"].ToObject<JObject>();
             IDictionary<string, JToken> stateDict = state;
@@ -69,7 +64,7 @@ namespace RPG.Saving {
                 return true;
             }
 
-            if (GlobalLookup[candidate].EntityId != candidate) {
+            if (GlobalLookup[candidate]._uniqueIdentifier != candidate) {
                 GlobalLookup.Remove(candidate);
                 return true;
             }

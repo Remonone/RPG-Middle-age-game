@@ -6,10 +6,11 @@ using RPG.Core.Predicate;
 using RPG.Inventories.Items;
 using RPG.Saving;
 using RPG.Visuals.Display;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Inventories {
-    public class Equipment : MonoBehaviour, ISaveable {
+    public class Equipment : NetworkBehaviour, ISaveable {
         [SerializeField] private Animator _animator;
 
         private PredicateMonoBehaviour _predicate;
@@ -32,6 +33,22 @@ namespace RPG.Inventories {
         }
         
         public void PlaceEquipment(EquipmentItem item, EquipmentSlot equipmentSlot) {
+            PlaceEquipmentServerRpc(item.ID, equipmentSlot);
+        }
+
+        [ServerRpc]
+        private void PlaceEquipmentServerRpc(string itemId, EquipmentSlot equipmentSlot) {
+            var item = (EquipmentItem)InventoryItem.GetItemByGuid(itemId);
+            if (item.Slot != equipmentSlot) return;
+            _items[equipmentSlot] = item;
+            OnEquipmentChange?.Invoke();
+            PlaceEquipmentClientRpc(itemId, equipmentSlot);
+        }
+        
+        [ClientRpc]
+        private void PlaceEquipmentClientRpc(string itemId, EquipmentSlot equipmentSlot) {
+            if (!IsOwner) return;
+            var item = (EquipmentItem)InventoryItem.GetItemByGuid(itemId);
             if (item.Slot != equipmentSlot) return;
             _items[equipmentSlot] = item;
             ApplyPredicate(_items[equipmentSlot].OnEquipPredicate);
@@ -43,6 +60,19 @@ namespace RPG.Inventories {
         }
 
         public void RemoveEquipment(EquipmentSlot equipmentSlot) {
+            PlaceEquipmentServerRpc(equipmentSlot);
+        }
+
+        [ServerRpc]
+        private void PlaceEquipmentServerRpc(EquipmentSlot equipmentSlot) {
+            _items[equipmentSlot] = null;
+            OnEquipmentChange?.Invoke();
+            PlaceEquipmentClientRpc(equipmentSlot);
+        }
+
+        [ClientRpc]
+        private void PlaceEquipmentClientRpc(EquipmentSlot equipmentSlot) {
+            if (!IsOwner) return;
             ApplyPredicate(_items[equipmentSlot].OnUnequipPredicate);
             _items[equipmentSlot].UnregisterModifications();
             _items[equipmentSlot] = null;
@@ -56,7 +86,7 @@ namespace RPG.Inventories {
             if (predicate.CodePredicate == "" || predicate.ComponentName == "") return;
             var formatted = 
                 string.Format(predicate.CodePredicate, 
-                    ((PredicateMonoBehaviour)GetComponent(predicate.ComponentName)).EntityID);
+                    GetComponent<PredicateMonoBehaviour>().EntityID, predicate.ComponentName);
             PredicateWorker.ExecutePredicate(formatted, _predicate.EntityID, out _);
         }
         

@@ -15,6 +15,7 @@ namespace RPG.Network.Controllers {
                     onData.Invoke(JObject.Parse(result));
                     yield break;
                 }
+                onData.Invoke(JObject.Parse(@"{}"));
                 
             }
         }

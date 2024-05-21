@@ -5,10 +5,11 @@ using Newtonsoft.Json.Linq;
 using RPG.Inventories.Items;
 using RPG.Inventories.Pickups;
 using RPG.Saving;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Inventories {
-    public class Inventory : MonoBehaviour, ISaveable {
+    public class Inventory : NetworkBehaviour, ISaveable {
         [SerializeField] private int _slotsCount;
         [SerializeField] private Pickup _pickup;
 
@@ -18,7 +19,9 @@ namespace RPG.Inventories {
 
         public event Action OnInventoryUpdate;
 
-        private void Awake() {
+        public override void OnNetworkSpawn() {
+            base.OnNetworkSpawn();
+            if (!IsOwner && !IsServer) return;
             _inventorySlots = new InventorySlot[_slotsCount];
             for (int i = 0; i < Size; i++) {
                 _inventorySlots[i] = new InventorySlot {
@@ -29,6 +32,7 @@ namespace RPG.Inventories {
         }
 
         private void Start() {
+            if (!IsOwner || !IsServer) return;
             _inventorySlots[0] = new InventorySlot {
                 Item = InventoryItem.GetItemByGuid("168820e5-f325-4e1e-9948-126e5ada4f18"),
                 Count = 1

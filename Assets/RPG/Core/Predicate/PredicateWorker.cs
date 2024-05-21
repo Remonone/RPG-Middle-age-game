@@ -67,7 +67,7 @@ namespace RPG.Core.Predicate {
                 var sender = (SenderNode)node;
                 var receiver = sender.Receiver.ID;
                 var id = Convert.ToString(RunNodes(receiver, sessionID));
-                string[] content = id.Split('.');
+                string[] content = id.Split(',');
                 var entity = PredicateBehavioursStore[content[0]];
                 if (!ReferenceEquals(entity, null) && entity.TryGetHandler(content[1], out IPredicateHandler handler)) {
                     var args = sender.Action.Args;

@@ -5,10 +5,11 @@ using Newtonsoft.Json.Linq;
 using RPG.Inventories;
 using RPG.Saving;
 using RPG.Stats;
-using UnityEngine;
+using Unity.Collections;
+using Unity.Netcode;
 
 namespace RPG.Quests {
-    public class QuestStore : MonoBehaviour, ISaveable {
+    public class QuestStore : NetworkBehaviour, ISaveable {
         private List<QuestState> _states = new();
 
         public IEnumerable<QuestState> States => _states;
@@ -17,6 +18,26 @@ namespace RPG.Quests {
 
         public void AddQuest(Quest quest) {
             if (HasQuest(quest)) return;
+            AddQuestServerRpc(quest.Title);
+        }
+
+        [ServerRpc]
+        private void AddQuestServerRpc(FixedString512Bytes questName, ServerRpcParams serverRpcParams = default) {
+            Quest quest = Quest.GetQuestByName(questName.Value);
+            var state = new QuestState(this, quest);
+            _states.Add(state);
+            OnStateUpdated?.Invoke(state);
+            ClientRpcParams clientRpcParams = new ClientRpcParams {
+                Send = {
+                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
+                }
+            };
+            AddQuestClientRpc(questName, clientRpcParams);
+        }
+
+        [ClientRpc]
+        private void AddQuestClientRpc(FixedString512Bytes questName, ClientRpcParams clientRpcParams) {
+            Quest quest = Quest.GetQuestByName(questName.Value);
             var state = new QuestState(this, quest);
             _states.Add(state);
             OnStateUpdated?.Invoke(state);
@@ -36,6 +57,27 @@ namespace RPG.Quests {
         }
 
         private void FinishQuest(QuestState state) {
+            FinishQuestServerRpc(state.Quest.Title);
+        }
+        
+        [ServerRpc]
+        private void FinishQuestServerRpc(string questTitle, ServerRpcParams serverRpcParams = default) {
+            var quest = Quest.GetQuestByName(questTitle);
+            var state = GetQuestState(quest);
+            _states.Remove(state);
+            GiveAward(state.Quest);
+            ClientRpcParams clientRpcParams = new ClientRpcParams {
+                Send = {
+                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
+                }
+            };
+            FinishQuestClientRpc(questTitle, clientRpcParams);
+        }
+        
+        [ClientRpc]
+        private void FinishQuestClientRpc(string questTitle, ClientRpcParams clientRpcParams) {
+            var quest = Quest.GetQuestByName(questTitle);
+            var state = GetQuestState(quest);
             _states.Remove(state);
             GiveAward(state.Quest);
         }

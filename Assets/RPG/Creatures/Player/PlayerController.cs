@@ -1,24 +1,30 @@
 using System;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using RPG.Core;
 using RPG.Core.Cursors;
-using RPG.Lobby;
 using RPG.Movement;
 using RPG.Network.Management;
+using RPG.Network.Processors;
+using RPG.Saving;
 using RPG.UI.Lobby;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace RPG.Creatures.Player {
+    // TODO: FIX HP BAR
     
     [RequireComponent(typeof(CameraBehaviour))]
     public class PlayerController : NetworkBehaviour {
         [SerializeField] private InputActionMap _map;
         [SerializeField] private CursorPreview[] _cursors;
         
+        [FormerlySerializedAs("_UiContainer")]
         [Header("On Init")] 
-        [SerializeField] private GameObject _UiContainer;
+        [SerializeField] private GameObject _uiContainer;
         [SerializeField] private GameObject _cameraHolder;
         [SerializeField] private Camera _camera;
         
@@ -26,9 +32,8 @@ namespace RPG.Creatures.Player {
         private LobbyProcessor _processor;
         private CameraBehaviour _cameraBehaviour;
 
-        private PlayerData _data;
+        private SavingSystem _system;
 
-        public PlayerData Data => _data;
         
         // PUBLIC
         public InputActionMap Map => _map;        
@@ -38,26 +43,42 @@ namespace RPG.Creatures.Player {
         private void Awake() {
             _mover = GetComponent<Mover>();
             _cameraBehaviour = GetComponent<CameraBehaviour>();
-            _cameraBehaviour.Init();
-        }
-
-        private void OnEnable() {
-            if (!IsOwner) return;
-            _map.Enable();
-            
         }
 
         public override void OnNetworkSpawn() {
-            if (!IsOwner || IsHost) return;
             base.OnNetworkSpawn();
+            if (!IsOwner || IsHost) return;
+            var application = FindObjectOfType<ApplicationManager>();
             _processor = FindObjectOfType<LobbyProcessor>();
-            var playerData = FindObjectOfType<ApplicationManager>().PlayerData;
-            _processor.ConnectToLobbyServerRpc(playerData);
+            var playerData = application.PlayerData;
+            application.SessionID = _processor.Room.Value.SessionID.Value;
             FindObjectOfType<LobbyInstanceHandler>().Initialize();
+            _processor.ConnectToLobbyServerRpc(playerData);
         }
 
-        public override void OnNetworkDespawn() {
-            if(NetworkManager.IsHost) _processor.CloseLobbyServerRpc();
+        [ClientRpc]
+        public void LoadClientRpc(ClientRpcParams clientRpcParams = default) {
+            var application = FindObjectOfType<ApplicationManager>();
+            LoadClientServerRpc(application.PlayerData.PlayerID.Value, application.SessionID);
+        }
+        
+        [ServerRpc(RequireOwnership = false)]
+        public void LoadClientServerRpc(string credentials, string SessionId, ServerRpcParams serverRpcParams = default) {
+            if (_system == null) _system = FindObjectOfType<SavingWrapper>().System;
+            gameObject.SetActive(true);
+            StartCoroutine(_system.Load(gameObject, credentials, SessionId, data => {
+                ClientRpcParams param = new ClientRpcParams {
+                    Send = {
+                        TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
+                    }
+                };
+                GetComponent<SaveableEntity>().RestoreFromJToken(data);
+                InitPlayerClientRpc(data.ToString(), param);
+            }));
+        }
+
+        public override void OnNetworkDespawn() { // TODO: FIX
+            if(IsHost) _processor.CloseLobbyServerRpc();
             else _processor.DisconnectFromLobbyServerRpc(FindObjectOfType<ApplicationManager>().PlayerData);
         }
 
@@ -66,20 +87,22 @@ namespace RPG.Creatures.Player {
             _map.Disable();
         }
         
-        public void InitPlayer() {
-            // BAD SOLUTION
-            ///////
-            Instantiate(_UiContainer);
+        [ClientRpc]
+        public void InitPlayerClientRpc(string data, ClientRpcParams clientRpcParams = default) {
+            gameObject.SetActive(true);
+            GetComponent<SaveableEntity>().RestoreFromJToken(JToken.Parse(data));
+            Instantiate(_uiContainer);
             _cameraHolder.SetActive(true);
             _cameraHolder.GetComponentInChildren<Camera>().tag = "MainCamera";
-            // _behaviour  = Instantiate(_followCamera).GetComponent<CinemachineVirtualCamera>();
-            // _behaviour.Follow = transform;
-            // var bar = Instantiate(_bar, transform);
-            // bar.gameObject.SetActive(false);
-            // bar.StartInit(_id, gameObject);
+            _cameraBehaviour.Init();
+            _map.Enable();
         }
 
         private void Update() {
+            if (!IsOwner) {
+                SetCursor(CursorType.EMPTY);
+                return;
+            }
             if (InteractWithCamera()) return;
             if (InteractWithUI()) return;
             if (InteractWithComponent()) return;
@@ -131,13 +154,18 @@ namespace RPG.Creatures.Player {
                 return false;
             }
             SetCursor(CursorType.MOVEMENT);
-            if (_map["Action"].WasPressedThisFrame()) _mover.StartMovingToPoint(hit.point);;
+            if (_map["Action"].WasPressedThisFrame()) _mover.RequestToMove(hit.point);
             return true;
         }
         
         private void SetCursor(CursorType type) {
             var cursor = _cursors.Single(cursor => cursor.Type == type);
             Cursor.SetCursor(cursor.Image, cursor.Hotspot, CursorMode.Auto);
+        }
+        
+        [ClientRpc]
+        public void DisableClientRpc() {
+            gameObject.SetActive(false);
         }
         
     }

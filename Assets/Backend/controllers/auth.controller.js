@@ -12,6 +12,9 @@ export const fetchUser = async (req, res) => {
     if (ip.slice(0, 7) === "::ffff:") {
         ip = ip.slice(7)
     }
+    if(ip === "::1") {
+        ip = "127.0.0.1";
+    }
     const user = await database.collection('users').findOne({_id: login});
     if(!!user) {
         if(bcrypt.compareSync(password, user.password)){

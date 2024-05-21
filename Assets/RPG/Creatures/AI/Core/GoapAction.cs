@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using RPG.Utils;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Creatures.AI.Core {
-    public abstract class GoapAction : MonoBehaviour {
+    public abstract class GoapAction : NetworkBehaviour {
 
         [SerializeField] protected List<StateObject> _prerequisites;
         [SerializeField] protected List<StateObject> _effects;

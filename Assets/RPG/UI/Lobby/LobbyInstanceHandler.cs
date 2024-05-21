@@ -1,5 +1,7 @@
 ﻿using RPG.Lobby;
 using RPG.Network.Management;
+using RPG.Network.Processors;
+using RPG.Network.Scenes;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -86,14 +88,9 @@ namespace RPG.UI.Lobby {
             }
         }
         private void OnGameStart() {
-            var sceneName = _processor.Room.Value.RoomMap;
-            NetworkManager.SceneManager.OnLoadComplete += OnSceneLoadComplete;
-            NetworkManager.SceneManager.LoadScene(sceneName.Value, LoadSceneMode.Single);
-            
+            _processor.StartGameServerRpc();
         }
-        private void OnSceneLoadComplete(ulong clientid, string scenename, LoadSceneMode loadscenemode) {
-            _processor.InitPlayersServerRpc();
-        }
+        
         private void CloseLobby() {
             _processor.CloseLobbyServerRpc();
         }
@@ -121,11 +118,13 @@ namespace RPG.UI.Lobby {
         public FixedString64Bytes RoomMap;
         public int RoomLevel;
         public FixedString64Bytes RoomHost;
+        public FixedString64Bytes SessionID;
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter {
             serializer.SerializeValue(ref RoomHost);
             serializer.SerializeValue(ref RoomLevel);
             serializer.SerializeValue(ref RoomMap);
             serializer.SerializeValue(ref RoomName);
+            serializer.SerializeValue(ref SessionID);
         }
     }
     

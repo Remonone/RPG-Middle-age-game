@@ -29,7 +29,7 @@ namespace RPG.Creatures.AI.Roles {
         private void Awake() {
             _health = GetComponent<Health>();
             _equipment = GetComponent<Equipment>();
-            _id = Guid.NewGuid(); // TODO: Change to save state
+            _id = Guid.NewGuid();
         }
 
         private void OnEnable() {
@@ -38,7 +38,8 @@ namespace RPG.Creatures.AI.Roles {
             _health.OnHit += OnHit;
         }
         private void OnHit(DamageReport report) {
-            if (!report.Attacker.TryGetComponent<Health>(out var target)) return;
+            report.Attacker.TryGet(out var attacker);
+            if (!attacker.TryGetComponent<Health>(out var target)) return;
             if ((target.transform.position - transform.position).magnitude > _detectionRadius) {
                 _suspiciousTime = Time.time + _suspiciousDuration;
             } else {

@@ -1,5 +1,6 @@
 ﻿using System;
 using RPG.Lobby;
+using RPG.Network.Processors;
 using RPG.UI.Lobby;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -16,6 +17,8 @@ namespace RPG.Network.Management {
         public ushort Port { get; set; }
         
         public string Token { get; set; }
+        
+        public string SessionID { get; set; }
         
         public PlayerData PlayerData {
             get => _data;

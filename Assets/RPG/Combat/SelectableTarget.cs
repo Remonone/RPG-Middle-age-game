@@ -33,7 +33,7 @@ namespace RPG.Combat {
             var fighter = invoker.GetComponent<Fighter>();
             if (_health is not {IsAlive: true}) return false;
             if (!IsAggressiveTo(invoker.GetComponent<OrganisationWrapper>().Organisation)) return false;
-            if (invoker.Map["Action"].WasPressedThisFrame()) fighter.Attack(this);
+            if (invoker.Map["Action"].WasPressedThisFrame()) fighter.Attack(gameObject);
             return true;
         }
     }
