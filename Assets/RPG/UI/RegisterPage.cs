@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
+using RPG.Lobby;
 using RPG.Network.Controllers;
 using RPG.Network.Management;
 using RPG.UI.Elements.Input;
 using RPG.Utils.UI;
-using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -51,8 +50,11 @@ namespace RPG.UI {
         }
 
         private void OnRegister(JToken data) {
-            FindObjectOfType<ApplicationManager>().Token = (string)data["token"];
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ipv4Address: (string)data["ip"], port: (ushort)data["port"]);
+            var application = FindObjectOfType<ApplicationManager>();
+            application.Token = (string)data["token"];
+            application.PlayerData = new PlayerData((string)data["user"]["_id"], (string)data["user"]["username"]);
+            application.IP = (string)data["ip"];
+            application.Port = (ushort)data["port"];
             SceneManager.LoadScene("Main");
         }
 

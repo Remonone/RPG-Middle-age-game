@@ -7,7 +7,6 @@ import {createErrorMessage, createErrorMessageWithType} from "../utils/error-con
 export const fetchUser = async (req, res) => {
     const login = req.query['login'];
     const password = req.query['password'];
-    console.log(req.ip);
     let ip = req.ip;
     if (ip.slice(0, 7) === "::ffff:") {
         ip = ip.slice(7)
@@ -44,11 +43,15 @@ export const registerUser = async (req, res) => {
         res.status(400).send(createErrorMessageWithType("Username", "This username is already used."));
         return;
     }
+    let ip = req.ip;
+    if (ip.slice(0, 7) === "::ffff:") ip = ip.slice(7)
+    if(ip === "::1") ip = "127.0.0.1";
+    
     const hashedPassword = bcrypt.hashSync(password, parseInt(CRYPT_SALT));
     const newUser = {_id: login, username, password: hashedPassword};
     await database.collection('users').insertOne({...newUser});
     const token = jwt.sign({username: username, login: login}, ENCRYPTION_KEY, { algorithm: 'HS256'});
-    res.status(200).send({token, user: newUser});
+    res.status(200).send({token, user: newUser, ip, port: 7000});
 }
 
 export const saveUser = async (req, res) => {

@@ -75,7 +75,7 @@ namespace RPG.UI {
             application.PlayerData = new PlayerData((string)data["user"]["_id"], (string)data["user"]["username"]);
             application.IP = (string)data["ip"];
             application.Port = (ushort)data["port"];
-            Debug.Log(application.IP + ":" + application.Port);
+            // Debug.Log(application.IP + ":" + application.Port);
             SceneManager.LoadScene("Main");
         }
 
