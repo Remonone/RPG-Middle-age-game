@@ -1,13 +1,13 @@
 ﻿using System;
-using RPG.Creatures.Controls;
+using RPG.Core.Cursors;
+using RPG.Creatures.Player;
 using RPG.Inventories.Items;
-using RPG.UI.Cursors;
 using UnityEngine;
 
 namespace RPG.Inventories.Pickups {
     public class Pickup : MonoBehaviour, ITrajectory {
 
-        private readonly Pickable _pickable = new();
+        [SerializeField] private Pickable _pickable = new();
         private bool _shouldBeDestroyed;
 
         public bool ShouldBeDestroyed => _shouldBeDestroyed;

@@ -1,0 +1,46 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Prefabs/UI/Create/createGame.uss?fileID=7433441132597879392&amp;guid=2c89f7703ef96ea4c8c36bc02680c11c&amp;type=3#createGame" />
+    <Style src="project://database/Assets/Prefabs/UI/base_ui.uss?fileID=7433441132597879392&amp;guid=7a22c7733ce44fc9aec6d3ff4b678964&amp;type=3#base_ui" />
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); margin-left: 20px; margin-right: 20px; margin-top: 20px; margin-bottom: 20px; flex-direction: row;">
+        <ui:VisualElement name="SelectWorld" style="flex-grow: 1; background-color: rgb(171, 171, 171); max-width: 30%; width: 100%; justify-content: flex-start; align-items: stretch; align-self: auto; padding-bottom: 15px; padding-left: 15px; padding-right: 15px; padding-top: 15px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;">
+            <ui:Label tabindex="-1" text="Select World" display-tooltip-when-elided="true" style="font-size: 20px; -unity-text-align: upper-center;" />
+            <ui:VisualElement name="Container" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+            <ui:Button text="Create New Game" display-tooltip-when-elided="true" name="Create" style="color: rgb(0, 0, 0); margin-left: 0; margin-right: 0;" />
+            <ui:Button text="Select" display-tooltip-when-elided="true" name="Select" style="color: rgb(0, 0, 0); margin-left: 0; margin-right: 0; margin-top: 5px;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column-reverse;">
+            <ui:VisualElement name="Control" style="flex-grow: 1; background-color: rgb(171, 171, 171); max-height: 15%; margin-left: 20px; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px; flex-direction: row-reverse;">
+                <ui:Button text="Start" display-tooltip-when-elided="true" name="Start" />
+                <ui:Button text="Back" display-tooltip-when-elided="true" name="Cancel" />
+                <ui:Label tabindex="-1" text="Control Panel" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Room" class="disabled" style="flex-grow: 1; background-color: rgb(171, 171, 171); margin-bottom: 20px; height: 70%; margin-left: 20px; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px; flex-direction: column;">
+                <ui:Label tabindex="-1" text="Room Settings" display-tooltip-when-elided="true" style="margin-left: 0; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; font-size: 20px; padding-left: 0;" />
+                <ui:VisualElement name="Props" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); align-self: auto; justify-content: flex-start; align-items: stretch;">
+                    <RPG.UI.Elements.Input.ValueInput label="Room Name" name="RoomName" />
+                    <ui:Toggle label="Is Secured" name="IsSecured" style="margin-left: 0;" />
+                    <RPG.UI.Elements.Input.ValueInput password="true" label="Password" name="Password" class="disabled" />
+                </ui:VisualElement>
+                <ui:VisualElement name="WorldInfo" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <ui:Label tabindex="-1" text="Room Info" display-tooltip-when-elided="true" style="font-size: 20px;" />
+                    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: column;">
+                        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: auto; align-self: auto;">
+                            <ui:Label tabindex="-1" text="Room Map:" display-tooltip-when-elided="true" />
+                            <ui:Label tabindex="-1" text="EMPTY" display-tooltip-when-elided="true" name="Map" />
+                        </ui:VisualElement>
+                        <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); flex-direction: row; align-items: auto; align-self: auto;">
+                            <ui:Label tabindex="-1" text="Room Level:" display-tooltip-when-elided="true" />
+                            <ui:Label tabindex="-1" text="EMPTY" display-tooltip-when-elided="true" name="Level" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="WorldName" class="disabled" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; width: 100%; height: 100%; justify-content: center;">
+            <ui:VisualElement style="flex-grow: 0; background-color: rgb(171, 171, 171); width: 50%; height: auto; justify-content: flex-start; align-self: center; align-items: stretch; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; border-left-color: rgb(128, 128, 128); border-right-color: rgb(128, 128, 128); border-top-color: rgb(128, 128, 128); border-bottom-color: rgb(128, 128, 128); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+                <RPG.UI.Elements.Input.ValueInput label="World Name" name="Name" />
+                <ui:Button text="Create World" display-tooltip-when-elided="true" name="Confirm" style="margin-left: 0; margin-right: 0;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

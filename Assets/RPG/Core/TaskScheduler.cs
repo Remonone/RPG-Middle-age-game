@@ -6,6 +6,7 @@ namespace RPG.Core {
         private IAction _currentAction;
 
         public void SwitchAction(IAction action) {
+            if (ReferenceEquals(_currentAction, action)) return;
             _currentAction?.Cancel();
             _currentAction = action;
         }

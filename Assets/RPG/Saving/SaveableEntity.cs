@@ -1,39 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using Unity.Collections;
+using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
+using static RPG.Utils.Constants.DataConstants;
 
 namespace RPG.Saving {
     [ExecuteAlways]
-    public class SaveableEntity : MonoBehaviour { 
+    public class SaveableEntity : NetworkBehaviour { 
         
-        [SerializeField] string uniqueIdentifier = "";
+        private NetworkVariable<FixedString64Bytes> _uniqueIdentifier;
+
+        public string UniqueID => _uniqueIdentifier.Value.Value;
         
         // CACHED STATE
-        static Dictionary<string, SaveableEntity> globalLookup = new Dictionary<string, SaveableEntity>();
-        
-        public string GetUniqueIdentifier() {
-            return uniqueIdentifier;
+        static readonly Dictionary<string, SaveableEntity> GlobalLookup = new();
+
+        private void Awake() {
+            _uniqueIdentifier = new();
         }
-    
-        public JToken CaptureAsJtoken() {
-            JObject state = new JObject();
-            IDictionary<string, JToken> stateDict = state;
+
+        public void Init(string id) {
+            _uniqueIdentifier.Value = id;
+        }
+
+        public JToken CaptureAsJToken() {
+            JObject state = new JObject(new JProperty("content", new JObject()));
+            JToken stateDict = state["content"];
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {
                 JToken token = jsonSaveable.CaptureAsJToken();
                 string component = jsonSaveable.GetType().ToString();
-                stateDict[jsonSaveable.GetType().ToString()] = token;
+                stateDict[component] = token;
             }
             return state;
         }
 
         public void RestoreFromJToken(JToken s) {
-            JObject state = s.ToObject<JObject>();
+            if (s["content"] == null) return;
+            JObject state = s["content"].ToObject<JObject>();
             IDictionary<string, JToken> stateDict = state;
             foreach (ISaveable jsonSaveable in GetComponents<ISaveable>()) {
                 string component = jsonSaveable.GetType().ToString();
                 if (stateDict.ContainsKey(component)) {
-                    // Debug.Log($"{name} Restore {component} =>{stateDict[component].ToString()}");
                     jsonSaveable.RestoreFromJToken(stateDict[component]);
                 }
             }
@@ -52,24 +62,23 @@ namespace RPG.Saving {
                 serializedObject.ApplyModifiedProperties();
             }
 
-            globalLookup[property.stringValue] = this;
+            GlobalLookup[property.stringValue] = this;
         }
     #endif
 
         private bool IsUnique(string candidate) {
-            if (!globalLookup.ContainsKey(candidate)) return true;
-            if (globalLookup[candidate] == this) return true;
-            if (globalLookup[candidate] == null) { 
-                globalLookup.Remove(candidate);
+            if (!GlobalLookup.ContainsKey(candidate)) return true;
+            if (GlobalLookup[candidate] == this) return true;
+            if (GlobalLookup[candidate] == null) { 
+                GlobalLookup.Remove(candidate);
                 return true;
             }
 
-            if (globalLookup[candidate].GetUniqueIdentifier() != candidate) {
-                globalLookup.Remove(candidate);
+            if (GlobalLookup[candidate].UniqueID != candidate) {
+                GlobalLookup.Remove(candidate);
                 return true;
             }
             return false;
         }
-
     }
 }

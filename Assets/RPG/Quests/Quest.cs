@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using RPG.Inventories.Items;
 using RPG.Quests.Objectives;
-using RPG.Utils;
+using RPG.Utils.Constants;
 using UnityEngine;
 
 namespace RPG.Quests {

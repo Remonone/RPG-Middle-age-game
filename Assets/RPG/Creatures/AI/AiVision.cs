@@ -8,7 +8,7 @@ namespace RPG.Creatures.AI {
     [RequireComponent(typeof(Collider))]
     public class AiVision : MonoBehaviour {
 
-        private IOrganisationWrapper _agent;
+        private OrganisationWrapper _agent;
         private Organisation _organisation;
 
         private readonly List<Health> _enemiesInVision = new();
@@ -26,8 +26,8 @@ namespace RPG.Creatures.AI {
         public bool IsCreaturesInVision => _creaturesInVision.Count > 0;
 
         private void Awake() {
-            _agent = GetComponentInParent<IOrganisationWrapper>();
-            _organisation = _agent.GetOrganisation();
+            _agent = GetComponentInParent<OrganisationWrapper>();
+            _organisation = _agent.Organisation;
         }
 
         public void OnTriggerEnter(Collider other) {
@@ -82,8 +82,8 @@ namespace RPG.Creatures.AI {
         }
 
         private bool? IsHostileCreature(GameObject obj) {
-            if (!obj.TryGetComponent<IOrganisationWrapper>(out var agent)) return null;
-            var organisation = agent.GetOrganisation();
+            if (!obj.TryGetComponent<OrganisationWrapper>(out var agent)) return null;
+            var organisation = agent.Organisation;
             return _organisation.GetRelationWithOrganisation(organisation) < _organisation.AgroThreshold;
         }
     }

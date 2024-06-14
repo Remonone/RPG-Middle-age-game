@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Prefabs/UI/MainMenu/menu.uss?fileID=7433441132597879392&amp;guid=1ba16bcaaf34fd84fad019121728f49e&amp;type=3#menu" />
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-self: auto; align-items: auto; justify-content: center; flex-direction: row;">
+        <ui:VisualElement name="Menu" style="flex-grow: 1; background-color: rgb(147, 147, 147); min-height: auto; min-width: auto; height: auto; flex-direction: column; align-items: stretch; justify-content: flex-start; max-width: 40%; align-self: center; max-height: none;">
+            <ui:Label tabindex="-1" text="Main Menu" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; margin-bottom: 15px; font-size: 20px;" />
+            <ui:Button text="Create Game" display-tooltip-when-elided="true" name="Create" />
+            <ui:Button text="Join Game" display-tooltip-when-elided="true" name="Join" />
+            <ui:Button text="Settings" display-tooltip-when-elided="true" name="Settings" />
+            <ui:Button text="Exit" display-tooltip-when-elided="true" name="Exit" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

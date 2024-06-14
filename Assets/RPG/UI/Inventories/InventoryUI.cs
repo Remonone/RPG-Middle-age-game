@@ -6,12 +6,7 @@ namespace RPG.UI.Inventories {
     public class InventoryUI : MonoBehaviour {
 
         [SerializeField] private InventorySlotUI _slotUI;
-
-        private Inventory _inventory;
-
-        private void Awake() {
-            _inventory = Inventory.GetPlayerInventory();
-        }
+        [SerializeField] private Inventory _inventory;
 
         private void Start() {
             _inventory.OnInventoryUpdate += RedrawUI;

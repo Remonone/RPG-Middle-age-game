@@ -1,0 +1,232 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9044114027733513701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3317bb457024ca8813e9b1bf0f4cfb9, type: 3}
+  m_Name: d02057e1-c75b-4ac8-9f27-793da079f897
+  m_EditorClassIdentifier: 
+  _text: I need some more metal to craft this chestplate. Would be great if you bring
+    some!
+  _children: []
+  _rectangle:
+    serializedVersion: 2
+    x: 1141
+    y: 1
+    width: 200
+    height: 200
+  _isPlayer: 0
+  _onEnterExecutor: 0
+  _onExitExecutor: 0
+  _onExitPredicate: '#{0}:QuestStore:AddQuest:CollectItems;'
+  _onEnterPredicate: 
+--- !u!114 &-3251154134070032969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3317bb457024ca8813e9b1bf0f4cfb9, type: 3}
+  m_Name: 91fdedb6-2779-453f-86cb-847bb2afb5b6
+  m_EditorClassIdentifier: 
+  _text: (Truth) I am from far lands, which people rather to avoid
+  _children:
+  - cfb5071e-1f27-4a57-bae4-83df04ba7f48
+  _rectangle:
+    serializedVersion: 2
+    x: 309
+    y: -7
+    width: 200
+    height: 200
+  _isPlayer: 1
+  _onEnterExecutor: 0
+  _onExitExecutor: 0
+  _onExitPredicate: 
+  _onEnterPredicate: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1999bd749324b178112c9168fbcce64, type: 3}
+  m_Name: Smith
+  m_EditorClassIdentifier: 
+  _nodes:
+  - {fileID: 2457199586658337518}
+  - {fileID: -3251154134070032969}
+  - {fileID: 3265162395110194750}
+  - {fileID: 707173646177611657}
+  - {fileID: 6266936253745514260}
+  - {fileID: 5905120033229906178}
+  - {fileID: 2963632092512639616}
+  - {fileID: -9044114027733513701}
+--- !u!114 &707173646177611657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3317bb457024ca8813e9b1bf0f4cfb9, type: 3}
+  m_Name: cfb5071e-1f27-4a57-bae4-83df04ba7f48
+  m_EditorClassIdentifier: 
+  _text: Oh, I see. Can I ask you for some help?
+  _children:
+  - f6e49f38-a725-4af2-acb8-8b511e4f54cb
+  - ae758bb1-26af-4b7b-8289-88332ecc01ab
+  _rectangle:
+    serializedVersion: 2
+    x: 629
+    y: 82
+    width: 200
+    height: 200
+  _isPlayer: 0
+  _onEnterExecutor: 0
+  _onExitExecutor: 0
+  _onExitPredicate: 
+  _onEnterPredicate: 
+--- !u!114 &2457199586658337518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3317bb457024ca8813e9b1bf0f4cfb9, type: 3}
+  m_Name: 6c2294d9-39d2-46d0-bdfe-2cf27ecff872
+  m_EditorClassIdentifier: 
+  _text: Hello, stranger! I didn't seen you before. Where are you from?
+  _children:
+  - 91fdedb6-2779-453f-86cb-847bb2afb5b6
+  - 26d76430-e2b5-400b-8c84-4b216b10e3ce
+  _rectangle:
+    serializedVersion: 2
+    x: 52
+    y: 69
+    width: 200
+    height: 200
+  _isPlayer: 0
+  _onEnterExecutor: 0
+  _onExitExecutor: 0
+  _onExitPredicate: 
+  _onEnterPredicate: 
+--- !u!114 &2963632092512639616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3317bb457024ca8813e9b1bf0f4cfb9, type: 3}
+  m_Name: 6464a61e-23e3-4659-b393-25e5e70a55cc
+  m_EditorClassIdentifier: 
+  _text: Oh.. I don't want to take your time! Farewell, stranger..
+  _children: []
+  _rectangle:
+    serializedVersion: 2
+    x: 1127
+    y: 272
+    width: 200
+    height: 200
+  _isPlayer: 0
+  _onEnterExecutor: 0
+  _onExitExecutor: 0
+  _onExitPredicate: 
+  _onEnterPredicate: 
+--- !u!114 &3265162395110194750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3317bb457024ca8813e9b1bf0f4cfb9, type: 3}
+  m_Name: 26d76430-e2b5-400b-8c84-4b216b10e3ce
+  m_EditorClassIdentifier: 
+  _text: (Lie) I am from neighbour village on south from here.
+  _children:
+  - cfb5071e-1f27-4a57-bae4-83df04ba7f48
+  _rectangle:
+    serializedVersion: 2
+    x: 311
+    y: 195
+    width: 200
+    height: 200
+  _isPlayer: 1
+  _onEnterExecutor: 0
+  _onExitExecutor: 0
+  _onExitPredicate: 
+  _onEnterPredicate: 
+--- !u!114 &5905120033229906178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3317bb457024ca8813e9b1bf0f4cfb9, type: 3}
+  m_Name: ae758bb1-26af-4b7b-8289-88332ecc01ab
+  m_EditorClassIdentifier: 
+  _text: Sorry... I have no time, I need to go...
+  _children:
+  - 6464a61e-23e3-4659-b393-25e5e70a55cc
+  _rectangle:
+    serializedVersion: 2
+    x: 872
+    y: 191
+    width: 200
+    height: 200
+  _isPlayer: 1
+  _onEnterExecutor: 0
+  _onExitExecutor: 0
+  _onExitPredicate: 
+  _onEnterPredicate: 
+--- !u!114 &6266936253745514260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3317bb457024ca8813e9b1bf0f4cfb9, type: 3}
+  m_Name: f6e49f38-a725-4af2-acb8-8b511e4f54cb
+  m_EditorClassIdentifier: 
+  _text: Sure! What the deal?
+  _children:
+  - d02057e1-c75b-4ac8-9f27-793da079f897
+  _rectangle:
+    serializedVersion: 2
+    x: 877
+    y: -7
+    width: 200
+    height: 200
+  _isPlayer: 1
+  _onEnterExecutor: 0
+  _onExitExecutor: 0
+  _onExitPredicate: 
+  _onEnterPredicate: 

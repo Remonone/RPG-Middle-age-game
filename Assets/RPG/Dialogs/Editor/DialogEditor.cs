@@ -1,5 +1,5 @@
 ﻿using System;
-using RPG.Utils;
+using RPG.Utils.Constants;
 using UnityEditor;
 using UnityEngine;
 
@@ -89,6 +89,37 @@ namespace RPG.Dialogs.Editor {
             var newText = EditorGUILayout.TextField(node.Text);
             node.Text = newText;
             
+            var enumValues = Enum.GetValues(typeof(Executor));
+            EditorGUILayout.LabelField("Enter Predicate");
+            var enterPredicate = EditorGUILayout.TextField(node.OnEnterPredicate);
+            node.OnEnterPredicate = enterPredicate;
+            var enterMenu = new GenericMenu();
+            foreach (var value in enumValues) {
+                Debug.Log(value);
+                enterMenu.AddItem(new GUIContent($"{value}"), false, (data) => {
+                    node.EnterExecutor = (Executor)data;
+                }, value);
+            }
+            
+            if (EditorGUILayout.DropdownButton(new GUIContent("Select Actor..."), FocusType.Keyboard)) {
+                enterMenu.ShowAsContext();
+            }
+            
+            EditorGUILayout.LabelField("Exit Predicate");
+            var exitPredicate = EditorGUILayout.TextField(node.OnExitPredicate);
+            node.OnExitPredicate = exitPredicate;
+            var exitMenu = new GenericMenu();
+            foreach (var value in enumValues) {
+                Debug.Log(value);
+                exitMenu.AddItem(new GUIContent($"{value}"), false, (data) => {
+                    node.EnterExecutor = (Executor)data;
+                }, value);
+            }
+            
+            if (EditorGUILayout.DropdownButton(new GUIContent("Select Actor..."), FocusType.Keyboard)) {
+                exitMenu.ShowAsContext();
+            }
+            
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("+")) _creatingNode = node;
             if (_linkingParentNode == null) {
@@ -112,6 +143,8 @@ namespace RPG.Dialogs.Editor {
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
+
+
         private void DrawRelations(DialogNode node) {
             var start = new Vector3(node.Rectangle.xMax, node.Rectangle.center.y, 0);
 

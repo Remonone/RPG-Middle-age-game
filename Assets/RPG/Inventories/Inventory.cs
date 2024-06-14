@@ -5,10 +5,11 @@ using Newtonsoft.Json.Linq;
 using RPG.Inventories.Items;
 using RPG.Inventories.Pickups;
 using RPG.Saving;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Inventories {
-    public class Inventory : MonoBehaviour, ISaveable {
+    public class Inventory : NetworkBehaviour, ISaveable {
         [SerializeField] private int _slotsCount;
         [SerializeField] private Pickup _pickup;
 
@@ -18,7 +19,9 @@ namespace RPG.Inventories {
 
         public event Action OnInventoryUpdate;
 
-        private void Awake() {
+        public override void OnNetworkSpawn() {
+            base.OnNetworkSpawn();
+            if (!IsOwner && !IsServer) return;
             _inventorySlots = new InventorySlot[_slotsCount];
             for (int i = 0; i < Size; i++) {
                 _inventorySlots[i] = new InventorySlot {
@@ -29,12 +32,9 @@ namespace RPG.Inventories {
         }
 
         private void Start() {
+            if (!IsOwner || !IsServer) return;
             _inventorySlots[0] = new InventorySlot {
                 Item = InventoryItem.GetItemByGuid("168820e5-f325-4e1e-9948-126e5ada4f18"),
-                Count = 1
-            };
-            _inventorySlots[1] = new InventorySlot {
-                Item = InventoryItem.GetItemByGuid("77973f65-3fd7-4404-a03c-fa46a7c72360"),
                 Count = 1
             };
             OnInventoryUpdate?.Invoke();
@@ -102,10 +102,6 @@ namespace RPG.Inventories {
 
         public IEnumerable<InventorySlot> FindSlots(InventoryItem item) => _inventorySlots.Where(slot => slot.Item == item);
 
-        public static Inventory GetPlayerInventory() {
-            var player = GameObject.FindWithTag("Player");
-            return player.GetComponent<Inventory>();
-        }
         
         private int FindEmptySlot() {
             for (int i = 0; i < _slotsCount; i++) {
@@ -123,23 +119,20 @@ namespace RPG.Inventories {
 
         public JToken CaptureAsJToken() {
             var inventoryState = new JArray(
-                            from item in _inventorySlots
-                            select new JObject(
-                                    new JProperty("slot", Array.FindIndex(_inventorySlots, slot => slot == item)),
-                                    new JProperty("item" , new JObject(
-                                                new JProperty("id", item.Item.ID),
-                                                new JProperty("count", item.Count)
-                                            ))
-                                )
-                        );
+                        from slot in _inventorySlots
+                        select new JObject(
+                            new JProperty("slot", Array.FindIndex(_inventorySlots, pos => pos == slot)),
+                            new JProperty("id", new JValue(slot.Item != null ? slot.Item.ID : "")),
+                            new JProperty("count", slot.Count)
+                        )
+                    );
             return inventoryState;
         }
         public void RestoreFromJToken(JToken state) {
             foreach (var slot in state) {
                 var index = (int)slot["slot"];
-                var itemConfig = slot["item"];
-                var item = InventoryItem.GetItemByGuid((string)itemConfig["id"]);
-                var count = (int)itemConfig["count"];
+                var item = InventoryItem.GetItemByGuid((string)slot["id"]);
+                var count = (int)slot["count"];
                 _inventorySlots[index] = new InventorySlot {
                     Item = item,
                     Count = count
