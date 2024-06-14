@@ -3,7 +3,6 @@
         public const string FETCH_USER = "api/v1/user/get";
         public const string SAVE_USER = "api/v1/user/save";
         public const string REGISTER_USER = "api/v1/user/register";
-        public const string LOAD_USER = "api/v1/user/load";
         
         //LOBBY
         public const string LOAD_LOBBIES = "api/v1/lobby/";
@@ -14,8 +13,9 @@
         // SESSION
         public const string CREATE_WORLD = "api/v1/session/create";
         public const string FETCH_WORLDS = "api/v1/session/fetch";
+        public const string UPDATE_WORLD = "api/v1/session/update";
         
         // CONTENT
-        public const string GET_CONTENT = "api/v1/content/";
+        public const string GET_CONTENT = "api/v1/content/get";
     }
 }

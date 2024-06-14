@@ -15,7 +15,7 @@ namespace RPG.Dialogs {
     public class DialogNode : ScriptableObject {
         [SerializeField] private string _text;
         [SerializeField] private List<string> _children = new();
-        [SerializeField] private Rect _rectangle = new(10,10,200,100);
+        [SerializeField] private Rect _rectangle = new(10,10,200,200);
         [SerializeField] private bool _isPlayer;
         [SerializeField] private Executor _onEnterExecutor;
         [SerializeField] private Executor _onExitExecutor;

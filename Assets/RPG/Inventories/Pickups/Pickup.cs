@@ -7,7 +7,7 @@ using UnityEngine;
 namespace RPG.Inventories.Pickups {
     public class Pickup : MonoBehaviour, ITrajectory {
 
-        private readonly Pickable _pickable = new();
+        [SerializeField] private Pickable _pickable = new();
         private bool _shouldBeDestroyed;
 
         public bool ShouldBeDestroyed => _shouldBeDestroyed;

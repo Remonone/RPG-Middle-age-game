@@ -90,7 +90,7 @@ namespace RPG.Dialogs.Editor {
             node.Text = newText;
             
             var enumValues = Enum.GetValues(typeof(Executor));
-            
+            EditorGUILayout.LabelField("Enter Predicate");
             var enterPredicate = EditorGUILayout.TextField(node.OnEnterPredicate);
             node.OnEnterPredicate = enterPredicate;
             var enterMenu = new GenericMenu();
@@ -105,6 +105,7 @@ namespace RPG.Dialogs.Editor {
                 enterMenu.ShowAsContext();
             }
             
+            EditorGUILayout.LabelField("Exit Predicate");
             var exitPredicate = EditorGUILayout.TextField(node.OnExitPredicate);
             node.OnExitPredicate = exitPredicate;
             var exitMenu = new GenericMenu();

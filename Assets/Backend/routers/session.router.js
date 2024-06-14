@@ -7,7 +7,7 @@ import {
 
 const router = Router();
 
-router.get('/', updateSession);
+router.put('/update', updateSession);
 router.get('/create', generateSession);
 router.get('/fetch', getSessions)
 

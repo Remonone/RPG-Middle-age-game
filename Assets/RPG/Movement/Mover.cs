@@ -36,11 +36,14 @@ namespace RPG.Movement {
         protected void Start() {
             _agent.speed = _baseStats.GetStatValue(Stat.MOVEMENT_SPEED);
             _agent.angularSpeed = 1000F;
+            _health.OnDie += OnDie;
         }
-        
+
+        private void OnDie() {
+            _agent.enabled = false;
+        }
+
         private void Update() {
-            if (!IsOwner) return;
-            _agent.enabled = _health.IsAlive;
             UpdateAnimator();
         }
 
@@ -107,7 +110,7 @@ namespace RPG.Movement {
         
         public void RestoreFromJToken(JToken state) {
             _agent.enabled = false;
-            transform.position = state.ToObject<Vector3>();
+            transform.position = new Vector3((float)state["x"], (float)state["y"], (float)state["z"]);
             _agent.enabled = true;
             _scheduler.CancelAction();
         }

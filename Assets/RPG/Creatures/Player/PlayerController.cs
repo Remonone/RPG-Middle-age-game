@@ -1,13 +1,12 @@
 using System;
 using System.Linq;
-using Newtonsoft.Json.Linq;
-using RPG.Core;
 using RPG.Core.Cursors;
 using RPG.Movement;
 using RPG.Network.Management;
 using RPG.Network.Processors;
 using RPG.Saving;
-using RPG.UI.Lobby;
+using RPG.UI.InfoBar;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,6 +26,7 @@ namespace RPG.Creatures.Player {
         [SerializeField] private GameObject _uiContainer;
         [SerializeField] private GameObject _cameraHolder;
         [SerializeField] private Camera _camera;
+        [SerializeField] private HpBar _bar;
         
         private Mover _mover;
         private LobbyProcessor _processor;
@@ -45,57 +45,29 @@ namespace RPG.Creatures.Player {
             _cameraBehaviour = GetComponent<CameraBehaviour>();
         }
 
-        public override void OnNetworkSpawn() {
-            base.OnNetworkSpawn();
-            if (!IsOwner || IsHost) return;
-            var application = FindObjectOfType<ApplicationManager>();
-            _processor = FindObjectOfType<LobbyProcessor>();
-            var playerData = application.PlayerData;
-            application.SessionID = _processor.Room.Value.SessionID.Value;
-            FindObjectOfType<LobbyInstanceHandler>().Initialize();
-            _processor.ConnectToLobbyServerRpc(playerData);
-        }
-
-        [ClientRpc]
-        public void LoadClientRpc(ClientRpcParams clientRpcParams = default) {
-            var application = FindObjectOfType<ApplicationManager>();
-            LoadClientServerRpc(application.PlayerData.PlayerID.Value, application.SessionID);
-        }
-        
-        [ServerRpc(RequireOwnership = false)]
-        public void LoadClientServerRpc(string credentials, string SessionId, ServerRpcParams serverRpcParams = default) {
-            if (_system == null) _system = FindObjectOfType<SavingWrapper>().System;
-            gameObject.SetActive(true);
-            StartCoroutine(_system.Load(gameObject, credentials, SessionId, data => {
-                ClientRpcParams param = new ClientRpcParams {
-                    Send = {
-                        TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
-                    }
-                };
-                GetComponent<SaveableEntity>().RestoreFromJToken(data);
-                InitPlayerClientRpc(data.ToString(), param);
-            }));
-        }
-
-        public override void OnNetworkDespawn() { // TODO: FIX
-            if(IsHost) _processor.CloseLobbyServerRpc();
-            else _processor.DisconnectFromLobbyServerRpc(FindObjectOfType<ApplicationManager>().PlayerData);
-        }
-
         private void OnDisable() {
             if (!IsOwner) return;
             _map.Disable();
         }
-        
-        [ClientRpc]
-        public void InitPlayerClientRpc(string data, ClientRpcParams clientRpcParams = default) {
-            gameObject.SetActive(true);
-            GetComponent<SaveableEntity>().RestoreFromJToken(JToken.Parse(data));
-            Instantiate(_uiContainer);
-            _cameraHolder.SetActive(true);
-            _cameraHolder.GetComponentInChildren<Camera>().tag = "MainCamera";
-            _cameraBehaviour.Init();
-            _map.Enable();
+
+        public void Init() {
+            if (IsOwner) {
+                _uiContainer.SetActive(true);
+                _cameraHolder.SetActive(true);
+                _cameraHolder.GetComponentInChildren<Camera>().tag = "MainCamera";
+                _cameraBehaviour.Init();
+                InitBarServerRpc(ApplicationManager.Instance.PlayerData.Username.Value, GetComponent<NetworkObject>());
+                _map.Enable();
+                
+            }
+        }
+
+        [ServerRpc]
+        private void InitBarServerRpc(FixedString64Bytes username, NetworkObjectReference reference) {
+            if (!IsServer) return;
+            var bar = Instantiate(_bar);
+            bar.GetComponent<NetworkObject>().Spawn();
+            bar.Init(username, reference);
         }
 
         private void Update() {
@@ -163,10 +135,7 @@ namespace RPG.Creatures.Player {
             Cursor.SetCursor(cursor.Image, cursor.Hotspot, CursorMode.Auto);
         }
         
-        [ClientRpc]
-        public void DisableClientRpc() {
-            gameObject.SetActive(false);
-        }
+        
         
     }
 

@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/InGame/Market.unity
     guid: e97268f14af9439888905cca7646e949
+  - enabled: 1
+    path: Assets/Scenes/InGame/Old_Man_House.unity
+    guid: 2e7769c241f64a48909bdf59831c94bd
+  - enabled: 1
+    path: Assets/Scenes/InGame/Plains.unity
+    guid: 21eb03b6b2844488a355d1260b2aa588
   m_configObjects: {}

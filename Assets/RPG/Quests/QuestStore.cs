@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using RPG.Core.Predicate.Interfaces;
 using RPG.Inventories;
 using RPG.Saving;
 using RPG.Stats;
@@ -9,7 +10,7 @@ using Unity.Collections;
 using Unity.Netcode;
 
 namespace RPG.Quests {
-    public class QuestStore : NetworkBehaviour, ISaveable {
+    public class QuestStore : NetworkBehaviour, ISaveable, IPredicateHandler {
         private List<QuestState> _states = new();
 
         public IEnumerable<QuestState> States => _states;
@@ -113,6 +114,18 @@ namespace RPG.Quests {
                     )
                 );
             }
+        }
+
+        public object Predicate(string command, object[] arguments) {
+            return command switch {
+                "AddQuest" => AddQuestToPlayer((string)arguments[0]),
+                _ => null
+            };
+        }
+
+        private object AddQuestToPlayer(string questName) {
+            AddQuest(Quest.GetQuestByName(questName));
+            return 0;
         }
     }
 }

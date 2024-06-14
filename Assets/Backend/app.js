@@ -15,6 +15,6 @@ app.use(express.json());
 app.use('/api/v1/user', authRouter);
 app.use('/api/v1/lobby', lobbyRouter);
 app.use('/api/v1/session', sessionRouter);
-app.use('/api/v1/playerContent', contentRouter);
+app.use('/api/v1/content', contentRouter);
 
 export default app;

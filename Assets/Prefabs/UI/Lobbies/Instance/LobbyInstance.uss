@@ -23,3 +23,7 @@
 .disabled {
     display: none;
 }
+
+PlayerContainer ListView {
+    flex-grow: 1;
+}

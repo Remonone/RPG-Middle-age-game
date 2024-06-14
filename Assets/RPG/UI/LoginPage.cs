@@ -72,7 +72,7 @@ namespace RPG.UI {
         private void OnLogin(JToken data) {
             var application = FindObjectOfType<ApplicationManager>();
             application.Token = (string)data["token"];
-            application.PlayerData = new PlayerData((string)data["user"]["_id"], (string)data["user"]["username"]);
+            application.PlayerData = new PlayerData((string)data["user"]["_id"], (string)data["user"]["username"], 1);
             application.IP = (string)data["ip"];
             application.Port = (ushort)data["port"];
             // Debug.Log(application.IP + ":" + application.Port);

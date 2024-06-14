@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Unity.Collections;
 using Unity.Netcode;
@@ -10,11 +11,20 @@ namespace RPG.Saving {
     [ExecuteAlways]
     public class SaveableEntity : NetworkBehaviour { 
         
-        private string _uniqueIdentifier;
-            
+        private NetworkVariable<FixedString64Bytes> _uniqueIdentifier;
+
+        public string UniqueID => _uniqueIdentifier.Value.Value;
         
         // CACHED STATE
         static readonly Dictionary<string, SaveableEntity> GlobalLookup = new();
+
+        private void Awake() {
+            _uniqueIdentifier = new();
+        }
+
+        public void Init(string id) {
+            _uniqueIdentifier.Value = id;
+        }
 
         public JToken CaptureAsJToken() {
             JObject state = new JObject(new JProperty("content", new JObject()));
@@ -64,7 +74,7 @@ namespace RPG.Saving {
                 return true;
             }
 
-            if (GlobalLookup[candidate]._uniqueIdentifier != candidate) {
+            if (GlobalLookup[candidate].UniqueID != candidate) {
                 GlobalLookup.Remove(candidate);
                 return true;
             }

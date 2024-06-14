@@ -73,10 +73,10 @@ namespace RPG.Network.Controllers {
             onAuth(token);
         }
 
-        public static IEnumerator SaveEntity(JToken entityToSave, string token, int attemptCount = 10) {
+        public static IEnumerator SaveEntity(JToken entityToSave, string token, string sessionID, int attemptCount = 10) {
             bool isFailed = false;
             for (int i = 0; i < attemptCount && !isFailed; i++) {
-                using (UnityWebRequest www = UnityWebRequest.Put($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.SAVE_USER}?token={token}", entityToSave.ToString())) {
+                using (UnityWebRequest www = UnityWebRequest.Put($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.SAVE_USER}?token={token}&session={sessionID}", entityToSave.ToString())) {
                     www.SetRequestHeader("Content-Type", "application/json");
                     yield return www.SendWebRequest();
                     switch (www.result) {
@@ -92,25 +92,6 @@ namespace RPG.Network.Controllers {
 
                 if (isFailed) {
                     Debug.LogError("Error during saving an entity");
-                }
-            }
-        }
-
-        public static IEnumerator LoadEntity(string jwt, Action<JObject> onData) {
-            using (UnityWebRequest www = UnityWebRequest.Get($"{PropertyConstants.SERVER_DOMAIN}/{BackendCalls.LOAD_USER}?jwt={jwt}")) {
-                yield return www.SendWebRequest();
-                switch (www.result) {
-                    case UnityWebRequest.Result.Success:
-                        JObject obj = JObject.Parse(www.downloadHandler.text);
-                        onData(obj);
-                        break;
-                    case UnityWebRequest.Result.DataProcessingError:
-                        Debug.LogError(www.error);
-                        onData(null);
-                        break;
-                    case UnityWebRequest.Result.ConnectionError:
-                        Debug.LogError("Connection timeout...");
-                        break;
                 }
             }
         }

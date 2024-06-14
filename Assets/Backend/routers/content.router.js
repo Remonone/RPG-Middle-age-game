@@ -7,6 +7,6 @@ import {
 const router = Router();
 
 router.post('/update', handlePlayerContent);
-router.get('/', getPlayerContent);
+router.get('/get', getPlayerContent);
 
 export default router;

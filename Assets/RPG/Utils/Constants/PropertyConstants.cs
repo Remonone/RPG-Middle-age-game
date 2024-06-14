@@ -6,6 +6,7 @@
         public const string QUESTS_PATH = "Quests";
         public const string DIALOGS_PATH = "Dialogs";
         public const int ITEM_HEIGHT = 100;
+        public const int MAX_PLAYERS = 4;
 
         
         // SERVER

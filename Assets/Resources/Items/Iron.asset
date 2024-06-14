@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dabe942d8f7244d2b66185bd248c5b7a, type: 3}
+  m_Name: Iron
+  m_EditorClassIdentifier: 
+  _itemID: dcf1836d-69ce-4748-a9ab-fe6e20fac4d0
+  _itemName: Metal
+  _itemDescription: Just a metal bar...
+  _itemIcon: {fileID: 21300000, guid: 7e082cc2cf2a4433d85e388c6bf94234, type: 3}
+  _stackable: 1
+  _pickup: {fileID: 3563874698326564240, guid: 9d0ba1b9f8e53a3448b05e27699033f4, type: 3}

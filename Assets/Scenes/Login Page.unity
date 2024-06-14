@@ -549,7 +549,13 @@ MonoBehaviour:
     NetworkTransport: {fileID: 1529969471}
     PlayerPrefab: {fileID: 5691676695861984064, guid: cf1235d2658ca0745840e257927caf8c,
       type: 3}
-    NetworkPrefabs: []
+    NetworkPrefabs:
+    - Override: 0
+      Prefab: {fileID: 1183876879310045508, guid: f75676ad8ea6425f85622ac5d8ed51bb,
+        type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -823,17 +829,17 @@ PrefabInstance:
     - target: {fileID: 5994641835294868627, guid: 6b1bfcf7acf2d1843a57d7cf9e37976d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 284.32727
+      value: 284.3273
       objectReference: {fileID: 0}
     - target: {fileID: 5994641835294868627, guid: 6b1bfcf7acf2d1843a57d7cf9e37976d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 23.787443
+      value: 23.78744
       objectReference: {fileID: 0}
     - target: {fileID: 5994641835294868627, guid: 6b1bfcf7acf2d1843a57d7cf9e37976d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 501.60776
+      value: 501.6078
       objectReference: {fileID: 0}
     - target: {fileID: 5994641835294868627, guid: 6b1bfcf7acf2d1843a57d7cf9e37976d,
         type: 3}

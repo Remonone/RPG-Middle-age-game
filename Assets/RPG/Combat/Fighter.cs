@@ -4,7 +4,6 @@ using RPG.Core;
 using RPG.Core.Predicate;
 using RPG.Core.Predicate.Interfaces;
 using RPG.Inventories;
-using RPG.Inventories.Items;
 using RPG.Movement;
 using RPG.Stats;
 using RPG.Utils;

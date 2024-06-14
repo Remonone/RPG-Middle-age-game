@@ -58,27 +58,17 @@ export const saveUser = async (req, res) => {
     const username = req.body.username;
     const userToken = req.query["token"];
     const userData = jwt.verify(userToken, ENCRYPTION_KEY);
-    const user = await database.collection('users').findOne({_id: userData.login});
-    console.log(req.body);
-    if(user.username !== username) { 
+    const session = await database.collection('session').findOne({host_id: userData.login, _id: req.query["session"]});
+    if(!session) { 
         res.status(403).send(createErrorMessage("Wrong credentials!"));
         return;
     }
-    await database.collection('users').updateOne({username}, {
+    await database.collection('player_data').updateOne({username}, {
         $set: {
+            session_id: req.query["session"],
+            username,
             content: req.body.content,
         }
-    });
+    }, {upsert: true});
     res.status(200).send({message: "Successful"});
-}
-
-export const loadUser = async (req, res) => {
-    const token = req.query['jwt'];
-    try {
-        const userData = jwt.verify(token, ENCRYPTION_KEY);
-        const user = await database.collection('users').findOne({_id: userData.login});
-        res.status(200).send(user);
-    } catch(e) {
-        res.status(403).send(createErrorMessage("Invalid user credentials."));
-    }
 }

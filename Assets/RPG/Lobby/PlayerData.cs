@@ -6,11 +6,15 @@ namespace RPG.Lobby {
     public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable {
         public FixedString64Bytes PlayerID;
         public FixedString64Bytes Username;
+        public int Level;
 
-        public PlayerData(string id, string username) {
+        public PlayerData(string id, string username, int level) {
             this.PlayerID = id;
             this.Username = username;
+            this.Level = level;
         }
+
+
         public bool Equals(PlayerData other) {
             return other.Username == Username && other.PlayerID == PlayerID;
 

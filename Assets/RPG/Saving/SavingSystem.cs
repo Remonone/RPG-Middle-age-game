@@ -9,15 +9,16 @@ using UnityEngine.SceneManagement;
 namespace RPG.Saving {
     public class SavingSystem : MonoBehaviour {
         
-        public void Save(SaveableEntity entity, string uniqueId, string jwt) {
-            var state = CaptureAsToken(entity, uniqueId);
-            PushStateToDataBase(state, jwt);
+        public void Save(SaveableEntity entity, string jwt, string sessionID) {
+            var state = CaptureAsToken(entity, entity.UniqueID);
+            PushStateToDataBase(state, jwt, sessionID);
         }
-        private void PushStateToDataBase(JToken state, string token) {
-            StartCoroutine(AuthenticationController.SaveEntity(state, token));
+        private void PushStateToDataBase(JToken state, string token, string sessionID) {
+            StartCoroutine(AuthenticationController.SaveEntity(state, token, sessionID));
         }
 
         public IEnumerator Load(GameObject loader, string playerId, string sessionId, Action<JObject> onLoadFinish) {
+            Debug.Log("Loading content");
             yield return ContentController.GetPlayerContent(playerId, sessionId, data => {
                 RestoreFromToken(data, loader);
                 onLoadFinish(data);
@@ -28,6 +29,7 @@ namespace RPG.Saving {
 
         private JToken CaptureAsToken(SaveableEntity entity, string idToSave) {
             var objectToSave = entity.CaptureAsJToken();
+            Debug.Log(idToSave);
             objectToSave[PLAYER_ID] = idToSave;
             objectToSave[SCENE_INDEX] = SceneManager.GetActiveScene().buildIndex;
             return objectToSave;

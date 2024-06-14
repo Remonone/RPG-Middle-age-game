@@ -1,18 +1,15 @@
-﻿using RPG.Lobby;
-using RPG.Network.Management;
+﻿using RPG.Network.Management;
 using RPG.Network.Processors;
-using RPG.Network.Scenes;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace RPG.UI.Lobby {
     public class LobbyInstanceHandler : NetworkBehaviour {
         [SerializeField] private UIDocument _document;
-        [SerializeField] private LobbyProcessor _processor;
-
+        
+        private LobbyProcessor _processor;
         private VisualElement _root;
         
         // DATA
@@ -34,7 +31,8 @@ namespace RPG.UI.Lobby {
         private Button _startGame;
         
 
-        public void Initialize() {
+        public void Start() {
+            _processor = FindObjectOfType<LobbyProcessor>();
             InitInputs();
             _processor.Room.OnValueChanged += OnDataChanged;
             SetRoomData(_processor.Room.Value);
@@ -80,24 +78,15 @@ namespace RPG.UI.Lobby {
             _roomLevel = _root.Q<Label>("Level");
             _roomHost = _root.Q<Label>("Host");
             _quitButton = _root.Q<Button>("Quit");
-            if (NetworkManager.IsHost) {
-                _quitButton.clicked += CloseLobby;
-            }
-            else {
-                _quitButton.clicked += OnQuit;
-            }
+            _quitButton.clicked += OnQuit;
+            
         }
         private void OnGameStart() {
-            _processor.StartGameServerRpc();
+            ApplicationManager.Instance.StartGame();
         }
         
-        private void CloseLobby() {
-            _processor.CloseLobbyServerRpc();
-        }
         private void OnQuit() {
-            
-            var data = FindObjectOfType<ApplicationManager>().PlayerData;
-            _processor.DisconnectFromLobbyServerRpc(data);
+            ApplicationManager.Instance.DisconnectFromServer();
         }
 
         private void BindItem(VisualElement el, int index) {
@@ -119,12 +108,14 @@ namespace RPG.UI.Lobby {
         public int RoomLevel;
         public FixedString64Bytes RoomHost;
         public FixedString64Bytes SessionID;
+        public FixedString64Bytes RoomID;
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter {
             serializer.SerializeValue(ref RoomHost);
             serializer.SerializeValue(ref RoomLevel);
             serializer.SerializeValue(ref RoomMap);
             serializer.SerializeValue(ref RoomName);
             serializer.SerializeValue(ref SessionID);
+            serializer.SerializeValue(ref RoomID);
         }
     }
     

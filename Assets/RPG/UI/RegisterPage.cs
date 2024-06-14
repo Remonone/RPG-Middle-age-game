@@ -50,9 +50,9 @@ namespace RPG.UI {
         }
 
         private void OnRegister(JToken data) {
-            var application = FindObjectOfType<ApplicationManager>();
+            var application = ApplicationManager.Instance;
             application.Token = (string)data["token"];
-            application.PlayerData = new PlayerData((string)data["user"]["_id"], (string)data["user"]["username"]);
+            application.PlayerData = new PlayerData((string)data["user"]["_id"], (string)data["user"]["username"], 1);
             application.IP = (string)data["ip"];
             application.Port = (ushort)data["port"];
             SceneManager.LoadScene("Main");
