@@ -55,7 +55,7 @@ namespace RPG.Core.Predicate {
                 return null;
             }
         }
-
+        
         [CanBeNull]
         private static object RunNodes(ExpressionNode node, string sessionID) {
             if (node.GetType() == typeof(StatementNode)) {
@@ -66,10 +66,11 @@ namespace RPG.Core.Predicate {
             if (node.GetType() == typeof(SenderNode)) {
                 var sender = (SenderNode)node;
                 var receiver = sender.Receiver.ID;
+                var receiverComponent = sender.Receiver.Component;
                 var id = Convert.ToString(RunNodes(receiver, sessionID));
-                string[] content = id.Split(',');
-                var entity = PredicateBehavioursStore[content[0]];
-                if (!ReferenceEquals(entity, null) && entity.TryGetHandler(content[1], out IPredicateHandler handler)) {
+                var component = Convert.ToString(RunNodes(receiverComponent, sessionID));
+                var entity = PredicateBehavioursStore[id];
+                if (!ReferenceEquals(entity, null) && entity.TryGetHandler(component, out IPredicateHandler handler)) {
                     var args = sender.Action.Args;
                     var argsToSend = args != null ? args.Select(arg => RunNodes(arg, sessionID)) : Array.Empty<object>();
                     var result = handler.Predicate(sender.Action.Name.text, argsToSend.ToArray());

@@ -6,18 +6,14 @@ namespace RPG.UI.Dialog {
     public class DialogUI : MonoBehaviour {
 
         [SerializeField] private UIDocument _document;
-        
+        [SerializeField] private PlayerConversant _playerConversant;
         private VisualElement _root;
-        private PlayerConversant _playerConversant;
+        
         private Label _currentConversant;
         private Label _dialogText;
         private Box _playerResponses;
 
         private Button _closeButton;
-
-        private void Awake() {
-            _playerConversant = GameObject.FindWithTag("Player").GetComponent<PlayerConversant>();
-        }
 
         private void OnEnable() {
             _root = _document.rootVisualElement;
@@ -51,6 +47,7 @@ namespace RPG.UI.Dialog {
                 _playerResponses.Add(button);
             }
         }
+
         private void CleanResponses() {
             _playerResponses.Clear();
         }

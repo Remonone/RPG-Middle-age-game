@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RPG.Quests.Objectives;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace RPG.Quests {
@@ -34,8 +35,10 @@ namespace RPG.Quests {
             foreach(var objective in _quest.Objectives) _objectivesList.Push(objective);
             for (int i = 0; i < objectiveIndex - 1; i++) _objectivesList.Pop();
             var task = _objectivesList.Pop();
-            _currentObjective = task;
-            task.OnObjectiveCompeted += OnObjectiveFinished;
+            var instantiatedTask = Object.Instantiate(task);
+            instantiatedTask.Init(_store.gameObject);
+            _currentObjective = instantiatedTask;
+            _currentObjective.OnObjectiveCompeted += OnObjectiveFinished;
         }
         
         
@@ -43,7 +46,7 @@ namespace RPG.Quests {
             _objectiveIndex++;
             _store.UpdateState(this);
             _currentObjective.OnObjectiveCompeted -= OnObjectiveFinished;
-            Object.Destroy(_currentObjective);
+            Object.Destroy(_currentObjective.gameObject);
             if (!_objectivesList.TryPop(out var task)) return;
             _currentObjective = task;
         }

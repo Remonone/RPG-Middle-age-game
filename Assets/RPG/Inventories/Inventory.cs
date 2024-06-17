@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using RPG.Inventories.Items;
 using RPG.Inventories.Pickups;
 using RPG.Saving;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,40 +13,29 @@ namespace RPG.Inventories {
     public class Inventory : NetworkBehaviour, ISaveable {
         [SerializeField] private int _slotsCount;
         [SerializeField] private Pickup _pickup;
+        
+        private NetworkList<InventorySlot> _inventorySlots;
 
-        private InventorySlot[] _inventorySlots;
-
-        public int Size => _inventorySlots.Length;
+        public int Size => _inventorySlots.Count;
 
         public event Action OnInventoryUpdate;
 
-        public override void OnNetworkSpawn() {
-            base.OnNetworkSpawn();
-            if (!IsOwner && !IsServer) return;
-            _inventorySlots = new InventorySlot[_slotsCount];
-            for (int i = 0; i < Size; i++) {
-                _inventorySlots[i] = new InventorySlot {
-                    Item = null,
-                    Count = 0
-                };
-            }
+        private void Awake() {
+            _inventorySlots = new();
         }
 
         private void Start() {
-            if (!IsOwner || !IsServer) return;
-            _inventorySlots[0] = new InventorySlot {
-                Item = InventoryItem.GetItemByGuid("168820e5-f325-4e1e-9948-126e5ada4f18"),
-                Count = 1
-            };
-            OnInventoryUpdate?.Invoke();
+            for (int i = 0; i < 64; i++) {
+                AddInventoryItemAtSlotServerRpc("", 0);
+            }
         }
 
         public void AddToInventorySlot(int slot, InventoryItem item, int count) {
-            if (_inventorySlots[slot].Item != null && _inventorySlots[slot].Item != item) {
+            if (_inventorySlots[slot].ItemId.Value != "" && _inventorySlots[slot].ItemId.Value != item.ID) {
                 AddToFirstEmptySlot(item, count);
                 return;
             }
-            _inventorySlots[slot] = new InventorySlot { Item = item, Count = count };
+            SetInventoryItemAtSlotServerRpc(slot, item.ID, count + _inventorySlots[slot].Count);
             OnInventoryUpdate?.Invoke();
         }
 
@@ -57,7 +47,7 @@ namespace RPG.Inventories {
             }
             int slotIndex = FindEmptySlot();
             if (slotIndex == -1) return false;
-            _inventorySlots[slotIndex] = new InventorySlot { Item = item, Count = count };
+            SetInventoryItemAtSlotServerRpc(slotIndex, item.ID, count);
             OnInventoryUpdate?.Invoke();
             return true;
         }
@@ -71,73 +61,140 @@ namespace RPG.Inventories {
         /// <param name="count">Count of items which require to clear</param>
         /// <returns>True if count is fully decreased(i.g. count = 4, item count = 5 -> return true), else False(i.g. count = 5, item count = 3 -> return false).</returns>
         public bool RemoveCountFromSlot(int slot, int count) {
-            if (_inventorySlots[slot] == null) return false;
-            _inventorySlots[slot].Count -= count;
-            if (_inventorySlots[slot].Count > 0) return true;
-            var finalCount = _inventorySlots[slot].Count;
-            _inventorySlots[slot] = new InventorySlot{ Item = null, Count = 0};
-            OnInventoryUpdate?.Invoke();
+            if (_inventorySlots[slot].ItemId.Value == "") return false;
+            var finalCount = _inventorySlots[slot].Count - count;
+            if (_inventorySlots[slot].Count - count > 0) {
+                SetInventoryItemAtSlotServerRpc(slot, _inventorySlots[slot].ItemId, finalCount);
+                return true;
+            }
+            SetInventoryItemAtSlotServerRpc(slot, "", 0);
+            
             return finalCount == 0;
         }
 
         public void DropItem(int slot, int count) {
-            if (_inventorySlots[slot] == null) return;
+            if (_inventorySlots[slot].ItemId.Value == "") return;
             int itemActual = _inventorySlots[slot].Count;
-            InventoryItem item = _inventorySlots[slot].Item;
+            string item = _inventorySlots[slot].ItemId.Value;
             if (RemoveCountFromSlot(slot, count)) {
-                SpawnPickup(item, count);
+                SpawnPickupServerRpc(item, count);
                 return;
             }
-            SpawnPickup(item, itemActual);
+            SpawnPickupServerRpc(item, itemActual);
         }
         
-        private void SpawnPickup(InventoryItem item, int count) {
+        [ServerRpc]
+        private void SpawnPickupServerRpc(FixedString128Bytes itemId, int count) {
             var pickup = Instantiate(_pickup, transform.forward, Quaternion.identity);
+            var item = InventoryItem.GetItemByGuid(itemId.Value);
             pickup.Setup(item, count);
         }
 
         public InventorySlot GetItemInSlot(int slot) => _inventorySlots[slot];
 
-        public int FindStack(InventoryItem item) => Array.FindIndex(_inventorySlots, slot => slot.Item == item);
+        public int FindStack(InventoryItem item) {
+            for (int i = 0; i < _inventorySlots.Count; i++) {
+                if (_inventorySlots[i].ItemId.Value == item.ID) return i;
+            }
 
-        public IEnumerable<InventorySlot> FindSlots(InventoryItem item) => _inventorySlots.Where(slot => slot.Item == item);
+            return -1;
+        }
+
+        public IEnumerable<InventorySlot> FindSlots(InventoryItem item) {
+            foreach (var slot in _inventorySlots) {
+                if (slot.ItemId.Value == item.ID) yield return slot;
+            }
+        }
 
         
-        private int FindEmptySlot() {
+        public int FindEmptySlot() {
             for (int i = 0; i < _slotsCount; i++) {
-                if (_inventorySlots[i].Item == null) return i;
+                if (_inventorySlots[i].ItemId.Value == "") return i;
             }
             return -1;
         }
         
         private static bool IsItemStackSatisfied(InventoryItem item, int count) =>  item.IsStackable && count > 1;
         
-        public sealed class InventorySlot {
-            public InventoryItem Item;
+        public struct InventorySlot : IEquatable<InventorySlot>, INetworkSerializable {
+            public FixedString128Bytes ItemId;
             public int Count;
+
+            public bool Equals(InventorySlot other) {
+                return ItemId.Equals(other.ItemId) && Count == other.Count;
+            }
+
+            public override bool Equals(object obj) {
+                return obj is InventorySlot other && Equals(other);
+            }
+
+            public override int GetHashCode() {
+                return HashCode.Combine(ItemId, Count);
+            }
+
+            public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter {
+                serializer.SerializeValue(ref ItemId);
+                serializer.SerializeValue(ref Count);
+            }
         }
 
         public JToken CaptureAsJToken() {
+            InventorySlot[] collection = new InventorySlot[16];
+            for (int i = 0; i < 16; i++) {
+                collection[i] = _inventorySlots[i];
+            }
             var inventoryState = new JArray(
-                        from slot in _inventorySlots
+                        from slot in collection
                         select new JObject(
-                            new JProperty("slot", Array.FindIndex(_inventorySlots, pos => pos == slot)),
-                            new JProperty("id", new JValue(slot.Item != null ? slot.Item.ID : "")),
+                            new JProperty("slot", Array.FindIndex(collection, pos => pos.ItemId.Value == slot.ItemId.Value)),
+                            new JProperty("id", new JValue(slot.ItemId.Value)),
                             new JProperty("count", slot.Count)
                         )
                     );
             return inventoryState;
         }
         public void RestoreFromJToken(JToken state) {
+            if (!IsServer) return;
             foreach (var slot in state) {
                 var index = (int)slot["slot"];
-                var item = InventoryItem.GetItemByGuid((string)slot["id"]);
                 var count = (int)slot["count"];
-                _inventorySlots[index] = new InventorySlot {
-                    Item = item,
-                    Count = count
-                };
+                var itemId = (string)slot["id"];
+                SetInventoryItemAtSlot(index, itemId, count);
             }
+        }
+
+        [ServerRpc]
+        private void SetInventoryItemAtSlotServerRpc(int slot, FixedString128Bytes itemId, int count) {
+            SetInventoryItemAtSlot(slot, itemId, count);
+        }
+
+        public void SetInventoryItemAtSlot(int slot, FixedString128Bytes itemId, int count) {
+            if (!IsServer) return;
+            InventorySlot item = new InventorySlot {
+                Count = count,
+                ItemId = itemId
+            };
+            _inventorySlots[slot] = item;
+            ClientRpcParams param = new ClientRpcParams {
+                Send = {
+                    TargetClientIds = new[] { GetComponent<NetworkObject>().OwnerClientId }
+                }
+            };
+            UpdateOwnerInventoryClientRpc(param);
+        }
+
+        [ClientRpc]
+        private void UpdateOwnerInventoryClientRpc(ClientRpcParams clientRpcParams) {
+            OnInventoryUpdate?.Invoke();
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void AddInventoryItemAtSlotServerRpc(FixedString128Bytes itemId, int count) {
+            InventorySlot item = new InventorySlot {
+                Count = count,
+                ItemId = itemId
+            };
+            _inventorySlots.Add(item);
         }
     }
 }

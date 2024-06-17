@@ -29,11 +29,11 @@ namespace RPG.Quests {
             var questDictionary = new Dictionary<string, Quest>();
             var quests = Resources.LoadAll<Quest>(PropertyConstants.QUESTS_PATH);
             foreach (var quest in quests) {
-                if (questDictionary.ContainsKey(quest._name)) {
-                    Debug.LogError($"There's a duplicate for objects: {questDictionary[quest._name]} and {quest}");
+                if (questDictionary.TryGetValue(quest.name, out var value)) {
+                    Debug.LogError($"There's a duplicate for objects: {value} and {quest}");
                     continue;
                 }
-                _questDictionary.Add(quest._name, quest);
+                questDictionary.Add(quest.name, quest);
             }
             return questDictionary;
         }

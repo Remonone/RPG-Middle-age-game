@@ -183,7 +183,6 @@ namespace RPG.Network.Management {
             var networkPlayer = playerObj.GetComponent<NetworkPlayer>();
             var playerData = networkPlayer._playerInfo.Value;
             playerObj.gameObject.SetActive(true);
-            Debug.Log("Initialization of player");
             StartCoroutine(system.Load(gameObject, playerData.PlayerID.Value, sessionID, data => {
                 ClientRpcParams param = new ClientRpcParams {
                     Send = {

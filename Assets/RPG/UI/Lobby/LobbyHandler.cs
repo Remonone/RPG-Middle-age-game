@@ -28,16 +28,12 @@ namespace RPG.UI.Lobby {
         
         LobbyElement CreateItem() => new();
 
-        private void Awake() {
+        private void OnEnable() {
             _root = _lobbyList.rootVisualElement;
-
             _connectButton = _root.Q<Button>("Connect");
             _refreshButton = _root.Q<Button>("Refresh");
             _backButton = _root.Q<Button>("Back");
             _listContainer = _root.Q<VisualElement>("Container");
-        }
-
-        private void OnEnable() {
             _dataPackage.OnUpdate += UpdateList;
             _isRefreshing = true;
             _dataPackage.UpdateList();

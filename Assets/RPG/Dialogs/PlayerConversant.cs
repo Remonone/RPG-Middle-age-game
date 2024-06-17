@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RPG.Core;
 using RPG.Core.Predicate;
+using RPG.Movement;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -38,11 +39,15 @@ namespace RPG.Dialogs {
         private void Update() {
             if (ReferenceEquals(_aiConversant, null)) return;
             if (IsConversantInRange()) {
-                InitDialog();
+                if(ReferenceEquals(_currentNode, null)) InitDialog();
+            }
+            else {
+                GetComponent<Mover>().RequestToMove(_aiConversant.transform.position);
             }
         }
         private void InitDialog() {
             _currentNode = _dialog.GetRootNode();
+            _scheduler.SwitchAction(this);
             OnEnterAction();
             OnUpdate?.Invoke();
         }
@@ -96,7 +101,7 @@ namespace RPG.Dialogs {
         }
         
         private void TriggerAction(string actionPredicate, string executor) {
-            if (actionPredicate == "" || IsServer) return;
+            if (actionPredicate == "") return;
             var formattedPredicate = string.Format(actionPredicate, executor);
             PredicateWorker.ExecutePredicate(formattedPredicate, _predicate.EntityID, out _);
         }
@@ -115,15 +120,6 @@ namespace RPG.Dialogs {
         public void SelectChoice(DialogNode choice) {
             TriggerAction(_currentNode.OnExitPredicate, GetIdFromExecutor(_currentNode.ExitExecutor));
             _currentNode = choice;
-            TriggerAction(_currentNode.OnEnterPredicate, GetIdFromExecutor(_currentNode.ExitExecutor));
-            _isChoosing = !_isChoosing;
-            SelectChoiceServerRpc(choice.Rectangle.position);
-        }
-
-        [ServerRpc]
-        private void SelectChoiceServerRpc(Vector2 choicePosition) {
-            TriggerAction(_currentNode.OnExitPredicate, GetIdFromExecutor(_currentNode.ExitExecutor));
-            _currentNode = _dialog.GetNode(choicePosition);
             TriggerAction(_currentNode.OnEnterPredicate, GetIdFromExecutor(_currentNode.EnterExecutor));
             _isChoosing = !_isChoosing;
             Next();

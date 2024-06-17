@@ -2,10 +2,11 @@
 using RPG.Core.Cursors;
 using RPG.Creatures.Player;
 using RPG.Inventories.Items;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace RPG.Inventories.Pickups {
-    public class Pickup : MonoBehaviour, ITrajectory {
+    public class Pickup : NetworkBehaviour, ITrajectory {
 
         [SerializeField] private Pickable _pickable = new();
         private bool _shouldBeDestroyed;
@@ -13,11 +14,6 @@ namespace RPG.Inventories.Pickups {
         public bool ShouldBeDestroyed => _shouldBeDestroyed;
         
         public event Action OnPickup;
-
-        private void Awake() {
-            _pickable.StoredItem = InventoryItem.GetItemByGuid("77973f65-3fd7-4404-a03c-fa46a7c72360");
-            _pickable.Count = 1;
-        }
 
         public void Setup(InventoryItem item, int count) {
             _pickable.StoredItem = item;
@@ -45,9 +41,12 @@ namespace RPG.Inventories.Pickups {
         }
         
         private void OnTriggerEnter(Collider other) {
+            if (!IsServer) return;
             if (!other.CompareTag("Player")) return;
             if (!other.TryGetComponent<Inventory>(out var inventory)) return;
-            inventory.AddToFirstEmptySlot(_pickable.StoredItem, _pickable.Count);
+            var emptySlot = inventory.FindEmptySlot();
+            if (emptySlot == -1) return;
+            inventory.SetInventoryItemAtSlot(emptySlot, _pickable.StoredItem.ID, _pickable.Count);
             _shouldBeDestroyed = true;
             OnPickup?.Invoke();
             Destroy(gameObject);

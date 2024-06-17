@@ -1719,6 +1719,7 @@ GameObject:
   - component: {fileID: 7860395435212350648}
   - component: {fileID: 4103735245376560793}
   - component: {fileID: 3753418713658417380}
+  - component: {fileID: 6154177000498385165}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1735,7 +1736,7 @@ Transform:
   m_GameObject: {fileID: 5691676695861984064}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -367.78528, y: 15.902782, z: -549.32495}
+  m_LocalPosition: {x: -367.7853, y: 15.90278, z: -549.325}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1877,16 +1878,16 @@ MonoBehaviour:
   _cursors:
   - Type: 2
     Image: {fileID: 2800000, guid: aaa9d832f967d2c4f863066eaf3a277e, type: 3}
-    Hotspot: {x: 0, y: 0}
+    Hotspot: {x: 50, y: 50}
   - Type: 1
     Image: {fileID: 2800000, guid: 5988a2020badc834c96521b52b6a08f5, type: 3}
-    Hotspot: {x: 0, y: 0}
+    Hotspot: {x: 50, y: 50}
   - Type: 3
     Image: {fileID: 2800000, guid: 8589811d8f6629443ad2c9be7e027110, type: 3}
-    Hotspot: {x: 0, y: 0}
+    Hotspot: {x: 50, y: 50}
   - Type: 0
     Image: {fileID: 2800000, guid: 8bf839021e420dd459a61f9c1c0354f7, type: 3}
-    Hotspot: {x: 0, y: 0}
+    Hotspot: {x: 50, y: 50}
   _uiContainer: {fileID: 2849973232243890473}
   _cameraHolder: {fileID: 863966133093248840}
   _camera: {fileID: 6507222223649406984}
@@ -2236,6 +2237,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _entityID: 
+--- !u!114 &6154177000498385165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5691676695861984064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf065e1624c4be5860f319fffa42765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6004634681318178303
 GameObject:
   m_ObjectHideFlags: 0
@@ -3205,6 +3218,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7431269029893116112}
     m_Modifications:
+    - target: {fileID: 1256864239, guid: 71e8b18b12a037e4fab8b182f6f8139e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1256864241, guid: 71e8b18b12a037e4fab8b182f6f8139e, type: 3}
+      propertyPath: _playerConversant
+      value: 
+      objectReference: {fileID: 830590091321968649}
     - target: {fileID: 1595923155354377866, guid: 71e8b18b12a037e4fab8b182f6f8139e,
         type: 3}
       propertyPath: m_Pivot.x

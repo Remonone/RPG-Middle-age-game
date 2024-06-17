@@ -17,15 +17,15 @@ MonoBehaviour:
   _children: []
   _rectangle:
     serializedVersion: 2
-    x: 1141
-    y: 1
+    x: 1162
+    y: 5
     width: 200
     height: 200
   _isPlayer: 0
   _onEnterExecutor: 0
   _onExitExecutor: 0
-  _onExitPredicate: '#{0}:QuestStore:AddQuest:CollectItems;'
-  _onEnterPredicate: 
+  _onExitPredicate: 
+  _onEnterPredicate: '#{0},QuestStore:AddQuest:CollectMetal;'
 --- !u!114 &-3251154134070032969
 MonoBehaviour:
   m_ObjectHideFlags: 0

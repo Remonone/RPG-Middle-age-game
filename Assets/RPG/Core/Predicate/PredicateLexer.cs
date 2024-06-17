@@ -12,6 +12,7 @@ namespace RPG.Core.Predicate {
 
         public List<PredicateToken> LexAnalysis(string code) {
             _code = code;
+            _predicateTokens.Clear();
             _position = 0;
             var iteration = 0;
             while (NextToken() && iteration < MAX_ITER) { 

@@ -1,4 +1,5 @@
-﻿using RPG.Inventories;
+﻿using System.Linq;
+using RPG.Inventories;
 using RPG.Inventories.Items;
 using UnityEngine;
 
@@ -7,16 +8,19 @@ namespace RPG.Quests.Objectives {
         [SerializeField] private InventoryItem _itemToCollect;
         [SerializeField] private int _itemCountToCollect;
 
-        private void OnEnable() {
-            GetComponent<Inventory>().OnInventoryUpdate += CheckOnItem;
+        private Inventory _ownerInventory;
+        
+        public override void Init(GameObject owner) {
+            _ownerInventory = owner.GetComponent<Inventory>();
+            _ownerInventory.OnInventoryUpdate += CheckOnItem;
         }
-
+        
         private void OnDisable() {
-            GetComponent<Inventory>().OnInventoryUpdate -= CheckOnItem;
+            _ownerInventory.OnInventoryUpdate -= CheckOnItem;
         }
 
-        public void CheckOnItem() {
-            var stack = GetComponent<Inventory>().FindStack(_itemToCollect);
+        private void CheckOnItem() {
+            var stack = _ownerInventory.FindSlots(_itemToCollect).ToList().Select(item => item.Count).Sum();
             if (stack < _itemCountToCollect) return;
             CompleteObjective();
         }

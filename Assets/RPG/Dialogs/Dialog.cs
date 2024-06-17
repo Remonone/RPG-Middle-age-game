@@ -59,7 +59,6 @@ namespace RPG.Dialogs {
         private static Dictionary<string, Dialog> GetFilledDialogDictionary() {
             var questDictionary = new Dictionary<string, Dialog>();
             var dialogs = Resources.LoadAll<Dialog>(PropertyConstants.DIALOGS_PATH);
-            Debug.Log(dialogs.Length);
             foreach (var dialog in dialogs) {
                 if (questDictionary.ContainsKey(dialog.name)) {
                     Debug.LogError($"There's a duplicate for objects: {questDictionary[dialog.name]} and {dialog}");

@@ -66,6 +66,7 @@ namespace RPG.Movement {
             MoveAgent(destination);
         }
         
+        // AI
         public void MoveToPoint(Vector3 destination) {
             if (!IsServer) return;
             MoveAgent(destination);

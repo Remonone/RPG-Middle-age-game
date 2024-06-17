@@ -15,11 +15,11 @@ namespace RPG.Quests {
 
         public IEnumerable<QuestState> States => _states;
 
-        public event Action<QuestState> OnStateUpdated;
+        public event Action OnStateUpdated;
 
         public void AddQuest(Quest quest) {
             if (HasQuest(quest)) return;
-            AddQuestServerRpc(quest.Title);
+            AddQuestServerRpc(quest.name);
         }
 
         [ServerRpc]
@@ -27,21 +27,7 @@ namespace RPG.Quests {
             Quest quest = Quest.GetQuestByName(questName.Value);
             var state = new QuestState(this, quest);
             _states.Add(state);
-            OnStateUpdated?.Invoke(state);
-            ClientRpcParams clientRpcParams = new ClientRpcParams {
-                Send = {
-                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
-                }
-            };
-            AddQuestClientRpc(questName, clientRpcParams);
-        }
-
-        [ClientRpc]
-        private void AddQuestClientRpc(FixedString512Bytes questName, ClientRpcParams clientRpcParams) {
-            Quest quest = Quest.GetQuestByName(questName.Value);
-            var state = new QuestState(this, quest);
-            _states.Add(state);
-            OnStateUpdated?.Invoke(state);
+            OnStateUpdated?.Invoke();
         }
         
         private void GiveAward(Quest quest) {
@@ -58,7 +44,7 @@ namespace RPG.Quests {
         }
 
         private void FinishQuest(QuestState state) {
-            FinishQuestServerRpc(state.Quest.Title);
+            FinishQuestServerRpc(state.Quest.name);
         }
         
         [ServerRpc]
@@ -67,28 +53,15 @@ namespace RPG.Quests {
             var state = GetQuestState(quest);
             _states.Remove(state);
             GiveAward(state.Quest);
-            ClientRpcParams clientRpcParams = new ClientRpcParams {
-                Send = {
-                    TargetClientIds = new[] { serverRpcParams.Receive.SenderClientId }
-                }
-            };
-            FinishQuestClientRpc(questTitle, clientRpcParams);
         }
         
-        [ClientRpc]
-        private void FinishQuestClientRpc(string questTitle, ClientRpcParams clientRpcParams) {
-            var quest = Quest.GetQuestByName(questTitle);
-            var state = GetQuestState(quest);
-            _states.Remove(state);
-            GiveAward(state.Quest);
-        }
 
         private bool HasQuest(Quest quest) => GetQuestState(quest) != null;
 
         private QuestState GetQuestState(Quest quest) => _states.Find(element => element.Quest.Equals(quest));
 
         public void UpdateState(QuestState questState) {
-            OnStateUpdated?.Invoke(questState);
+            OnStateUpdated?.Invoke();
             if (questState.IsCompleted) {
                 FinishQuest(questState);
             }
@@ -97,7 +70,7 @@ namespace RPG.Quests {
             var quests = new JArray(
                     from state in _states
                     select new JObject(
-                            new JProperty("quest_name", state.Quest),
+                            new JProperty("quest_name", state.Quest.name),
                             new JProperty("completed_objectives", state.ObjectiveIndex)
                         )
                 );

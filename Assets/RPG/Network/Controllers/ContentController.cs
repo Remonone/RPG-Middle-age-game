@@ -13,7 +13,6 @@ namespace RPG.Network.Controllers {
                 yield return www.SendWebRequest();
                 if (www.result is UnityWebRequest.Result.Success) {
                     var result = www.downloadHandler.text;
-                    Debug.Log(result);
                     onData.Invoke(JObject.Parse(result));
                     yield break;
                 }

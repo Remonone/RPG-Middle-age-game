@@ -8,6 +8,8 @@ namespace RPG.Quests.Objectives {
 
         public event Action OnObjectiveCompeted;
 
+        public abstract void Init(GameObject owner);
+
         protected void CompleteObjective() {
             if (!_isQuestFinished) {
                 _isQuestFinished = true;

@@ -14,11 +14,13 @@ namespace RPG.UI.Inventories.Slots {
             var slot = inventory.GetItemInSlot(i);
             _index = i;
             _inventory = inventory;
-            if (slot.Item == null) {
+            if (slot.ItemId.Value == "") {
                 _imageUI.SetItem(null);
                 return;
             }
-            _imageUI.SetItem(slot.Item);
+
+            var item = InventoryItem.GetItemByGuid(slot.ItemId.Value);
+            _imageUI.SetItem(item);
         }
         public int MaxAcceptable(InventoryItem item) => item == null ? -1 : !item.IsStackable ? 1 : int.MaxValue;
 
@@ -27,7 +29,7 @@ namespace RPG.UI.Inventories.Slots {
         }
 
         public InventoryItem GetItem() {
-            return _inventory.GetItemInSlot(_index).Item;
+            return InventoryItem.GetItemByGuid(_inventory.GetItemInSlot(_index).ItemId.Value);
         }
 
         public int GetNumber() {

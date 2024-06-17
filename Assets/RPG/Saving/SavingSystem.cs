@@ -18,7 +18,6 @@ namespace RPG.Saving {
         }
 
         public IEnumerator Load(GameObject loader, string playerId, string sessionId, Action<JObject> onLoadFinish) {
-            Debug.Log("Loading content");
             yield return ContentController.GetPlayerContent(playerId, sessionId, data => {
                 RestoreFromToken(data, loader);
                 onLoadFinish(data);
@@ -29,7 +28,6 @@ namespace RPG.Saving {
 
         private JToken CaptureAsToken(SaveableEntity entity, string idToSave) {
             var objectToSave = entity.CaptureAsJToken();
-            Debug.Log(idToSave);
             objectToSave[PLAYER_ID] = idToSave;
             objectToSave[SCENE_INDEX] = SceneManager.GetActiveScene().buildIndex;
             return objectToSave;
