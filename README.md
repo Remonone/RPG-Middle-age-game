@@ -7,12 +7,8 @@ This game was developed as an educational purpose. The genre of the game is RPG 
 - Battle system
 - Predicate system(Custom Instruction Language to exchange data between components)
 - AI (based on Goal Oriented Action Planner)
-## Current Roadmap
-
-- Multiplayer
+- Multiplayer(implement data base connection and create UI system to manage connectivity with accounts and created worlds)
 - Quest System
-- Shop System
-
 
 ## Acknowledgements
 
